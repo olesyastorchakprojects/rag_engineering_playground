@@ -1,0 +1,52 @@
+{
+  "run_id": "cd2431e5-320c-479c-b4d0-b9e63e179fde",
+  "run_type": "experiment",
+  "status": "completed",
+  "started_at": "2026-04-10T18:31:39.394994+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "/home/olesia/code/prompt_gen_proj/Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_provider": "together",
+  "judge_base_url": "https://api.together.xyz/v1",
+  "judge_model": "openai/gpt-oss-20b",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 20,
+  "run_scope_request_ids": [
+    "5ebe7a71-6141-4d14-b466-64174c7d24a0",
+    "6dbd7390-e026-4d72-a21f-cbf00174eb3b",
+    "a4ea2ff1-3881-4422-9559-e75ca709dadb",
+    "cbab0209-4b87-4b75-8553-25d14ed41133",
+    "440e8b82-0059-42c0-9efa-5931462efcae",
+    "37ec6ff8-d994-47b3-995d-2f66351560a0",
+    "44cf9fdf-1822-442b-a9a7-2d28157eaaa2",
+    "8af725c2-0d8b-4d11-ba22-1d50646b24d1",
+    "67221119-e1a2-4721-a729-b3db0d18df04",
+    "a55a8e0a-57b4-442a-9c83-782dc8bc3dc7",
+    "75fe37ec-ad95-4b26-a438-2eb9b2dc207d",
+    "b4ca74b1-7b0d-4d96-b28c-acac0c5ff0ab",
+    "d10a271c-68a6-4d0e-9e92-8315b8bd56c1",
+    "fb3b39b1-5719-41c8-8802-5b3edd3f6a3b",
+    "aa12390e-2445-4e2b-b79a-b6b631958f34",
+    "b0d34ac2-1621-48cd-834d-a22b1145cda5",
+    "7ccafa73-c6cc-4db9-8f04-81654f52f221",
+    "8b2f6610-855e-43ab-aea0-fec063ffdef3",
+    "bb4d781d-e77a-45c8-a95f-e7075be0fdf4",
+    "9b056e95-7587-4fc3-b902-b5eee13daed5"
+  ],
+  "retriever_kind": "Hybrid",
+  "reranker_kind": "Heuristic",
+  "completed_at": "2026-04-10T18:46:03.229619+00:00"
+}

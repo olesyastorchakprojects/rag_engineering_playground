@@ -1,0 +1,120 @@
+name: observability
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rag_eval
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - axum_net
+
+  phoenix:
+    image: arizephoenix/phoenix:version-13.14.0
+    container_name: phoenix
+    restart: unless-stopped
+    environment:
+      PHOENIX_WORKING_DIR: /mnt/data
+    ports:
+      - "6006:6006"
+      - "4319:4317"
+    volumes:
+      - phoenix-data:/mnt/data
+    networks:
+      - axum_net
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    restart: unless-stopped
+    user: "0:0"
+    command: ["-config.file=/etc/tempo.yaml", "-target=all"]
+    ports:
+      - "3200:3200"
+    volumes:
+      - ../../Measurement/observability/tempo/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo-data:/tmp/tempo/blocks
+      - tempo-wal:/tmp/tempo/wal
+    networks:
+      - axum_net
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.123.0
+    container_name: otel-collector
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    depends_on:
+      - phoenix
+      - tempo
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8888:8888"
+      - "9464:9464"
+    volumes:
+      - ./otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    networks:
+      - axum_net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    depends_on:
+      - otel-collector
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - axum_net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      - tempo
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ../../Measurement/observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ../../Measurement/evals/grafana/dashboards:/var/lib/grafana/eval-dashboards:ro
+      - ../../Measurement/observability/grafana/provisioning/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/runtime.yml:ro
+      - ../../Measurement/evals/grafana/provisioning/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/evals.yml:ro
+      - ../../Measurement/observability/grafana/provisioning/datasources/prometheus.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+      - ../../Measurement/observability/grafana/provisioning/datasources/tempo.yml:/etc/grafana/provisioning/datasources/tempo.yml:ro
+      - ../../Measurement/evals/grafana/provisioning/datasources/postgres.yml:/etc/grafana/provisioning/datasources/postgres.yml:ro
+    networks:
+      - axum_net
+
+networks:
+  axum_net:
+    name: axum_net
+    external: true
+
+volumes:
+  grafana-data:
+  postgres-data:
+  phoenix-data:
+  prometheus-data:
+  tempo-data:
+  tempo-wal:

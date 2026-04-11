@@ -1,0 +1,5 @@
+{"question_id":"q1_tcp_reliable_over_ip","question":"Why is TCP considered a layer that creates a reliable channel on top of unreliable IP, and what mechanisms does it use to compensate for packet loss, duplication, and reordering?"}
+{"question_id":"q2_post_idempotency","question":"Why can retrying a POST request after a timeout lead to an incorrect system state, and how do idempotency keys together with transactional atomicity solve this problem?"}
+{"question_id":"q3_dns_ttl","question":"Why does a short DNS TTL both help propagate changes faster and increase a system’s vulnerability to failures in DNS infrastructure?"}
+{"question_id":"q4_flow_vs_congestion","question":"What is the difference between flow control and congestion control in TCP, and what type of overload does each of these mechanisms protect against?"}
+{"question_id":"q5_partial_synchrony","question":"Why is the partially synchronous model considered more realistic for practical distributed systems than either the strictly synchronous or the fully asynchronous model?"}

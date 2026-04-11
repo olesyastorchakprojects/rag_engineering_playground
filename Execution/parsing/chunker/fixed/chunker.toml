@@ -1,0 +1,13 @@
+[chunking]
+target_tokens = 350
+overlap_ratio = 0.15
+chunking_version = "v1"
+
+[sentence_segmentation]
+library = "spacy"
+library_version = "3.8.7"
+language = "en"
+
+[tokenizer]
+library = "tokenizers"
+source = "Qwen/Qwen3-Embedding-0.6B"

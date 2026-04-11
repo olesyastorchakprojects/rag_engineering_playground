@@ -1,0 +1,29 @@
+{
+  "run_id": "91fb912a-043e-481d-a4f0-cff1247a7a52",
+  "run_type": "experiment",
+  "status": "failed",
+  "started_at": "2026-04-01T19:56:59.542480+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "../../Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434/v1",
+  "judge_model": "qwen2.5:1.5b-instruct-q4_K_M",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 0,
+  "run_scope_request_ids": [],
+  "completed_at": "2026-04-01T19:56:59.601529+00:00",
+  "last_error": "no new requests were bootstrapped; resumable run(s) still exist: 35821274-4066-42dd-bc7c-f11db910121d. Re-run with --resume-run-id."
+}

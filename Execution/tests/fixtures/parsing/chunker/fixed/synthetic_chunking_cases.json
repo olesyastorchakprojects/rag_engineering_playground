@@ -1,0 +1,1312 @@
+[
+  {
+    "name": "front_matter_is_not_chunked",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 2
+        },
+        "main_matter": {
+          "start": 3,
+          "end": 4
+        }
+      },
+      "front_matter": [
+        {
+          "title": "Contents",
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 1,
+              "end": 2
+            }
+          }
+        }
+      ],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 1,
+          "title": "Timeouts",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 3,
+              "end": 4
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 1,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 20,
+        "overlap_ratio": 0.15,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 1,
+        "clean_text": "Contents Introduction Reliable links Replication"
+      },
+      {
+        "page": 2,
+        "clean_text": "List of figures and acknowledgements"
+      },
+      {
+        "page": 3,
+        "clean_text": "Timeouts help a process decide when a reply is probably lost. They are useful when waiting forever is unacceptable."
+      },
+      {
+        "page": 4,
+        "clean_text": "A timeout that is too short causes false suspicions. A timeout that is too long slows recovery."
+      }
+    ],
+    "expected_chunk_count": 3,
+    "expected_page_ranges": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        4
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Timeouts"
+      ],
+      [
+        "Timeouts"
+      ],
+      [
+        "Timeouts"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Timeouts help a process decide",
+        "waiting forever is unacceptable"
+      ],
+      [
+        "waiting forever is unacceptable",
+        "too short causes false suspicions"
+      ],
+      [
+        "too short causes false suspicions",
+        "too long slows recovery"
+      ]
+    ],
+    "forbidden_text_contains": [
+      "Contents",
+      "acknowledgements"
+    ]
+  },
+  {
+    "name": "expected_fail_when_content_start_missing",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 2
+        },
+        "main_matter": {
+          "start": 3,
+          "end": 4
+        }
+      },
+      "front_matter": [
+        {
+          "title": "Contents",
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 1,
+              "end": 2
+            }
+          }
+        }
+      ],
+      "parts": [],
+      "chapters": [],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 1,
+        "parts": 0,
+        "chapters": 0,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 20,
+        "overlap_ratio": 0.15,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 1,
+        "clean_text": "Contents only"
+      },
+      {
+        "page": 2,
+        "clean_text": "More front matter only"
+      }
+    ],
+    "expected_fail": true
+  },
+  {
+    "name": "duplicate_pages_preserve_stable_order",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 4
+        },
+        "main_matter": {
+          "start": 5,
+          "end": 6
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 2,
+          "title": "Backoff",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 5,
+              "end": 6
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 8,
+        "overlap_ratio": 0.15,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 5,
+        "clean_text": "Retries spread load over time."
+      },
+      {
+        "page": 5,
+        "clean_text": "Backoff reduces synchronized retries."
+      },
+      {
+        "page": 6,
+        "clean_text": "Jitter adds randomness."
+      }
+    ],
+    "expected_chunk_count": 2,
+    "expected_page_ranges": [
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Backoff"
+      ],
+      [
+        "Backoff"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Retries spread load over time"
+      ],
+      [
+        "Backoff reduces synchronized retries",
+        "Jitter adds randomness"
+      ]
+    ]
+  },
+  {
+    "name": "empty_page_inside_range_emits_no_text_chunk",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 9
+        },
+        "main_matter": {
+          "start": 10,
+          "end": 12
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 3,
+          "title": "Caching",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 3
+            },
+            "pdf": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 8,
+        "overlap_ratio": 0.15,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 10,
+        "clean_text": "Caching avoids repeated expensive reads."
+      },
+      {
+        "page": 11,
+        "clean_text": ""
+      },
+      {
+        "page": 12,
+        "clean_text": "Freshness rules determine when cached entries expire."
+      }
+    ],
+    "expected_chunk_count": 2,
+    "expected_page_ranges": [
+      [
+        10,
+        10
+      ],
+      [
+        10,
+        12
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Caching"
+      ],
+      [
+        "Caching"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Caching avoids repeated expensive reads"
+      ],
+      [
+        "cached entries expire"
+      ]
+    ]
+  },
+  {
+    "name": "single_long_sentence_becomes_oversize_chunk",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 19
+        },
+        "main_matter": {
+          "start": 20,
+          "end": 20
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 4,
+          "title": "Membership",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 1
+            },
+            "pdf": {
+              "start": 20,
+              "end": 20
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 5,
+        "overlap_ratio": 0.15,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 20,
+        "clean_text": "Membership changes are delicate because every node must eventually agree on who belongs to the group while the system continues serving traffic without splitting the cluster into incompatible views."
+      }
+    ],
+    "expected_chunk_count": 1,
+    "expected_page_ranges": [
+      [
+        20,
+        20
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Membership"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Membership changes are delicate",
+        "without splitting the cluster"
+      ]
+    ]
+  },
+  {
+    "name": "overlap_reuses_sentence_suffix",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 29
+        },
+        "main_matter": {
+          "start": 30,
+          "end": 31
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 5,
+          "title": "Retries",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 30,
+              "end": 31
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 9,
+        "overlap_ratio": 0.34,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 30,
+        "clean_text": "Clients retry after transient failures. Retries must use backoff to avoid overload. Jitter breaks synchronization between clients."
+      },
+      {
+        "page": 31,
+        "clean_text": "Idempotency keeps repeated requests safe."
+      }
+    ],
+    "expected_chunk_count": 3,
+    "expected_page_ranges": [
+      [
+        30,
+        30
+      ],
+      [
+        30,
+        30
+      ],
+      [
+        30,
+        31
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Retries"
+      ],
+      [
+        "Retries"
+      ],
+      [
+        "Retries"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Clients retry after transient failures",
+        "Retries must use backoff"
+      ],
+      [
+        "Retries must use backoff"
+      ],
+      [
+        "Jitter breaks synchronization",
+        "Idempotency keeps repeated requests safe"
+      ]
+    ],
+    "expected_pairwise_overlap_contains": [
+      {
+        "left_chunk": 0,
+        "right_chunk": 1,
+        "anchors": [
+          "Retries must use backoff to avoid overload"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "zero_overlap_does_not_repeat_sentence_suffix",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 39
+        },
+        "main_matter": {
+          "start": 40,
+          "end": 41
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 6,
+          "title": "Queues",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 40,
+              "end": 41
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 9,
+        "overlap_ratio": 0.0,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 40,
+        "clean_text": "Queues absorb bursty traffic. Queue length reflects pressure. Consumers drain work continuously."
+      },
+      {
+        "page": 41,
+        "clean_text": "Backpressure protects downstream systems."
+      }
+    ],
+    "expected_chunk_count": 2,
+    "expected_page_ranges": [
+      [
+        40,
+        40
+      ],
+      [
+        40,
+        41
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Queues"
+      ],
+      [
+        "Queues"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Queues absorb bursty traffic",
+        "Queue length reflects pressure"
+      ],
+      [
+        "Consumers drain work continuously",
+        "Backpressure protects downstream systems"
+      ]
+    ],
+    "expected_pairwise_no_overlap_contains": [
+      {
+        "left_chunk": 0,
+        "right_chunk": 1,
+        "anchors": [
+          "Queue length reflects pressure"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "target_tokens_split_six_sentences_into_two_chunks",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 49
+        },
+        "main_matter": {
+          "start": 50,
+          "end": 50
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 7,
+          "title": "Pacing",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 1
+            },
+            "pdf": {
+              "start": 50,
+              "end": 50
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 15,
+        "overlap_ratio": 0.0,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 50,
+        "clean_text": "Alpha nodes pace writes. Beta nodes smooth bursts. Gamma nodes cut spikes. Delta nodes absorb retries. Epsilon nodes drain queues. Zeta nodes keep balance."
+      }
+    ],
+    "expected_chunk_count": 2,
+    "expected_page_ranges": [
+      [
+        50,
+        50
+      ],
+      [
+        50,
+        50
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Pacing"
+      ],
+      [
+        "Pacing"
+      ]
+    ],
+    "expected_text_equals": [
+      "Alpha nodes pace writes. Beta nodes smooth bursts. Gamma nodes cut spikes.",
+      "Delta nodes absorb retries. Epsilon nodes drain queues. Zeta nodes keep balance."
+    ],
+    "expected_pairwise_no_overlap_contains": [
+      {
+        "left_chunk": 0,
+        "right_chunk": 1,
+        "anchors": [
+          "Gamma nodes cut spikes"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "multiple_empty_pages_inside_content_range",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 59
+        },
+        "main_matter": {
+          "start": 60,
+          "end": 64
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 8,
+          "title": "Compaction",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 5
+            },
+            "pdf": {
+              "start": 60,
+              "end": 64
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 8,
+        "overlap_ratio": 0.0,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 60,
+        "clean_text": "Compaction rewrites files."
+      },
+      {
+        "page": 61,
+        "clean_text": ""
+      },
+      {
+        "page": 62,
+        "clean_text": ""
+      },
+      {
+        "page": 63,
+        "clean_text": "Snapshots bound recovery time."
+      },
+      {
+        "page": 64,
+        "clean_text": "Cleanup frees disk space."
+      }
+    ],
+    "expected_chunk_count": 2,
+    "expected_page_ranges": [
+      [
+        60,
+        63
+      ],
+      [
+        63,
+        64
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Compaction"
+      ],
+      [
+        "Compaction"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Compaction rewrites files",
+        "Snapshots bound recovery time"
+      ],
+      [
+        "Cleanup frees disk space"
+      ]
+    ]
+  },
+  {
+    "name": "section_annotation_changes_on_page_boundary",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 69
+        },
+        "main_matter": {
+          "start": 70,
+          "end": 71
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 9,
+          "title": "Storage",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 2
+            },
+            "pdf": {
+              "start": 70,
+              "end": 71
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "9.1",
+          "title": "Logs",
+          "chapter": 9,
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 1
+            },
+            "pdf": {
+              "start": 70,
+              "end": 70
+            }
+          }
+        },
+        {
+          "section": "9.2",
+          "title": "Snapshots",
+          "chapter": 9,
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 2,
+              "end": 2
+            },
+            "pdf": {
+              "start": 71,
+              "end": 71
+            }
+          }
+        }
+      ],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 2,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 8,
+        "overlap_ratio": 0.0,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 70,
+        "clean_text": "Logs record every update."
+      },
+      {
+        "page": 71,
+        "clean_text": "Snapshots shorten replay."
+      }
+    ],
+    "expected_chunk_count": 1,
+    "expected_page_ranges": [
+      [
+        70,
+        71
+      ]
+    ],
+    "expected_section_paths": [
+      [
+        "Storage",
+        "Logs"
+      ]
+    ],
+    "expected_text_contains": [
+      [
+        "Logs record every update",
+        "Snapshots shorten replay"
+      ]
+    ]
+  },
+  {
+    "name": "expected_fail_when_all_pages_after_content_start_are_empty",
+    "book_metadata": {
+      "document_title": "Synthetic Fixed Chunker Book",
+      "url": "https://example.com/fixed-synthetic",
+      "tags": [
+        "synthetic",
+        "fixed"
+      ]
+    },
+    "content_metadata": {
+      "dataset": "synthetic",
+      "source_pdf": "synthetic.pdf",
+      "generated_from": "manual",
+      "generated_on": "2026-04-01",
+      "book": {
+        "title": "Synthetic Fixed Chunker Book",
+        "authors": [
+          "OpenAI"
+        ]
+      },
+      "page_numbering": {
+        "front_matter": {
+          "start": 1,
+          "end": 79
+        },
+        "main_matter": {
+          "start": 80,
+          "end": 82
+        }
+      },
+      "front_matter": [],
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 10,
+          "title": "Recovery",
+          "part": null,
+          "ranges": {
+            "book": {
+              "start": 1,
+              "end": 3
+            },
+            "pdf": {
+              "start": 80,
+              "end": 82
+            }
+          }
+        }
+      ],
+      "sections": [],
+      "subsections": [],
+      "counts": {
+        "front_matter": 0,
+        "parts": 0,
+        "chapters": 1,
+        "sections": 0,
+        "subsections": 0
+      }
+    },
+    "config": {
+      "chunking": {
+        "target_tokens": 8,
+        "overlap_ratio": 0.0,
+        "chunking_version": "v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "pages": [
+      {
+        "page": 80,
+        "clean_text": ""
+      },
+      {
+        "page": 81,
+        "clean_text": ""
+      },
+      {
+        "page": 82,
+        "clean_text": ""
+      }
+    ],
+    "expected_fail": true
+  }
+]

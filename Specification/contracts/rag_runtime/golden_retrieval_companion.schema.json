@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Specification/contracts/rag_runtime/golden_retrieval_companion.schema.json",
+  "title": "Golden Retrieval Companion",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "scenario",
+    "questions"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "scenario": {
+      "type": "string",
+      "enum": ["fixed", "structural"]
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question_id",
+          "question",
+          "soft_positive_chunk_ids",
+          "strict_positive_chunk_ids",
+          "graded_relevance"
+        ],
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "soft_positive_chunk_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "strict_positive_chunk_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "graded_relevance": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "chunk_id",
+                "score"
+              ],
+              "properties": {
+                "chunk_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "score": {
+                  "type": "number",
+                  "enum": [0.0, 0.5, 1.0]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

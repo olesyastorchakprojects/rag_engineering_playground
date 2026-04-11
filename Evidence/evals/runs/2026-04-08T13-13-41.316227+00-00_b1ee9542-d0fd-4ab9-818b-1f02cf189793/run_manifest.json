@@ -1,0 +1,33 @@
+{
+  "run_id": "b1ee9542-d0fd-4ab9-818b-1f02cf189793",
+  "run_type": "experiment",
+  "status": "completed",
+  "started_at": "2026-04-08T13:13:41.316227+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@127.0.0.1:5432/rag_eval",
+  "chunks_path": "Evidence/parsing/understanding_distributed_systems/chunks/fixed_chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_provider": "together",
+  "judge_base_url": "https://api.together.xyz/v1",
+  "judge_model": "openai/gpt-oss-20b",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 1,
+  "run_scope_request_ids": [
+    "f51da11c-3706-4acc-bf59-237e1a032297"
+  ],
+  "retriever_kind": "Dense",
+  "reranker_kind": "PassThrough",
+  "completed_at": "2026-04-08T13:15:01.430546+00:00"
+}

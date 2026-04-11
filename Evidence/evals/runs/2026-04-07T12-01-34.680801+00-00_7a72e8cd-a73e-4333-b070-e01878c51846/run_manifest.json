@@ -1,0 +1,29 @@
+{
+  "run_id": "7a72e8cd-a73e-4333-b070-e01878c51846",
+  "run_type": "experiment",
+  "status": "failed",
+  "started_at": "2026-04-07T12:01:34.680801+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "/home/olesia/code/prompt_gen_proj/Evidence/parsing/understanding_distributed_systems/chunks/fixed_chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434/v1",
+  "judge_model": "qwen2.5:1.5b-instruct-ctx32k",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 0,
+  "run_scope_request_ids": [],
+  "completed_at": "2026-04-07T12:01:34.858029+00:00",
+  "last_error": "column \"generation_config\" does not exist\nLINE 2: ...retriever_config, reranker_kind, reranker_config, generation...\n                                                             ^"
+}

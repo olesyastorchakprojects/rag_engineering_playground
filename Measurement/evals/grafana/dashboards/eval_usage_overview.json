@@ -1,0 +1,227 @@
+{
+  "title": "Eval Usage Overview",
+  "uid": "eval-usage-overview",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "1m",
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "title": "Token Usage",
+      "type": "table",
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH run_ids AS (SELECT DISTINCT rrs.run_id FROM request_run_summaries rrs WHERE $__timeFilter(rrs.source_received_at)), runtime AS (SELECT COALESCE(SUM(rc.total_tokens), 0)::numeric AS total_tokens, COALESCE(SUM(rc.prompt_tokens * COALESCE((rc.generation_config->>'input_cost_per_million_tokens')::numeric, 0) / 1000000.0 + rc.completion_tokens * COALESCE((rc.generation_config->>'output_cost_per_million_tokens')::numeric, 0) / 1000000.0), 0)::numeric(20,8) AS total_cost_usd FROM request_captures rc JOIN request_run_summaries rrs ON rrs.request_id = rc.request_id WHERE $__timeFilter(rrs.source_received_at)), judge_generation AS (SELECT COALESCE(SUM(j.total_tokens), 0)::numeric AS total_tokens, COALESCE(SUM(j.total_cost_usd), 0)::numeric(20,8) AS total_cost_usd FROM judge_llm_calls j WHERE j.run_id IN (SELECT run_id FROM run_ids) AND j.stage_name = 'judge_generation'), judge_retrieval AS (SELECT COALESCE(SUM(j.total_tokens), 0)::numeric AS total_tokens, COALESCE(SUM(j.total_cost_usd), 0)::numeric(20,8) AS total_cost_usd FROM judge_llm_calls j WHERE j.run_id IN (SELECT run_id FROM run_ids) AND j.stage_name = 'judge_retrieval'), judge_total AS (SELECT COALESCE(SUM(j.total_tokens), 0)::numeric AS total_tokens, COALESCE(SUM(j.total_cost_usd), 0)::numeric(20,8) AS total_cost_usd FROM judge_llm_calls j WHERE j.run_id IN (SELECT run_id FROM run_ids)), run_total AS (SELECT (SELECT total_tokens FROM runtime) + (SELECT total_tokens FROM judge_total) AS total_tokens, (SELECT total_cost_usd FROM runtime) + (SELECT total_cost_usd FROM judge_total) AS total_cost_usd) SELECT scope, total_tokens, total_cost_usd FROM (VALUES (1, 'runtime', (SELECT total_tokens FROM runtime), (SELECT total_cost_usd FROM runtime)), (2, 'judge_generation', (SELECT total_tokens FROM judge_generation), (SELECT total_cost_usd FROM judge_generation)), (3, 'judge_retrieval', (SELECT total_tokens FROM judge_retrieval), (SELECT total_cost_usd FROM judge_retrieval)), (4, 'judge_total', (SELECT total_tokens FROM judge_total), (SELECT total_cost_usd FROM judge_total)), (5, 'run_total', (SELECT total_tokens FROM run_total), (SELECT total_cost_usd FROM run_total))) AS t(ord, scope, total_tokens, total_cost_usd) ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "scope"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_tokens"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total_cost_usd"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              },
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "Runs in Time Range",
+      "type": "table",
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH scoped_runs AS (SELECT rrs.run_id, min(rrs.source_received_at) AS started_at, count(*) AS request_count, max(rrs.retriever_kind) AS retriever_kind, max(rc.retriever_config->'strategy'->>'kind') AS sparse_strategy_kind, max(rc.retriever_config->>'chunking_strategy') AS chunking_strategy, max(rc.reranker_kind) AS reranker_kind, max(rc.reranker_config->'cross_encoder'->>'model_name') AS reranker_model, max(rc.generation_model) AS runtime_model, max(rrs.judge_generation_model) AS judge_model, CASE WHEN count(*) FILTER (WHERE esp.status::text = 'failed') > 0 THEN 'failed' WHEN count(*) FILTER (WHERE esp.status::text = 'completed') = count(*) THEN 'completed' ELSE 'running' END AS status FROM request_run_summaries rrs JOIN request_captures rc ON rc.request_id = rrs.request_id LEFT JOIN eval_processing_state esp ON esp.request_id = rrs.request_id WHERE $__timeFilter(rrs.source_received_at) GROUP BY rrs.run_id) SELECT run_id, started_at, request_count, chunking_strategy AS chunking, CASE WHEN retriever_kind = 'Hybrid' AND sparse_strategy_kind = 'bag_of_words' THEN 'Hybrid - bow' WHEN retriever_kind = 'Hybrid' AND sparse_strategy_kind = 'bm25_like' THEN 'Hybrid - bm25' ELSE retriever_kind END AS retriever, reranker_kind AS reranker, reranker_model, runtime_model, judge_model, status FROM scoped_runs ORDER BY started_at DESC, run_id DESC",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 14 },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "run_id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 320
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "started_at"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "request_count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 100
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "chunking"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "retriever"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 160
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reranker"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "reranker_model"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "runtime_model"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "judge_model"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 120
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

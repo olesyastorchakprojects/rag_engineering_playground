@@ -1,0 +1,11 @@
+{
+  "id": "default",
+  "title": "Distributed Systems Basics",
+  "description": "Short sanity-check set for RAG and eval runs.",
+  "question_count": 5,
+  "domain": "distributed_systems",
+  "source_corpus": "understanding_distributed_systems",
+  "version": "v1",
+  "has_golden_retrievals": true,
+  "has_golden_answers": false
+}

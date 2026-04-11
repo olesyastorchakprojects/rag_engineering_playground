@@ -1,0 +1,53 @@
+name: rag
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: rag-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      - axum_net
+
+  ollama:
+    image: ollama/ollama
+    container_name: rag-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - axum_net
+
+  mxbai-reranker:
+    image: observability-mxbai-reranker:latest
+    container_name: mxbai-reranker
+    restart: unless-stopped
+    environment:
+      MODEL_ID: mixedbread-ai/mxbai-rerank-base-v2
+      MODEL_CACHE_DIR: /data/hf
+      PORT: "8000"
+    ports:
+      - "8081:8000"
+    volumes:
+      - mxbai-reranker-data:/data
+    networks:
+      - axum_net
+
+networks:
+  axum_net:
+    name: axum_net
+    external: true
+
+volumes:
+  qdrant-data:
+    external: true
+    name: sys_design_agent_qdrant_data
+  ollama-data:
+    external: true
+    name: ollama
+  mxbai-reranker-data:

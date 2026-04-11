@@ -1,0 +1,35 @@
+{
+  "run_id": "e8ae90dd-a3ba-4be6-a12d-24061fc0f24c",
+  "run_type": "experiment",
+  "status": "completed",
+  "started_at": "2026-04-02T09:42:06.642292+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "../../Evidence/parsing/understanding_distributed_systems/chunks/fixed_chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434/v1",
+  "judge_model": "qwen2.5:1.5b-instruct-q4_K_M",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 5,
+  "run_scope_request_ids": [
+    "f573c5d6-254b-4a9f-9e29-90f6f93d8e6d",
+    "04fbae96-499c-4d52-8c97-8d8b9b386126",
+    "7ea8bc9f-b479-4789-bb73-c2a301fd9eeb",
+    "b791207d-a630-4b2b-b224-318755c48d85",
+    "657356fa-7a8b-4cb0-a7ad-8b8966124e38"
+  ],
+  "reranker_kind": "CrossEncoder",
+  "completed_at": "2026-04-02T10:05:00.917878+00:00"
+}

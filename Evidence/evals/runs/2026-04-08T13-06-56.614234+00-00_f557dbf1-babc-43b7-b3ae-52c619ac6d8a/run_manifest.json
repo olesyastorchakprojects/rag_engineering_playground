@@ -1,0 +1,30 @@
+{
+  "run_id": "f557dbf1-babc-43b7-b3ae-52c619ac6d8a",
+  "run_type": "experiment",
+  "status": "failed",
+  "started_at": "2026-04-08T13:06:56.614234+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "Evidence/parsing/understanding_distributed_systems/chunks/fixed_chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_provider": "together",
+  "judge_base_url": "https://api.together.xyz/v1",
+  "judge_model": "openai/gpt-oss-20b",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 0,
+  "run_scope_request_ids": [],
+  "completed_at": "2026-04-08T13:07:02.981583+00:00",
+  "last_error": "connection is bad: no error details available"
+}

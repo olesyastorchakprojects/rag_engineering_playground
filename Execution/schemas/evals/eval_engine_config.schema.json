@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Execution/schemas/evals/eval_engine_config.schema.json",
+  "title": "Eval Engine Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["judge"],
+  "properties": {
+    "judge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "model_name",
+        "tokenizer_source",
+        "input_cost_per_million_tokens",
+        "output_cost_per_million_tokens"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["ollama", "together"]
+        },
+        "model_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tokenizer_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_cost_per_million_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "output_cost_per_million_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ollama": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["timeout_sec"],
+          "properties": {
+            "timeout_sec": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "together": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["timeout_sec"],
+          "properties": {
+            "timeout_sec": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "judge": {
+            "type": "object",
+            "properties": {
+              "provider": { "const": "ollama" }
+            },
+            "required": ["provider"]
+          }
+        },
+        "required": ["judge"]
+      },
+      "then": {
+        "properties": {
+          "judge": {
+            "required": [
+              "provider",
+              "model_name",
+              "tokenizer_source",
+              "input_cost_per_million_tokens",
+              "output_cost_per_million_tokens",
+              "ollama"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "judge": {
+            "type": "object",
+            "properties": {
+              "provider": { "const": "together" }
+            },
+            "required": ["provider"]
+          }
+        },
+        "required": ["judge"]
+      },
+      "then": {
+        "properties": {
+          "judge": {
+            "required": [
+              "provider",
+              "model_name",
+              "tokenizer_source",
+              "input_cost_per_million_tokens",
+              "output_cost_per_million_tokens",
+              "together"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

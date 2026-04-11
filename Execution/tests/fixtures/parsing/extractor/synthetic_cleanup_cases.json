@@ -1,0 +1,245 @@
+[
+  {
+    "name": "footnote_refs_removed",
+    "raw_text": "Availability is often described with nines[3], and can be measured as uptime ratio.",
+    "expected_clean_text": "Availability is often described with nines, and can be measured as uptime ratio."
+  },
+  {
+    "name": "table_content_is_preserved",
+    "raw_text": "Availability % Downtime per day 90% (one nine) 2.40 hours 99% (two nines) 14.40 minutes 99.9% (three nines) 1.44 minutes",
+    "expected_clean_text": "Availability % Downtime per day 90% (one nine) 2.40 hours 99% (two nines) 14.40 minutes 99.9% (three nines) 1.44 minutes"
+  },
+  {
+    "name": "code_snippet_is_preserved",
+    "raw_text": "def get_resource(id): resource = self._cache.get(id) if resource is not None: return resource",
+    "expected_clean_text": "def get_resource(id): resource = self._cache.get(id) if resource is not None: return resource"
+  },
+  {
+    "name": "running_header_removed_top_band",
+    "raw_text": "CHAPTER 12. TRANSACTIONS 111\nTransactions require atomicity and isolation.",
+    "expected_clean_text": "Transactions require atomicity and isolation."
+  },
+  {
+    "name": "book_title_header_removed_case_insensitive",
+    "raw_text": "Understanding Distributed Systems by Roberto Vitillo\nConsensus requires agreement among replicas.",
+    "expected_clean_text": "Consensus requires agreement among replicas."
+  },
+  {
+    "name": "book_title_header_removed_not_at_top",
+    "raw_text": "Replication improves availability.\nUNDERSTANDING DISTRIBUTED SYSTEMS\nConsensus still requires coordination.",
+    "expected_clean_text": "Replication improves availability. Consensus still requires coordination."
+  },
+  {
+    "name": "multiline_caption_removed_keep_following_paragraph_3",
+    "raw_text": "Figure 11.4: The same object is updated simultaneously by different clients at different replicas,\nleading to conflicts.\nThis solution has better availability and performance than the one using total order broadcast, since consensus is only required to reconcile conflicts and can happen off the critical path.\nBut getting the reconciliation logic right isn’t trivial. So is there a way for replicas to solve conflicts without using consensus at all?",
+    "expected_clean_text": "This solution has better availability and performance than the one using total order broadcast, since consensus is only required to reconcile conflicts and can happen off the critical path. But getting the reconciliation logic right isn’t trivial. So is there a way for replicas to solve conflicts without using consensus at all?"
+  },
+  {
+    "name": "multiline_caption_removed_keep_following_paragraph_4",
+    "raw_text": "Figure 16.4: With consistent hashing, partition identifiers and keys are randomly distributed around a circle,\nand each key is assigned to the next partition that appears on the circle in clockwise order.\nto it on the circle need to be reassigned, as shown in Figure 16.5.\nThe main drawback of hash partitioning compared to range partitioning is that the sort order over the partitions is lost, which is required to efficiently scan all the data in order.\nHowever, the data within an individual partition can still be sorted based on a secondary key.",
+    "expected_clean_text": "to it on the circle need to be reassigned, as shown in Figure 16.5. The main drawback of hash partitioning compared to range partitioning is that the sort order over the partitions is lost, which is required to efficiently scan all the data in order. However, the data within an individual partition can still be sorted based on a secondary key."
+  },
+  {
+    "name": "figure_only_page_becomes_empty_2",
+    "raw_text": "Figure 16.5: After partition P4 is added, the key ’for’ is reassigned to P4,\nbut the assignment of the other keys doesn’t change.",
+    "expected_clean_text": ""
+  },
+  {
+    "name": "running_header_not_removed_outside_top_band",
+    "page_height": 1000.0,
+    "words": [
+      { "text": "Body", "top": 120.0, "x0": 50.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "text", "top": 120.0, "x0": 82.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "introduces", "top": 120.0, "x0": 112.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "the", "top": 120.0, "x0": 182.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "section.", "top": 120.0, "x0": 206.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "CHAPTER", "top": 400.0, "x0": 50.0, "size": 10.0, "bottom": 410.0 },
+      { "text": "12.", "top": 400.0, "x0": 104.0, "size": 10.0, "bottom": 410.0 },
+      { "text": "TRANSACTIONS", "top": 400.0, "x0": 126.0, "size": 10.0, "bottom": 410.0 },
+      { "text": "111", "top": 400.0, "x0": 218.0, "size": 10.0, "bottom": 410.0 },
+      { "text": "Additional", "top": 430.0, "x0": 50.0, "size": 10.0, "bottom": 440.0 },
+      { "text": "body", "top": 430.0, "x0": 118.0, "size": 10.0, "bottom": 440.0 },
+      { "text": "text", "top": 430.0, "x0": 150.0, "size": 10.0, "bottom": 440.0 },
+      { "text": "continues", "top": 430.0, "x0": 180.0, "size": 10.0, "bottom": 440.0 },
+      { "text": "here.", "top": 430.0, "x0": 244.0, "size": 10.0, "bottom": 440.0 }
+    ],
+    "expected_clean_text": "Body text introduces the section. CHAPTER 12. TRANSACTIONS 111 Additional body text continues here."
+  },
+  {
+    "name": "terms_dictionary_split_variant_is_preserved",
+    "raw_text": "The service exposes an Open API endpoint for clients.",
+    "expected_clean_text": "The service exposes an Open API endpoint for clients."
+  },
+  {
+    "name": "inline_see_figure_reference_removed",
+    "raw_text": "When a replica receives a read request for an object, it first contacts the tail (see Figure 10.7) to request the latest committed version.",
+    "expected_clean_text": "When a replica receives a read request for an object, it first contacts the tail to request the latest committed version."
+  },
+  {
+    "name": "inline_see_figure_reference_without_parentheses_is_preserved",
+    "raw_text": "When a replica receives a read request for an object, it first contacts the tail; see Figure 10.7 before requesting the latest committed version.",
+    "expected_clean_text": "When a replica receives a read request for an object, it first contacts the tail; see Figure 10.7 before requesting the latest committed version."
+  },
+  {
+    "name": "footnote_block_below_separator_removed_with_explicit_geometry",
+    "page_num": 54,
+    "page_height": 1000.0,
+    "words": [
+      { "text": "Main", "top": 120.0, "x0": 50.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "text", "top": 120.0, "x0": 84.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "continues.", "top": 120.0, "x0": 116.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "1", "top": 835.0, "x0": 50.0, "size": 7.0, "bottom": 842.0 },
+      { "text": "Footnote", "top": 835.0, "x0": 66.0, "size": 7.0, "bottom": 842.0 },
+      { "text": "text.", "top": 835.0, "x0": 118.0, "size": 7.0, "bottom": 842.0 }
+    ],
+    "page_lines": [
+      { "top": 820.0, "x0": 40.0, "x1": 170.0, "linewidth": 0.5 }
+    ],
+    "expected_clean_text": "Main text continues."
+  },
+  {
+    "name": "bottom_separator_not_triggered_for_body_sized_text",
+    "page_num": 54,
+    "page_height": 1000.0,
+    "words": [
+      { "text": "Main", "top": 120.0, "x0": 50.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "text", "top": 120.0, "x0": 84.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "continues.", "top": 120.0, "x0": 116.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "1", "top": 835.0, "x0": 50.0, "size": 10.0, "bottom": 845.0 },
+      { "text": "Footer", "top": 835.0, "x0": 66.0, "size": 10.0, "bottom": 845.0 },
+      { "text": "note", "top": 835.0, "x0": 110.0, "size": 10.0, "bottom": 845.0 },
+      { "text": "remains", "top": 835.0, "x0": 140.0, "size": 10.0, "bottom": 845.0 },
+      { "text": "visible.", "top": 835.0, "x0": 194.0, "size": 10.0, "bottom": 845.0 }
+    ],
+    "page_lines": [
+      { "top": 820.0, "x0": 40.0, "x1": 170.0, "linewidth": 0.5 }
+    ],
+    "expected_clean_text": "Main text continues. 1 Footer note remains visible."
+  },
+  {
+    "name": "bottom_separator_uses_lowest_matching_hrule",
+    "page_num": 54,
+    "page_height": 1000.0,
+    "words": [
+      { "text": "Main", "top": 120.0, "x0": 50.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "text", "top": 120.0, "x0": 84.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "continues.", "top": 120.0, "x0": 116.0, "size": 10.0, "bottom": 130.0 },
+      { "text": "1", "top": 835.0, "x0": 50.0, "size": 7.0, "bottom": 842.0 },
+      { "text": "Footnote", "top": 835.0, "x0": 66.0, "size": 7.0, "bottom": 842.0 },
+      { "text": "text.", "top": 835.0, "x0": 118.0, "size": 7.0, "bottom": 842.0 }
+    ],
+    "page_lines": [
+      { "top": 760.0, "x0": 40.0, "x1": 170.0, "linewidth": 0.5 },
+      { "top": 820.0, "x0": 40.0, "x1": 170.0, "linewidth": 0.5 }
+    ],
+    "expected_clean_text": "Main text continues."
+  },
+  {
+    "name": "caption_stops_on_large_gap",
+    "page_num": 89,
+    "page_height": 1000.0,
+    "words": [
+      { "text": "Figure", "top": 80.0, "x0": 50.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "9.2:", "top": 80.0, "x0": 92.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "Elections", "top": 80.0, "x0": 124.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "require", "top": 80.0, "x0": 186.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "a", "top": 80.0, "x0": 234.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "quorum", "top": 80.0, "x0": 248.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "to", "top": 80.0, "x0": 292.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "make", "top": 80.0, "x0": 308.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "progress.", "top": 80.0, "x0": 338.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "The", "top": 94.0, "x0": 50.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "quorum", "top": 94.0, "x0": 74.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "must", "top": 94.0, "x0": 118.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "overlap", "top": 94.0, "x0": 152.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "with", "top": 94.0, "x0": 202.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "any", "top": 94.0, "x0": 232.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "future", "top": 94.0, "x0": 254.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "quorum.", "top": 94.0, "x0": 296.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "A", "top": 108.0, "x0": 50.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "leader", "top": 108.0, "x0": 64.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "can", "top": 108.0, "x0": 106.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "be", "top": 108.0, "x0": 128.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "elected", "top": 108.0, "x0": 144.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "only", "top": 108.0, "x0": 194.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "after", "top": 108.0, "x0": 224.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "a", "top": 108.0, "x0": 258.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "timeout", "top": 108.0, "x0": 272.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "expires.", "top": 108.0, "x0": 322.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "This", "top": 140.0, "x0": 50.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "paragraph", "top": 140.0, "x0": 80.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "should", "top": 140.0, "x0": 146.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "remain", "top": 140.0, "x0": 190.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "after", "top": 140.0, "x0": 240.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "the", "top": 140.0, "x0": 274.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "caption.", "top": 140.0, "x0": 298.0, "size": 10.0, "bottom": 150.0 }
+    ],
+    "expected_clean_text": "This paragraph should remain after the caption."
+  },
+  {
+    "name": "page_120_two_figures_then_paragraph",
+    "page_num": 120,
+    "page_height": 1000.0,
+    "words": [
+      { "text": "CHAPTER", "top": 40.0, "x0": 50.0, "size": 10.0, "bottom": 50.0 },
+      { "text": "11.", "top": 40.0, "x0": 106.0, "size": 10.0, "bottom": 50.0 },
+      { "text": "COORDINATION", "top": 40.0, "x0": 128.0, "size": 10.0, "bottom": 50.0 },
+      { "text": "AVOIDANCE", "top": 40.0, "x0": 222.0, "size": 10.0, "bottom": 50.0 },
+      { "text": "102", "top": 40.0, "x0": 290.0, "size": 10.0, "bottom": 50.0 },
+      { "text": "Figure", "top": 80.0, "x0": 50.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "11.5:", "top": 80.0, "x0": 94.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "Last-writer", "top": 80.0, "x0": 132.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "wins", "top": 80.0, "x0": 204.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "register", "top": 80.0, "x0": 236.0, "size": 10.0, "bottom": 90.0 },
+      { "text": "operation", "top": 94.0, "x0": 50.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "returns", "top": 94.0, "x0": 110.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "the", "top": 94.0, "x0": 160.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "union", "top": 94.0, "x0": 184.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "of", "top": 94.0, "x0": 222.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "all", "top": 94.0, "x0": 238.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "concurrent", "top": 94.0, "x0": 260.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "updates.", "top": 94.0, "x0": 326.0, "size": 10.0, "bottom": 104.0 },
+      { "text": "Figure", "top": 108.0, "x0": 50.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "11.6:", "top": 108.0, "x0": 94.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "Multi-value", "top": 108.0, "x0": 132.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "register", "top": 108.0, "x0": 206.0, "size": 10.0, "bottom": 118.0 },
+      { "text": "The", "top": 140.0, "x0": 50.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "beauty", "top": 140.0, "x0": 74.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "of", "top": 140.0, "x0": 118.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "CRDTs", "top": 140.0, "x0": 134.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "is", "top": 140.0, "x0": 174.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "that", "top": 140.0, "x0": 190.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "they", "top": 140.0, "x0": 220.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "compose.", "top": 140.0, "x0": 250.0, "size": 10.0, "bottom": 150.0 },
+      { "text": "So,", "top": 154.0, "x0": 50.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "for", "top": 154.0, "x0": 74.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "example,", "top": 154.0, "x0": 102.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "you", "top": 154.0, "x0": 160.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "can", "top": 154.0, "x0": 182.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "build", "top": 154.0, "x0": 204.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "a", "top": 154.0, "x0": 238.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "convergent", "top": 154.0, "x0": 252.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "key-value", "top": 154.0, "x0": 322.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "store", "top": 154.0, "x0": 386.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "by", "top": 154.0, "x0": 420.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "using", "top": 154.0, "x0": 436.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "a", "top": 154.0, "x0": 470.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "dictionary", "top": 154.0, "x0": 484.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "of", "top": 154.0, "x0": 548.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "LWW", "top": 154.0, "x0": 564.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "or", "top": 154.0, "x0": 590.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "MV", "top": 154.0, "x0": 606.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "registers.", "top": 154.0, "x0": 626.0, "size": 10.0, "bottom": 164.0 },
+      { "text": "This", "top": 168.0, "x0": 50.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "is", "top": 168.0, "x0": 80.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "the", "top": 168.0, "x0": 96.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "approach", "top": 168.0, "x0": 120.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "followed", "top": 168.0, "x0": 182.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "by", "top": 168.0, "x0": 238.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "Dynamo-style", "top": 168.0, "x0": 254.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "data", "top": 168.0, "x0": 336.0, "size": 10.0, "bottom": 178.0 },
+      { "text": "stores.", "top": 168.0, "x0": 366.0, "size": 10.0, "bottom": 178.0 }
+    ],
+    "expected_clean_text": "The beauty of CRDTs is that they compose. So, for example, you can build a convergent key-value store by using a dictionary of LWW or MV registers. This is the approach followed by Dynamo-style data stores."
+  }
+]

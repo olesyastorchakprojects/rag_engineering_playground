@@ -1,0 +1,11 @@
+{
+  "id": "20",
+  "title": "Distributed Systems 20 Questions",
+  "description": "Expanded evaluation set for RAG and retrieval experiments.",
+  "question_count": 20,
+  "domain": "distributed_systems",
+  "source_corpus": "understanding_distributed_systems",
+  "version": "v1",
+  "has_golden_retrievals": true,
+  "has_golden_answers": false
+}

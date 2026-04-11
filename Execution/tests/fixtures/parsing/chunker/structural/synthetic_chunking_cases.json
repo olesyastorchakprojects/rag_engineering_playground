@@ -1,0 +1,915 @@
+[
+  {
+    "name": "chapter_intro_then_sections",
+    "metadata": {
+      "parts": [
+        {
+          "part": "I",
+          "title": "Communication",
+          "ranges": {
+            "pdf": {
+              "start": 1,
+              "end": 4
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 1,
+          "title": "Failure Detection",
+          "part": "I",
+          "ranges": {
+            "pdf": {
+              "start": 1,
+              "end": 4
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "1.1",
+          "title": "Timeout",
+          "chapter": 1,
+          "part": "I",
+          "ranges": {
+            "pdf": {
+              "start": 2,
+              "end": 3
+            }
+          }
+        },
+        {
+          "section": "1.2",
+          "title": "Heartbeats",
+          "chapter": 1,
+          "part": "I",
+          "ranges": {
+            "pdf": {
+              "start": 4,
+              "end": 4
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 1,
+        "clean_text": "Part I Communication Chapter 1 Failure Detection Failure detection decides when a peer should be suspected before any specific mechanism is introduced."
+      },
+      {
+        "page": 2,
+        "clean_text": "1.1 Timeout A timeout expires when no response arrives before the waiting window closes."
+      },
+      {
+        "page": 3,
+        "clean_text": "Additional timeout considerations explain how to size the waiting window and reduce false positives."
+      },
+      {
+        "page": 4,
+        "clean_text": "1.2 Heartbeats Heartbeats are periodic probes that keep liveness information fresh."
+      }
+    ],
+    "expected_chunk_count": 4,
+    "expected_paths": [
+      [
+        "Communication"
+      ],
+      [
+        "Communication",
+        "Failure Detection"
+      ],
+      [
+        "Communication",
+        "Failure Detection",
+        "Timeout"
+      ],
+      [
+        "Communication",
+        "Failure Detection",
+        "Heartbeats"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Communication",
+          "Failure Detection"
+        ],
+        "first_anchor": "Failure detection decides when a peer should be suspected",
+        "last_anchor": "specific mechanism is introduced"
+      },
+      {
+        "section_path": [
+          "Communication",
+          "Failure Detection",
+          "Timeout"
+        ],
+        "first_anchor": "A timeout expires when no response arrives",
+        "last_anchor": "reduce false positives"
+      },
+      {
+        "section_path": [
+          "Communication",
+          "Failure Detection",
+          "Heartbeats"
+        ],
+        "first_anchor": "Heartbeats are periodic probes",
+        "last_anchor": "information fresh"
+      }
+    ]
+  },
+  {
+    "name": "subsections_emit_leaf_chunks_only",
+    "metadata": {
+      "parts": [
+        {
+          "part": "II",
+          "title": "Coordination",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 13
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 2,
+          "title": "Replication",
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 13
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "2.1",
+          "title": "Consistency Models",
+          "chapter": 2,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 12
+            }
+          }
+        },
+        {
+          "section": "2.2",
+          "title": "Quorums",
+          "chapter": 2,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 13,
+              "end": 13
+            }
+          }
+        }
+      ],
+      "subsections": [
+        {
+          "subsection": "2.1.1",
+          "section": "2.1",
+          "title": "Strong consistency",
+          "chapter": 2,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 10
+            }
+          }
+        },
+        {
+          "subsection": "2.1.2",
+          "section": "2.1",
+          "title": "Eventual consistency",
+          "chapter": 2,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 11,
+              "end": 12
+            }
+          }
+        }
+      ]
+    },
+    "pages": [
+      {
+        "page": 10,
+        "clean_text": "Part II Coordination Chapter 2 Replication 2.1 Consistency Models 2.1.1 Strong consistency Strong consistency makes every read observe the latest committed write."
+      },
+      {
+        "page": 11,
+        "clean_text": "2.1.2 Eventual consistency Eventual consistency tolerates temporary divergence while replicas converge in the background."
+      },
+      {
+        "page": 12,
+        "clean_text": "Eventually replicas exchange state until they converge on the same value."
+      },
+      {
+        "page": 13,
+        "clean_text": "2.2 Quorums Quorums require overlapping read and write sets."
+      }
+    ],
+    "expected_chunk_count": 6,
+    "expected_paths": [
+      [
+        "Coordination"
+      ],
+      [
+        "Coordination",
+        "Replication"
+      ],
+      [
+        "Coordination",
+        "Replication",
+        "Consistency Models"
+      ],
+      [
+        "Coordination",
+        "Replication",
+        "Consistency Models",
+        "Strong Consistency"
+      ],
+      [
+        "Coordination",
+        "Replication",
+        "Consistency Models",
+        "Eventual Consistency"
+      ],
+      [
+        "Coordination",
+        "Replication",
+        "Quorums"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Coordination",
+          "Replication",
+          "Consistency Models",
+          "Strong Consistency"
+        ],
+        "first_anchor": "Strong consistency makes every read observe",
+        "last_anchor": "latest committed write"
+      },
+      {
+        "section_path": [
+          "Coordination",
+          "Replication",
+          "Consistency Models",
+          "Eventual Consistency"
+        ],
+        "first_anchor": "Eventual consistency tolerates temporary divergence",
+        "last_anchor": "same value"
+      },
+      {
+        "section_path": [
+          "Coordination",
+          "Replication",
+          "Quorums"
+        ],
+        "first_anchor": "Quorums require overlapping read and write sets",
+        "last_anchor": "write sets"
+      }
+    ]
+  },
+  {
+    "name": "middle_residual_attaches_to_previous_child",
+    "metadata": {
+      "parts": [
+        {
+          "part": "II",
+          "title": "Coordination",
+          "ranges": {
+            "pdf": {
+              "start": 20,
+              "end": 23
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 9,
+          "title": "Leader Election",
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 20,
+              "end": 23
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "9.1",
+          "title": "Raft leader election",
+          "chapter": 9,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 21,
+              "end": 22
+            }
+          }
+        },
+        {
+          "section": "9.2",
+          "title": "Practical considerations",
+          "chapter": 9,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 23,
+              "end": 23
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 20,
+        "clean_text": "Part II Coordination Chapter 9 Leader Election Leader election selects a single coordinator before the concrete algorithm starts."
+      },
+      {
+        "page": 21,
+        "clean_text": "9.1 Raft leader election Raft elects a leader by using randomized timeouts and majority voting."
+      },
+      {
+        "page": 22,
+        "clean_text": "If the vote is split, a new election starts after another timeout."
+      },
+      {
+        "page": 23,
+        "clean_text": "9.2 Practical considerations Production systems should persist the current term and vote before replying."
+      }
+    ],
+    "expected_chunk_count": 4,
+    "expected_paths": [
+      [
+        "Coordination"
+      ],
+      [
+        "Coordination",
+        "Leader Election"
+      ],
+      [
+        "Coordination",
+        "Leader Election",
+        "Raft Leader Election"
+      ],
+      [
+        "Coordination",
+        "Leader Election",
+        "Practical Considerations"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Coordination",
+          "Leader Election"
+        ],
+        "first_anchor": "Leader election selects a single coordinator",
+        "last_anchor": "concrete algorithm starts"
+      },
+      {
+        "section_path": [
+          "Coordination",
+          "Leader Election",
+          "Raft Leader Election"
+        ],
+        "first_anchor": "Raft elects a leader by using randomized timeouts",
+        "last_anchor": "another timeout"
+      },
+      {
+        "section_path": [
+          "Coordination",
+          "Leader Election",
+          "Practical Considerations"
+        ],
+        "first_anchor": "Production systems should persist the current term",
+        "last_anchor": "before replying"
+      }
+    ]
+  },
+  {
+    "name": "trailing_summary_stays_with_parent",
+    "metadata": {
+      "parts": [
+        {
+          "part": "III",
+          "title": "Scalability",
+          "ranges": {
+            "pdf": {
+              "start": 30,
+              "end": 33
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 30,
+          "title": "Monitoring",
+          "part": "III",
+          "ranges": {
+            "pdf": {
+              "start": 30,
+              "end": 33
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "30.1",
+          "title": "Metrics",
+          "chapter": 30,
+          "part": "III",
+          "ranges": {
+            "pdf": {
+              "start": 31,
+              "end": 31
+            }
+          }
+        },
+        {
+          "section": "30.2",
+          "title": "Alerts",
+          "chapter": 30,
+          "part": "III",
+          "ranges": {
+            "pdf": {
+              "start": 32,
+              "end": 32
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 30,
+        "clean_text": "Part III Scalability Chapter 30 Monitoring Monitoring begins with a clear goal for what healthy behavior should look like."
+      },
+      {
+        "page": 31,
+        "clean_text": "30.1 Metrics Metrics track latency, throughput, and saturation over time."
+      },
+      {
+        "page": 32,
+        "clean_text": "30.2 Alerts Alerts route urgent signals to the right responders."
+      },
+      {
+        "page": 33,
+        "clean_text": "A monitoring strategy should be revisited regularly as the system and the organization evolve."
+      }
+    ],
+    "expected_chunk_count": 5,
+    "expected_paths": [
+      [
+        "Scalability"
+      ],
+      [
+        "Scalability",
+        "Monitoring"
+      ],
+      [
+        "Scalability",
+        "Monitoring",
+        "Metrics"
+      ],
+      [
+        "Scalability",
+        "Monitoring",
+        "Alerts"
+      ],
+      [
+        "Scalability",
+        "Monitoring"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Scalability",
+          "Monitoring",
+          "Metrics"
+        ],
+        "first_anchor": "Metrics track latency, throughput, and saturation",
+        "last_anchor": "over time"
+      },
+      {
+        "section_path": [
+          "Scalability",
+          "Monitoring",
+          "Alerts"
+        ],
+        "first_anchor": "Alerts route urgent signals",
+        "last_anchor": "right responders"
+      }
+    ]
+  },
+  {
+    "name": "introduction_chapter_without_part",
+    "metadata": {
+      "parts": [],
+      "chapters": [
+        {
+          "chapter": 1,
+          "title": "Introduction",
+          "part": null,
+          "ranges": {
+            "pdf": {
+              "start": 1,
+              "end": 3
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "1.1",
+          "title": "Communication",
+          "chapter": 1,
+          "part": null,
+          "ranges": {
+            "pdf": {
+              "start": 2,
+              "end": 3
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 1,
+        "clean_text": "Chapter 1 Introduction Distributed systems begin with a set of basic communication assumptions."
+      },
+      {
+        "page": 2,
+        "clean_text": "1.1 Communication Nodes exchange messages to coordinate work."
+      },
+      {
+        "page": 3,
+        "clean_text": "Reliable communication reduces ambiguity when failures occur."
+      }
+    ],
+    "expected_chunk_count": 2,
+    "expected_paths": [
+      [
+        "Introduction",
+        "Introduction"
+      ],
+      [
+        "Introduction",
+        "Introduction",
+        "Communication"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Introduction",
+          "Introduction"
+        ],
+        "first_anchor": "Distributed systems begin with a set of basic communication assumptions",
+        "last_anchor": "communication assumptions"
+      },
+      {
+        "section_path": [
+          "Introduction",
+          "Introduction",
+          "Communication"
+        ],
+        "first_anchor": "Nodes exchange messages to coordinate work",
+        "last_anchor": "failures occur"
+      }
+    ]
+  },
+  {
+    "name": "same_page_sibling_sections",
+    "metadata": {
+      "parts": [
+        {
+          "part": "I",
+          "title": "Communication",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 11
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 3,
+          "title": "Reliable Links",
+          "part": "I",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 11
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "3.1",
+          "title": "Reliability",
+          "chapter": 3,
+          "part": "I",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 10
+            }
+          }
+        },
+        {
+          "section": "3.2",
+          "title": "Ordering",
+          "chapter": 3,
+          "part": "I",
+          "ranges": {
+            "pdf": {
+              "start": 10,
+              "end": 11
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 10,
+        "clean_text": "Part I Communication Chapter 3 Reliable Links 3.1 Reliability Reliable delivery ensures that messages eventually arrive. 3.2 Ordering Ordered delivery preserves causality between dependent messages."
+      },
+      {
+        "page": 11,
+        "clean_text": "Ordering guarantees help deterministic consumers process events consistently."
+      }
+    ],
+    "expected_chunk_count": 4,
+    "expected_paths": [
+      [
+        "Communication"
+      ],
+      [
+        "Communication",
+        "Reliable Links"
+      ],
+      [
+        "Communication",
+        "Reliable Links",
+        "Reliability"
+      ],
+      [
+        "Communication",
+        "Reliable Links",
+        "Ordering"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Communication",
+          "Reliable Links",
+          "Reliability"
+        ],
+        "first_anchor": "Reliable delivery ensures that messages eventually arrive",
+        "last_anchor": "eventually arrive"
+      },
+      {
+        "section_path": [
+          "Communication",
+          "Reliable Links",
+          "Ordering"
+        ],
+        "first_anchor": "Ordered delivery preserves causality",
+        "last_anchor": "process events consistently"
+      }
+    ]
+  },
+  {
+    "name": "empty_page_inside_section_range",
+    "metadata": {
+      "parts": [
+        {
+          "part": "II",
+          "title": "Coordination",
+          "ranges": {
+            "pdf": {
+              "start": 20,
+              "end": 22
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 4,
+          "title": "Transactions",
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 20,
+              "end": 22
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "4.1",
+          "title": "Atomicity",
+          "chapter": 4,
+          "part": "II",
+          "ranges": {
+            "pdf": {
+              "start": 20,
+              "end": 22
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 20,
+        "clean_text": "Part II Coordination Chapter 4 Transactions 4.1 Atomicity Atomicity ensures that either all state transitions happen or none of them do."
+      },
+      {
+        "page": 21,
+        "clean_text": ""
+      },
+      {
+        "page": 22,
+        "clean_text": "Atomic commits avoid exposing partial effects to observers."
+      }
+    ],
+    "expected_chunk_count": 3,
+    "expected_paths": [
+      [
+        "Coordination"
+      ],
+      [
+        "Coordination",
+        "Transactions"
+      ],
+      [
+        "Coordination",
+        "Transactions",
+        "Atomicity"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Coordination",
+          "Transactions",
+          "Atomicity"
+        ],
+        "first_anchor": "Atomicity ensures that either all state transitions happen",
+        "last_anchor": "partial effects to observers"
+      }
+    ]
+  },
+  {
+    "name": "part_trailing_residual_after_last_chapter",
+    "metadata": {
+      "parts": [
+        {
+          "part": "V",
+          "title": "Maintainability",
+          "ranges": {
+            "pdf": {
+              "start": 30,
+              "end": 33
+            }
+          }
+        }
+      ],
+      "chapters": [
+        {
+          "chapter": 31,
+          "title": "Observability",
+          "part": "V",
+          "ranges": {
+            "pdf": {
+              "start": 30,
+              "end": 32
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "section": "31.1",
+          "title": "Logs",
+          "chapter": 31,
+          "part": "V",
+          "ranges": {
+            "pdf": {
+              "start": 31,
+              "end": 31
+            }
+          }
+        }
+      ],
+      "subsections": []
+    },
+    "pages": [
+      {
+        "page": 30,
+        "clean_text": "Part V Maintainability Chapter 31 Observability Observability starts by deciding which internal signals matter most."
+      },
+      {
+        "page": 31,
+        "clean_text": "31.1 Logs Logs capture discrete events that explain what the system has done."
+      },
+      {
+        "page": 32,
+        "clean_text": "Observability also depends on disciplined analysis and feedback loops."
+      },
+      {
+        "page": 33,
+        "clean_text": "Part summaries should connect operational lessons back to design decisions."
+      }
+    ],
+    "expected_chunk_count": 5,
+    "expected_paths": [
+      [
+        "Maintainability"
+      ],
+      [
+        "Maintainability",
+        "Observability"
+      ],
+      [
+        "Maintainability",
+        "Observability",
+        "Logs"
+      ],
+      [
+        "Maintainability",
+        "Observability"
+      ],
+      [
+        "Maintainability"
+      ]
+    ],
+    "checks": [
+      {
+        "section_path": [
+          "Maintainability",
+          "Observability"
+        ],
+        "first_anchor": "Observability starts by deciding which internal signals matter most",
+        "last_anchor": "matter most"
+      },
+      {
+        "section_path": [
+          "Maintainability",
+          "Observability",
+          "Logs"
+        ],
+        "first_anchor": "Logs capture discrete events",
+        "last_anchor": "system has done"
+      },
+      {
+        "section_path": [
+          "Maintainability",
+          "Observability"
+        ],
+        "first_anchor": "Observability also depends on disciplined analysis",
+        "last_anchor": "feedback loops"
+      }
+    ]
+  }
+]

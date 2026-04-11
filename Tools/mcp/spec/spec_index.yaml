@@ -1,0 +1,536 @@
+topics:
+  project_structure:
+    description: "Repository-wide architecture and project layout reference."
+    primary_source_of_truth:
+      - Specification/architecture/project_structure.md
+      - Specification/architecture/agent_workflow_policy.md
+    architecture:
+      - Specification/architecture/project_structure.md
+      - Specification/architecture/project_structure.json
+      - Specification/architecture/agent_workflow_policy.md
+    related_topics:
+      - rag_runtime
+      - eval_engine
+      - chunker
+      - extractor
+      - dense_ingest
+
+  request_capture:
+    description: "Canonical request-capture contract, including reranker metadata, runtime persistence boundary, and main eval-engine input source."
+    primary_source_of_truth:
+      - Specification/contracts/rag_runtime/request_capture.md
+      - Execution/rag_runtime/schemas/request_capture.schema.json
+    related_topics:
+      - rag_runtime
+      - rag_runtime_reranking
+      - eval_engine
+    data_contracts:
+      - Specification/contracts/rag_runtime/request_capture.md
+    storage_contracts:
+      - Specification/contracts/storage/request_captures_storage.md
+    data_schemas:
+      - Execution/rag_runtime/schemas/request_capture.schema.json
+    storage_schemas:
+      - Execution/docker/postgres/init/001_request_captures.sql
+    codegen:
+      - Specification/codegen/rag_runtime/request_capture_store.md
+      - Specification/codegen/rag_runtime/rag_runtime.md
+      - Specification/codegen/evals/judge_generation.md
+      - Specification/codegen/evals/judge_retrieval.md
+      - Specification/codegen/evals/build_request_summary.md
+      - Specification/codegen/evals/eval_orchestrator.md
+    test_specs:
+      - Specification/codegen/rag_runtime/unit_tests.md
+
+  rag_runtime:
+    description: "Unified Rust runtime for live end-to-end RAG execution."
+    primary_source_of_truth:
+      - Specification/codegen/rag_runtime/rag_runtime.md
+    related_topics:
+      - request_capture
+      - retrieval
+      - rag_runtime_reranking
+      - rag_runtime_observability
+      - eval_observability
+      - dense_ingest
+    architecture:
+      - Specification/codegen/rag_runtime/rag_runtime.md
+    codegen:
+      - Specification/codegen/rag_runtime/input_validation.md
+      - Specification/codegen/rag_runtime/orchestration.md
+      - Specification/codegen/rag_runtime/retrieve/integration.md
+      - Specification/codegen/rag_runtime/retrieve/dense_retrieval.md
+      - Specification/codegen/rag_runtime/retrieve/hybrid_retrieval.md
+      - Specification/codegen/rag_runtime/reranking/integration.md
+      - Specification/codegen/rag_runtime/reranking/heuristic.md
+      - Specification/codegen/rag_runtime/reranking/cross_encoder.md
+      - Specification/codegen/rag_runtime/reranking/mixedbread_ai_api.md
+      - Specification/codegen/rag_runtime/reranking/voyageai_api.md
+      - Specification/codegen/rag_runtime/generation/generation.md
+      - Specification/codegen/rag_runtime/generation/ollama_transport.md
+      - Specification/codegen/rag_runtime/generation/openai_transport.md
+      - Specification/codegen/rag_runtime/generation/transport_integration.md
+      - Specification/codegen/rag_runtime/reranking/transport_integration.md
+      - Specification/codegen/rag_runtime/request_capture_store.md
+      - Specification/codegen/rag_runtime/generated_artifacts.md
+      - Specification/codegen/rag_runtime/observability/observability.md
+      - Specification/codegen/rag_runtime/observability/implementation.md
+      - Specification/codegen/rag_runtime/observability/spans.md
+      - Specification/codegen/rag_runtime/observability/metrics.md
+      - Specification/codegen/rag_runtime/observability/openinference_spans.md
+      - Specification/codegen/rag_runtime/observability/openinference_metrics.md
+      - Specification/codegen/rag_runtime/observability/grafana_dashboards.md
+    data_contracts:
+      - Specification/contracts/chunk/spec.md
+      - Specification/contracts/rag_runtime/request_capture.md
+    storage_contracts:
+      - Specification/contracts/storage/request_captures_storage.md
+    config_contracts:
+      - Specification/contracts/rag_runtime/config.md
+    external_service_contracts:
+      - Specification/codegen/rag_runtime/generation/ollama_transport.md
+      - Specification/codegen/rag_runtime/generation/openai_transport.md
+      - Specification/codegen/rag_runtime/reranking/mixedbread_ai_api.md
+      - Specification/codegen/rag_runtime/reranking/voyageai_api.md
+    prompt_specs:
+      - Specification/codegen/rag_runtime/prompts.json
+    data_schemas:
+      - Execution/schemas/chunk.schema.json
+      - Execution/rag_runtime/schemas/request_capture.schema.json
+    storage_schemas:
+      - Execution/docker/postgres/init/001_request_captures.sql
+    config_schemas:
+      - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+    env_schemas:
+      - Execution/rag_runtime/schemas/rag_runtime_env.schema.json
+    strong_references:
+      - Execution/otel_runtime_smoke/README.md
+      - Execution/otel_runtime_smoke/Cargo.toml
+      - Execution/otel_runtime_smoke/src/main.rs
+      - Execution/docker/compose.yaml
+    secondary_references:
+      - Specification/codegen/rag_runtime/observability/references.md
+    incident_reports:
+      - Specification/IncidentReports
+    test_specs:
+      - Specification/codegen/rag_runtime/unit_tests.md
+    validation_risks:
+      - live observability backends required for final validation
+      - cargo-llvm-cov coverage gate required
+      - live end-to-end CLI validation required before completion
+
+  rag_runtime_reranking:
+    description: "Reranking stage for rag_runtime, including pass-through, heuristic, and cross-encoder implementations, typed settings, orchestration-owned reranker selection, and model-backed reranker API contracts."
+    primary_source_of_truth:
+      - Specification/codegen/rag_runtime/reranking/integration.md
+      - Specification/codegen/rag_runtime/reranking/heuristic.md
+      - Specification/codegen/rag_runtime/reranking/cross_encoder.md
+    related_topics:
+      - rag_runtime
+      - request_capture
+      - rag_runtime_observability
+    codegen:
+      - Specification/codegen/rag_runtime/reranking/integration.md
+      - Specification/codegen/rag_runtime/reranking/heuristic.md
+      - Specification/codegen/rag_runtime/reranking/cross_encoder.md
+      - Specification/codegen/rag_runtime/reranking/mixedbread_ai_api.md
+      - Specification/codegen/rag_runtime/reranking/voyageai_api.md
+      - Specification/codegen/rag_runtime/orchestration.md
+      - Specification/codegen/rag_runtime/rag_runtime.md
+    data_contracts:
+      - Specification/contracts/rag_runtime/config.md
+      - Specification/contracts/rag_runtime/request_capture.md
+    external_service_contracts:
+      - Specification/codegen/rag_runtime/reranking/mixedbread_ai_api.md
+      - Specification/codegen/rag_runtime/reranking/voyageai_api.md
+    storage_contracts:
+      - Specification/contracts/storage/request_captures_storage.md
+    config_schemas:
+      - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+    data_schemas:
+      - Execution/rag_runtime/schemas/request_capture.schema.json
+    storage_schemas:
+      - Execution/docker/postgres/init/001_request_captures.sql
+
+  rag_runtime_observability:
+    description: "Observability specifications and provisioning references for rag_runtime, including traces, metrics, Grafana provisioning, and Tempo-related setup."
+    primary_source_of_truth:
+      - Specification/codegen/rag_runtime/observability/observability.md
+    related_topics:
+      - rag_runtime
+      - eval_observability
+    codegen:
+      - Specification/codegen/rag_runtime/observability/observability.md
+      - Specification/codegen/rag_runtime/observability/implementation.md
+      - Specification/codegen/rag_runtime/observability/spans.md
+      - Specification/codegen/rag_runtime/observability/metrics.md
+      - Specification/codegen/rag_runtime/observability/openinference_spans.md
+      - Specification/codegen/rag_runtime/observability/openinference_metrics.md
+      - Specification/codegen/rag_runtime/observability/grafana_dashboards.md
+    strong_references:
+      - Execution/docker/compose.yaml
+      - Measurement/observability/grafana/dashboards/ai_overview.json
+      - Measurement/observability/grafana/dashboards/request_overview.json
+      - Measurement/observability/grafana/provisioning/dashboards/dashboards.yml
+      - Measurement/observability/grafana/provisioning/datasources/prometheus.yml
+      - Measurement/observability/grafana/provisioning/datasources/tempo.yml
+      - Measurement/observability/tempo/tempo.yaml
+    secondary_references:
+      - Specification/codegen/rag_runtime/observability/references.md
+      - Specification/codegen/rag_runtime/observability/references/todo_app_grafana_dashboards.yml
+      - Specification/codegen/rag_runtime/observability/references/todo_app_grafana_prometheus_datasource.yml
+      - Specification/codegen/rag_runtime/observability/references/todo_app_grafana_tempo_datasource.yml
+      - Specification/codegen/rag_runtime/observability/references/todo_app_otel_collector_config.yaml
+      - Specification/codegen/rag_runtime/observability/references/todo_app_tempo.yaml
+      - Specification/codegen/rag_runtime/observability/references/todo_app_prometheus.yml
+      - Specification/codegen/rag_runtime/observability/references/todo_app_docker_compose_observability.yml
+    validation_risks:
+      - requires live local observability stack for end-to-end verification
+      - generated Grafana provisioning must stay aligned with dashboards and datasources
+
+  eval_engine:
+    description: "Sequential eval pipeline and run-level orchestration."
+    primary_source_of_truth:
+      - Specification/architecture/evals_architecture.md
+      - Specification/codegen/evals/eval_orchestrator.md
+    related_topics:
+      - request_capture
+      - run_manifest
+      - run_report
+      - request_summaries
+      - request_run_summaries
+      - eval_observability
+    architecture:
+      - Specification/architecture/evals_architecture.md
+    codegen:
+      - Specification/codegen/evals/eval_orchestrator.md
+      - Specification/codegen/evals/judge_generation.md
+      - Specification/codegen/evals/judge_retrieval.md
+      - Specification/codegen/evals/build_request_summary.md
+      - Specification/codegen/evals/observability.md
+    data_contracts:
+      - Specification/contracts/rag_runtime/request_capture.md
+      - Specification/contracts/evals/run_manifest.md
+      - Specification/contracts/evals/run_report.md
+    storage_contracts:
+      - Specification/contracts/storage/judge_generation_results_storage.md
+      - Specification/contracts/storage/judge_retrieval_results_storage.md
+      - Specification/contracts/storage/request_summaries_storage.md
+      - Specification/contracts/storage/eval_processing_state_storage.md
+      - Specification/contracts/storage/request_captures_storage.md
+    prompt_specs:
+      - Specification/codegen/evals/prompts.json
+    data_schemas:
+      - Execution/schemas/evals/run_manifest.schema.json
+      - Execution/schemas/chunk.schema.json
+      - Execution/rag_runtime/schemas/request_capture.schema.json
+    strong_references:
+      - Execution/docker/compose.yaml
+      - Measurement/evals/grafana/dashboards/eval_runs.json
+      - Measurement/evals/grafana/dashboards/eval_usage_overview.json
+      - Measurement/evals/grafana/provisioning/dashboards/dashboards.yml
+      - Measurement/evals/grafana/provisioning/datasources/postgres.yml
+    storage_schemas:
+      - Execution/docker/postgres/init/001_request_captures.sql
+      - Execution/docker/postgres/init/002_judge_generation_results.sql
+      - Execution/docker/postgres/init/003_judge_retrieval_results.sql
+      - Execution/docker/postgres/init/004_request_summaries.sql
+      - Execution/docker/postgres/init/005_eval_processing_state.sql
+      - Execution/docker/postgres/init/006_request_run_summaries.sql
+    validation_risks:
+      - requires Postgres with eval tables
+      - requires canonical chunks JSONL
+      - requires live judge model through Ollama
+
+  run_manifest:
+    description: "Run-scoped structured eval artifact."
+    primary_source_of_truth:
+      - Specification/contracts/evals/run_manifest.md
+      - Execution/schemas/evals/run_manifest.schema.json
+    related_topics:
+      - eval_engine
+      - run_report
+    data_contracts:
+      - Specification/contracts/evals/run_manifest.md
+    data_schemas:
+      - Execution/schemas/evals/run_manifest.schema.json
+    codegen:
+      - Specification/codegen/evals/eval_orchestrator.md
+
+  run_report:
+    description: "Human-readable eval run summary artifact."
+    primary_source_of_truth:
+      - Specification/contracts/evals/run_report.md
+    related_topics:
+      - eval_engine
+      - run_manifest
+    data_contracts:
+      - Specification/contracts/evals/run_report.md
+    codegen:
+      - Specification/codegen/evals/eval_orchestrator.md
+
+  chunker:
+    description: "Chunking pipeline family, including shared chunk contract plus structural and fixed variants."
+    primary_source_of_truth:
+      - Specification/testgen/chunker/README.md
+      - Specification/codegen/chunker/fixed.md
+      - Specification/codegen/chunker/structural.md
+    related_topics:
+      - extractor
+      - dense_ingest
+      - hybrid_ingest
+      - retrieval
+    codegen:
+      - Specification/codegen/chunker/fixed.md
+      - Specification/codegen/chunker/structural.md
+    data_contracts:
+      - Specification/contracts/chunk/spec.md
+    data_schemas:
+      - Execution/schemas/chunk.schema.json
+      - Execution/parsing/schemas/fixed_chunker_config.schema.json
+    runtime_metadata:
+      - Execution/parsing/books/understanding_distributed_systems/source/book_content_metadata.json
+    validators:
+      - Execution/parsing/common/book_metadata_validation.py
+    strong_references:
+      - Execution/parsing/chunker/fixed/chunker.py
+      - Execution/parsing/chunker/fixed/chunker.toml
+      - Execution/parsing/chunker/structural/chunker.py
+    test_specs:
+      - Specification/testgen/chunker/common/determinism.md
+      - Specification/testgen/chunker/common/sanitation.md
+      - Specification/testgen/chunker/common/schema_validation.md
+      - Specification/testgen/chunker/fixed/overlap.md
+      - Specification/testgen/chunker/fixed/page_mapping.md
+      - Specification/testgen/chunker/fixed/synthetic_regression.md
+      - Specification/testgen/chunker/structural/span_quality.md
+      - Specification/testgen/chunker/structural/structure.md
+      - Specification/testgen/chunker/structural/synthetic_regression.md
+      - Specification/testgen/chunker/structural/truth_consistency.md
+    validation_risks:
+      - behavior depends on validated content metadata and shared metadata validator
+      - schema validation and structural consistency are both required
+
+  fixed_chunker:
+    description: "Sentence-based fixed chunker with overlap, page mapping, and metadata-aware section annotation."
+    primary_source_of_truth:
+      - Specification/codegen/chunker/fixed.md
+    related_topics:
+      - chunker
+      - extractor
+      - dense_ingest
+      - hybrid_ingest
+    codegen:
+      - Specification/codegen/chunker/fixed.md
+    data_contracts:
+      - Specification/contracts/chunk/spec.md
+    config_schemas:
+      - Execution/parsing/schemas/fixed_chunker_config.schema.json
+    strong_references:
+      - Execution/parsing/chunker/fixed/chunker.py
+      - Execution/parsing/chunker/fixed/chunker.toml
+    implementation_references:
+      - Execution/tests/parsing/chunker/common/determinism.py
+      - Execution/tests/parsing/chunker/common/sanitation.py
+      - Execution/tests/parsing/chunker/common/schema_validation.py
+      - Execution/tests/parsing/chunker/fixed/page_mapping.py
+      - Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+    test_specs:
+      - Specification/testgen/chunker/common/determinism.md
+      - Specification/testgen/chunker/common/sanitation.md
+      - Specification/testgen/chunker/common/schema_validation.md
+      - Specification/testgen/chunker/fixed/overlap.md
+      - Specification/testgen/chunker/fixed/page_mapping.md
+      - Specification/testgen/chunker/fixed/synthetic_regression.md
+    validation_risks:
+      - page_start/page_end mapping must stay aligned with marker-aware sentence coverage
+      - overlap semantics must preserve sentence boundaries and forward progress
+      - section metadata resolution depends on validated content metadata
+
+  extractor:
+    description: "PDF extraction pipeline that produces page-level clean_text JSONL."
+    primary_source_of_truth:
+      - Specification/codegen/extractor/extractor.md
+    related_topics:
+      - chunker
+    codegen:
+      - Specification/codegen/extractor/extractor.md
+    runtime_metadata:
+      - Execution/parsing/books/understanding_distributed_systems/cleanup/rules_metadata.json
+      - Execution/parsing/books/understanding_distributed_systems/cleanup/clean_text_overrides_metadata.json
+      - Execution/parsing/books/understanding_distributed_systems/cleanup/terms_dictionary.json
+      - Execution/parsing/books/understanding_distributed_systems/source/book_content_metadata.json
+    test_specs:
+      - Specification/testgen/extractor/cleanup_quality.md
+      - Specification/testgen/extractor/rules_metrics.md
+      - Specification/testgen/extractor/sanity.md
+      - Specification/testgen/extractor/synthetic_regression.md
+    validation_risks:
+      - behavior depends on runtime metadata files, not only code
+      - cleanup quality and synthetic regression coverage are both important
+
+  dense_ingest:
+    description: "Dense ingest pipeline into Qdrant."
+    primary_source_of_truth:
+      - Specification/codegen/ingest/dense.md
+    related_topics:
+      - chunker
+      - retrieval
+      - rag_runtime
+    codegen:
+      - Specification/codegen/ingest/dense.md
+    data_contracts:
+      - Specification/contracts/chunk/spec.md
+      - Specification/contracts/external/embedding_service.md
+    data_schemas:
+      - Execution/schemas/chunk.schema.json
+    config_contracts:
+      - Specification/contracts/ingest/dense_config.md
+    env_contracts:
+      - Specification/contracts/ingest/dense_env.md
+    config_schemas:
+      - Execution/ingest/schemas/dense_ingest_config.schema.json
+    env_schemas:
+      - Execution/ingest/schemas/dense_ingest_env.schema.json
+    strong_references:
+      - Execution/ingest/dense/ingest.toml
+    test_specs:
+      - Specification/testgen/ingest/dense/e2e.md
+      - Specification/testgen/ingest/dense/integration.md
+      - Specification/testgen/ingest/dense/without_containers.md
+    validation_risks:
+      - requires live Qdrant
+      - requires live embedding service
+      - runtime config and env contracts must stay aligned with ingest.toml
+
+  hybrid_ingest:
+    description: "Hybrid ingest pipeline into a Qdrant collection with dense and sparse representations."
+    primary_source_of_truth:
+      - Specification/codegen/ingest/hybrid.md
+    related_topics:
+      - dense_ingest
+      - retrieval
+      - rag_runtime
+    codegen:
+      - Specification/codegen/ingest/hybrid.md
+    config_contracts:
+      - Specification/contracts/ingest/hybrid_config.md
+    data_contracts:
+      - Specification/contracts/chunk/spec.md
+      - Specification/contracts/external/embedding_service.md
+      - Specification/contracts/ingest/common/sparse_vocabulary.md
+      - Specification/contracts/ingest/hybrid_manifest.md
+      - Specification/contracts/ingest/common/sparse_text_space.md
+      - Specification/contracts/ingest/common/sparse_strategies/bag_of_words.md
+      - Specification/contracts/ingest/common/sparse_strategies/bm25_like.md
+      - Specification/contracts/ingest/common/bm25_term_stats.md
+    data_schemas:
+      - Execution/schemas/chunk.schema.json
+      - Execution/ingest/schemas/hybrid_ingest_config.schema.json
+      - Execution/ingest/schemas/common/sparse_vocabulary.schema.json
+      - Execution/ingest/schemas/common/bm25_term_stats.schema.json
+      - Execution/ingest/schemas/hybrid_ingest_manifest.schema.json
+    strong_references:
+      - Execution/ingest/hybrid/ingest.toml
+      - Execution/ingest/hybrid/profiles/fixed.toml
+      - Execution/ingest/hybrid/profiles/structural.toml
+      - Execution/ingest/hybrid/examples/bm25_like.toml
+    implementation_references:
+      - Execution/tests/ingest/hybrid/config_validation.py
+      - Execution/tests/ingest/hybrid/hybrid_collection_create_shape.py
+      - Execution/tests/ingest/hybrid/qdrant_collection_metadata_roundtrip.py
+      - Execution/tests/ingest/hybrid/full_ingest_e2e.py
+    test_specs:
+      - Specification/testgen/ingest/hybrid/e2e.md
+      - Specification/testgen/ingest/hybrid/integration.md
+      - Specification/testgen/ingest/hybrid/without_containers.md
+      - Specification/tests/hybrid_ingest_TESTS_MATRIX.md
+    validation_risks:
+      - requires live Qdrant
+      - requires live embedding service
+      - hybrid collection compatibility rules must stay aligned with the future hybrid retrieval contract
+      - sparse vocabulary identity must stay reproducible across reruns
+
+  retrieval:
+    description: "rag_runtime retrieval stage, including shared retriever integration plus dense and hybrid retriever implementations."
+    primary_source_of_truth:
+      - Specification/codegen/rag_runtime/retrieve/integration.md
+    related_topics:
+      - rag_runtime
+      - hybrid_ingest
+      - dense_ingest
+      - request_capture
+      - rag_runtime_observability
+    codegen:
+      - Specification/codegen/rag_runtime/retrieve/integration.md
+      - Specification/codegen/rag_runtime/retrieve/dense_retrieval.md
+      - Specification/codegen/rag_runtime/retrieve/hybrid_retrieval.md
+      - Specification/codegen/rag_runtime/orchestration.md
+      - Specification/codegen/rag_runtime/rag_runtime.md
+    data_contracts:
+      - Specification/contracts/chunk/spec.md
+      - Specification/contracts/external/embedding_service.md
+      - Specification/contracts/rag_runtime/request_capture.md
+    data_schemas:
+      - Execution/schemas/chunk.schema.json
+    validation_risks:
+      - retrieval depends on embedding-service and Qdrant compatibility
+      - hybrid retrieval depends on sparse vocabulary and BM25 term-stats compatibility
+      - hybrid retrieval depends on Qdrant `prefetch + fusion = rrf` request/response compatibility
+
+  request_summaries:
+    description: "Current per-request derived eval summary layer."
+    primary_source_of_truth:
+      - Specification/contracts/storage/request_summaries_storage.md
+    related_topics:
+      - eval_engine
+      - request_run_summaries
+      - run_report
+    data_contracts:
+      - Specification/contracts/storage/request_summaries_storage.md
+    codegen:
+      - Specification/codegen/evals/build_request_summary.md
+    storage_schemas:
+      - Execution/docker/postgres/init/004_request_summaries.sql
+
+  request_run_summaries:
+    description: "Run-scoped derived eval summary layer used for batch run comparison and run-oriented dashboards."
+    primary_source_of_truth:
+      - Execution/docker/postgres/init/006_request_run_summaries.sql
+    related_topics:
+      - eval_engine
+      - request_summaries
+      - eval_observability
+      - run_report
+    codegen:
+      - Specification/codegen/evals/build_request_summary.md
+    storage_schemas:
+      - Execution/docker/postgres/init/006_request_run_summaries.sql
+
+  eval_observability:
+    description: "Eval observability specs plus repository-owned Grafana assets for live and historical eval monitoring."
+    primary_source_of_truth:
+      - Specification/codegen/evals/observability.md
+    related_topics:
+      - eval_engine
+      - request_summaries
+      - request_run_summaries
+      - rag_runtime_observability
+    dashboard_roles:
+      - path: Measurement/evals/grafana/dashboards/eval_usage_overview.json
+        role: live
+        purpose: "Current live eval state for requests that are being judged in near real time."
+      - path: Measurement/evals/grafana/dashboards/eval_runs.json
+        role: run
+        purpose: "Batch eval run comparison using run-scoped request_run_summaries rows."
+    codegen:
+      - Specification/codegen/evals/observability.md
+    strong_references:
+      - Execution/docker/compose.yaml
+      - Measurement/evals/grafana/dashboards/eval_runs.json
+      - Measurement/evals/grafana/dashboards/eval_usage_overview.json
+      - Measurement/evals/grafana/provisioning/dashboards/dashboards.yml
+      - Measurement/evals/grafana/provisioning/datasources/postgres.yml
+    validation_risks:
+      - eval Grafana assets must stay aligned with the request_summaries/request_run_summaries SQL shape
+      - repository-owned dashboard provisioning must remain consistent with the compose-managed Grafana container

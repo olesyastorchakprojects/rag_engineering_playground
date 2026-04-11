@@ -1,0 +1,55 @@
+completion_requirements:
+  default:
+    require_statuses:
+      - Code Writer Agent: completed
+      - Test Writer Agent: completed
+      - Spec Conformance Agent: completed
+      - Code Review Agent: completed
+    forbid_nonempty_fields:
+      - code_updates_needed
+
+  review-change:
+    require_statuses:
+      - Spec Conformance Agent: completed
+      - Code Review Agent: completed
+
+blocking_conditions:
+  - any_step_status: blocked
+  - any_step_status: failed
+  - spec_updates_needed_present
+  - mcp_updates_needed_present
+
+project_specific_conditions:
+  - name: eval_run_semantics
+    applies_when_paths_include:
+      - Measurement/evals/
+      - Execution/docker/postgres/init/
+    must_explicitly_address:
+      - request_summaries
+      - request_run_summaries
+      - Eval Usage Overview dashboard semantics
+      - Eval Runs dashboard semantics
+
+  - name: ingest_and_launcher_semantics
+    applies_when_paths_include:
+      - Execution/ingest/hybrid/
+      - Execution/ingest/schemas/
+      - Execution/bin/
+      - Execution/orchestration/
+      - Specification/tasks/multi_agent/
+    must_explicitly_address:
+      - hybrid_ingest sparse vocabulary and BM25 term stats
+      - run_stack launcher inputs and resolved configs
+      - multi-agent handoff and launcher templates
+
+  - name: observability_assets
+    applies_when_paths_include:
+      - Measurement/observability/
+    must_consult:
+      - Observability MCP
+
+report_requirements:
+  final_report_fields:
+    - summary
+    - completion_reason
+    - remaining_followups

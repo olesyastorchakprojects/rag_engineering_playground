@@ -1,0 +1,29 @@
+{
+  "run_id": "b37b2d04-aafc-468c-a35d-59f5a50d1933",
+  "run_type": "experiment",
+  "status": "failed",
+  "started_at": "2026-04-06T14:18:14.753054+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "/home/olesia/code/prompt_gen_proj/Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434",
+  "judge_model": "qwen2.5:1.5b-instruct-ctx32k",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 0,
+  "run_scope_request_ids": [],
+  "completed_at": "2026-04-06T14:18:14.819764+00:00",
+  "last_error": "no new requests were bootstrapped; resumable run(s) still exist: f2f41aad-10af-45cc-9cfc-04a276715468. Re-run with --resume-run-id."
+}

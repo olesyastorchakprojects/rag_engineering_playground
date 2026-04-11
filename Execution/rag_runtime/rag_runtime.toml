@@ -1,0 +1,82 @@
+[pipeline]
+config_version = "v1"
+
+[input_validation]
+max_query_tokens = 128
+tokenizer_source = "Qwen/Qwen3-Embedding-0.6B"
+reject_empty_query = true
+trim_whitespace = true
+collapse_internal_whitespace = true
+
+[retrieval]
+kind = "dense"
+retriever_version = "v1"
+top_k = 12
+score_threshold = 0.2
+
+[retrieval.embedding_retry]
+max_attempts = 3
+backoff = "exponential"
+
+[retrieval.qdrant_retry]
+max_attempts = 3
+backoff = "exponential"
+
+[generation]
+transport_kind = "openai"
+tokenizer_source = "Qwen/Qwen2.5-1.5B-Instruct"
+temperature = 0.0
+max_context_chunks = 4
+max_prompt_tokens = 28672
+
+[generation.retry]
+max_attempts = 3
+backoff = "exponential"
+
+[generation.ollama]
+model_name = "qwen2.5:1.5b-instruct-ctx32k"
+timeout_sec = 120
+input_cost_per_million_tokens = 0.0
+output_cost_per_million_tokens = 0.0
+
+[generation.openai]
+model_name = "openai/gpt-oss-20b"
+timeout_sec = 120
+input_cost_per_million_tokens = 0.05
+output_cost_per_million_tokens = 0.20
+
+# Available reranker kinds: pass_through, heuristic, cross_encoder
+[reranking]
+kind = "cross_encoder"
+
+[reranking.weights]
+retrieval_score = 1.0
+query_term_coverage = 1.0
+phrase_match_bonus = 1.0
+title_section_match_bonus = 1.0
+
+[reranking.cross_encoder]
+transport_kind = "mixedbread-ai"
+
+[reranking.cross_encoder.mixedbread-ai]
+model_name = "mixedbread-ai/mxbai-rerank-base-v2"
+batch_size = 3
+timeout_sec = 120
+cost_per_million_tokens = 0.0
+tokenizer_source = "mixedbread-ai/mxbai-rerank-base-v2"
+max_attempts = 3
+backoff = "exponential"
+
+[reranking.cross_encoder.voyageai]
+model_name = "rerank-2.5"
+batch_size = 12
+timeout_sec = 120
+cost_per_million_tokens = 0.0
+max_attempts = 3
+backoff = "exponential"
+
+[observability]
+tracing_enabled = true
+metrics_enabled = true
+trace_batch_scheduled_delay_ms = 2000
+metrics_export_interval_ms = 1000

@@ -1,0 +1,521 @@
+{
+  "version": "v1",
+  "scenario": "fixed",
+  "questions": [
+    {
+      "question_id": "q1",
+      "question": "Why is TCP considered a layer that creates a reliable channel on top of unreliable IP, and what mechanisms does it use to compensate for packet loss, duplication, and reordering?",
+      "soft_positive_chunk_ids": [
+        "9eb408f9-dc4f-43da-b943-c7d1cfecca9c",
+        "1a4ad2b9-a5a2-42b2-828b-a4c647927580",
+        "d28f3230-bbc8-4910-bd23-8c1fe6a1aed7",
+        "fb111cf5-f187-4f25-87ea-72fa34ae259e",
+        "c53294a8-4d8f-4622-8edd-c7ad4ec7393b",
+        "4e6198f0-e78c-4d50-9a9d-064484112abc",
+        "b670a3a3-282d-4f9e-89ab-b8900190b093",
+        "770cf90f-5909-4196-883f-f9a6c0659279",
+        "43723749-a3ea-41c2-aaf2-084bc4fff95d",
+        "f5be3161-ecc8-4a14-881a-05cff4409ad6"
+      ],
+      "strict_positive_chunk_ids": [
+        "9eb408f9-dc4f-43da-b943-c7d1cfecca9c",
+        "1a4ad2b9-a5a2-42b2-828b-a4c647927580",
+        "d28f3230-bbc8-4910-bd23-8c1fe6a1aed7",
+        "fb111cf5-f187-4f25-87ea-72fa34ae259e"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "9eb408f9-dc4f-43da-b943-c7d1cfecca9c",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "1a4ad2b9-a5a2-42b2-828b-a4c647927580",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "d28f3230-bbc8-4910-bd23-8c1fe6a1aed7",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "fb111cf5-f187-4f25-87ea-72fa34ae259e",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "c53294a8-4d8f-4622-8edd-c7ad4ec7393b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "4e6198f0-e78c-4d50-9a9d-064484112abc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "b670a3a3-282d-4f9e-89ab-b8900190b093",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "770cf90f-5909-4196-883f-f9a6c0659279",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "43723749-a3ea-41c2-aaf2-084bc4fff95d",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "f5be3161-ecc8-4a14-881a-05cff4409ad6",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "75cf4fff-6c96-4b22-abec-74a64f2b6362",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8839f7c4-ed8c-4e45-a243-262ac23df2a7",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "0f84c137-b63e-4fd7-b82a-e2ef1885308c",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "3f0e32a4-7620-4fa4-9c2c-ee423887b0bf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "da382cfb-7306-4c57-9fd9-35c0858dd6a9",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "ad003bfa-3cd7-4ccd-8c1b-dfcab158424e",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "9a751ff1-949c-4ef3-b695-b8c7d5ac4f21",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "e10f6d2d-b9b4-4246-9ef7-7153392487b7",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "6b2324ab-933f-43d6-8a1b-eba10bcfe150",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d950aa95-18f2-4362-a1e2-ced9e0899d04",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q2",
+      "question": "Why can retrying a POST request after a timeout lead to an incorrect system state, and how do idempotency keys together with transactional atomicity solve this problem?",
+      "soft_positive_chunk_ids": [
+        "5d72f12e-ea15-4d67-b177-1e0aa032685b",
+        "5bf64303-12e5-4a5e-8892-6f756ff7ffb9",
+        "b913cf0a-8062-4d17-9300-581c5d9f74e9",
+        "61dd99b3-76b4-45c4-a460-16d2b9d53ab9",
+        "8a9191c1-e927-4ed6-8408-1b925d3782c9",
+        "10ae6cb9-1dd8-4b68-b22e-16eb91a69282",
+        "82cd8cb0-bd64-4c6c-bd37-19f29e3c1720",
+        "097f7231-d43a-4dfe-aeb7-cf93d71a0274",
+        "aa3a9944-fdd7-45fc-8b97-e79a06f580f7",
+        "47151c3b-ddbb-4c59-a4cb-7e24d70c6044"
+      ],
+      "strict_positive_chunk_ids": [
+        "5d72f12e-ea15-4d67-b177-1e0aa032685b",
+        "5bf64303-12e5-4a5e-8892-6f756ff7ffb9",
+        "b913cf0a-8062-4d17-9300-581c5d9f74e9",
+        "61dd99b3-76b4-45c4-a460-16d2b9d53ab9"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "5d72f12e-ea15-4d67-b177-1e0aa032685b",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "5bf64303-12e5-4a5e-8892-6f756ff7ffb9",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "b913cf0a-8062-4d17-9300-581c5d9f74e9",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "61dd99b3-76b4-45c4-a460-16d2b9d53ab9",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "8a9191c1-e927-4ed6-8408-1b925d3782c9",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "10ae6cb9-1dd8-4b68-b22e-16eb91a69282",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "82cd8cb0-bd64-4c6c-bd37-19f29e3c1720",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "097f7231-d43a-4dfe-aeb7-cf93d71a0274",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "aa3a9944-fdd7-45fc-8b97-e79a06f580f7",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "47151c3b-ddbb-4c59-a4cb-7e24d70c6044",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "a6b1321f-64c7-4897-bf78-c06e32d356e6",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "1d4816b1-a2be-45d7-8118-38101947a290",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "84112aaf-8754-4f2a-b33c-f90966e43949",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "e60650e5-6f3b-40a3-b827-2c4d2cb8fca5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "a6b29770-3579-4eae-9802-f229988955db",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "88a55b7b-5b49-4f08-bc6a-66280cba77a1",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "963b057e-3b42-483a-9546-f9eeec9d7657",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "0fff6945-12ed-49db-87cd-4b3476d8749f",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "efa0c979-2b74-4bc8-a17f-5ee1e8dcb44d",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "3c822183-5eea-472b-a1d4-5e09c97879ea",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q3",
+      "question": "Why does a short DNS TTL both help propagate changes faster and increase a system\u2019s vulnerability to failures in DNS infrastructure?",
+      "soft_positive_chunk_ids": [
+        "2a1393b3-7479-4d71-bc8d-ebaeb2ebb4a4",
+        "b735186f-a322-4526-9d2c-589edab08f0f",
+        "67094ed9-b876-4493-bc03-6cc93e22303a",
+        "2d91831c-2fd2-48f5-b93c-adc10144a708",
+        "d5812048-7182-49f3-b466-6458e6c8e41c",
+        "79dac7dc-e394-4753-a5a6-23371468ba5b",
+        "2c86b3b2-cd49-4e75-bd47-b9c51eb5a3c3",
+        "ad2d2a92-e131-4671-aeb6-804a316d29c8",
+        "3975fefc-fac5-4eb9-b48c-d119445cd5ee",
+        "88566b0c-ee04-40b2-821e-9ee1630c4692"
+      ],
+      "strict_positive_chunk_ids": [
+        "2a1393b3-7479-4d71-bc8d-ebaeb2ebb4a4",
+        "b735186f-a322-4526-9d2c-589edab08f0f",
+        "67094ed9-b876-4493-bc03-6cc93e22303a"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "2a1393b3-7479-4d71-bc8d-ebaeb2ebb4a4",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "b735186f-a322-4526-9d2c-589edab08f0f",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "67094ed9-b876-4493-bc03-6cc93e22303a",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "2d91831c-2fd2-48f5-b93c-adc10144a708",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d5812048-7182-49f3-b466-6458e6c8e41c",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "79dac7dc-e394-4753-a5a6-23371468ba5b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "2c86b3b2-cd49-4e75-bd47-b9c51eb5a3c3",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ad2d2a92-e131-4671-aeb6-804a316d29c8",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "3975fefc-fac5-4eb9-b48c-d119445cd5ee",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "88566b0c-ee04-40b2-821e-9ee1630c4692",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "07a5ba5c-ce2d-44fb-ba90-7fcd6e916c41",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "170c097f-a5ee-4ba8-a750-4df0cd828b10",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "7172d13f-29e5-485c-9bcb-e7fceebfc241",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "675ba911-f8eb-453f-9675-14a8fd81da88",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8a9191c1-e927-4ed6-8408-1b925d3782c9",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "10ae6cb9-1dd8-4b68-b22e-16eb91a69282",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "f0b14611-c916-4d0b-9dce-11a4d3c257e7",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "fda4b8db-8467-452c-b8b2-c4216ecaa765",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d1003b3d-bb31-4cf0-8f85-95a07a5c8ef5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "1a782275-0d14-4e97-838b-8ae30cefa7d5",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q4",
+      "question": "What is the difference between flow control and congestion control in TCP, and what type of overload does each of these mechanisms protect against?",
+      "soft_positive_chunk_ids": [
+        "4e6198f0-e78c-4d50-9a9d-064484112abc",
+        "b670a3a3-282d-4f9e-89ab-b8900190b093",
+        "9eb408f9-dc4f-43da-b943-c7d1cfecca9c",
+        "1a4ad2b9-a5a2-42b2-828b-a4c647927580",
+        "770cf90f-5909-4196-883f-f9a6c0659279",
+        "c53294a8-4d8f-4622-8edd-c7ad4ec7393b",
+        "d28f3230-bbc8-4910-bd23-8c1fe6a1aed7",
+        "fb111cf5-f187-4f25-87ea-72fa34ae259e",
+        "24b05445-1404-4742-b3a4-999623b74c1a",
+        "0b975339-f9b9-4f16-b89b-d53f070dcd61"
+      ],
+      "strict_positive_chunk_ids": [
+        "4e6198f0-e78c-4d50-9a9d-064484112abc",
+        "b670a3a3-282d-4f9e-89ab-b8900190b093"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "4e6198f0-e78c-4d50-9a9d-064484112abc",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "b670a3a3-282d-4f9e-89ab-b8900190b093",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "9eb408f9-dc4f-43da-b943-c7d1cfecca9c",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1a4ad2b9-a5a2-42b2-828b-a4c647927580",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "770cf90f-5909-4196-883f-f9a6c0659279",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "c53294a8-4d8f-4622-8edd-c7ad4ec7393b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d28f3230-bbc8-4910-bd23-8c1fe6a1aed7",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "fb111cf5-f187-4f25-87ea-72fa34ae259e",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "24b05445-1404-4742-b3a4-999623b74c1a",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "0b975339-f9b9-4f16-b89b-d53f070dcd61",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "6b2324ab-933f-43d6-8a1b-eba10bcfe150",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "fda4b8db-8467-452c-b8b2-c4216ecaa765",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "43723749-a3ea-41c2-aaf2-084bc4fff95d",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "3f0e32a4-7620-4fa4-9c2c-ee423887b0bf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d3ceb512-80b7-4b2a-9367-a5a9e3e0a2c5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "67094ed9-b876-4493-bc03-6cc93e22303a",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8839f7c4-ed8c-4e45-a243-262ac23df2a7",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "88dccb51-518f-4461-9f00-e7861d870222",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d19d1969-3974-4b1c-b70b-a3bc839855ba",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "2401957b-d3ba-4fde-b743-157d66813545",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q5",
+      "question": "Why is the partially synchronous model considered more realistic for practical distributed systems than either the strictly synchronous or the fully asynchronous model?",
+      "soft_positive_chunk_ids": [
+        "ffe4258e-c992-42e6-a17f-6a07e1cd9a6d",
+        "3cc97820-ff94-4208-98ca-6d1176edf9a8",
+        "dd08afb8-3cbe-43dc-b038-8512e8b6ded4",
+        "8a9191c1-e927-4ed6-8408-1b925d3782c9",
+        "10ae6cb9-1dd8-4b68-b22e-16eb91a69282",
+        "1ac6279c-80ec-43df-b0f0-cabae766ddae",
+        "9a751ff1-949c-4ef3-b695-b8c7d5ac4f21",
+        "9c08912f-9ff2-4c10-b077-bb8b3ffda0d1",
+        "84112aaf-8754-4f2a-b33c-f90966e43949",
+        "8f8265f9-6fa1-4949-a997-c274a7a98294"
+      ],
+      "strict_positive_chunk_ids": [
+        "ffe4258e-c992-42e6-a17f-6a07e1cd9a6d",
+        "3cc97820-ff94-4208-98ca-6d1176edf9a8"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "ffe4258e-c992-42e6-a17f-6a07e1cd9a6d",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "3cc97820-ff94-4208-98ca-6d1176edf9a8",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "dd08afb8-3cbe-43dc-b038-8512e8b6ded4",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "8a9191c1-e927-4ed6-8408-1b925d3782c9",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "10ae6cb9-1dd8-4b68-b22e-16eb91a69282",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1ac6279c-80ec-43df-b0f0-cabae766ddae",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "9a751ff1-949c-4ef3-b695-b8c7d5ac4f21",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "9c08912f-9ff2-4c10-b077-bb8b3ffda0d1",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "84112aaf-8754-4f2a-b33c-f90966e43949",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "8f8265f9-6fa1-4949-a997-c274a7a98294",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "76c57f5d-6736-43c2-953a-a4a1f0bec26a",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "4137b187-9f9b-4bd2-b213-af7ef7917f13",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "aafb6f3e-a3ba-4da8-8c53-6eb24b5d23dc",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "a840cda6-ebc9-45a0-b081-eff6a5bd231d",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "b9e780b4-03c8-4e69-b375-590936e6d01b",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "6b2324ab-933f-43d6-8a1b-eba10bcfe150",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "e10f6d2d-b9b4-4246-9ef7-7153392487b7",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "aeaf2b82-5e25-4851-bbff-610012a26a12",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "680e7703-9340-4868-81b8-2656df1c355a",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "c70db03a-847a-49a0-847c-878f24273905",
+          "score": 0.0
+        }
+      ]
+    }
+  ]
+}

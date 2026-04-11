@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "config_contract/dense_ingest/dense_ingest_env_schema.json",
+  "title": "Dense Ingest Environment",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "QDRANT_URL",
+    "OLLAMA_URL"
+  ],
+  "properties": {
+    "QDRANT_URL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "OLLAMA_URL": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

@@ -1,0 +1,754 @@
+project:
+  name: prompt_gen_proj
+  process_model: specification-first
+
+operational_defaults:
+  local_observability_stack:
+    kind: docker_compose_stack
+    source_path: Execution/docker
+    purpose: "Local Docker-managed observability stack for Tempo, Phoenix, Prometheus, Grafana, OTEL collector, and eval Postgres"
+    repository_assets:
+      - Measurement/observability
+      - Measurement/evals
+  rag_runtime_stack:
+    kind: docker_compose_stack
+    source_path: Execution/docker/rag.compose.yaml
+    purpose: "Local Docker-managed RAG-side stack for Qdrant, Ollama, and the reranker service"
+  agent_runtime_environment:
+    kind: codex_agent_shell
+    purpose: "Ambient shell defaults inside the coding agent environment that affect local runtime debugging"
+    known_default_env:
+      RUST_LOG: warn
+    notes:
+      - "Without overriding RUST_LOG, rag_runtime CLI runs from the agent shell may suppress info-level spans."
+      - "Before validating Phoenix traces from rag_runtime CLI, explicitly launch with a RUST_LOG that permits info spans, for example rag_runtime=info or rag_runtime=trace."
+  ollama_runtime:
+    kind: docker_container
+    logical_name: ollama
+    purpose: "Docker-managed RAG-side container in Execution/docker/rag.compose.yaml; hosts the embedding model and the local fallback generation and eval judge models"
+  qdrant_runtime:
+    kind: docker_container
+    logical_name: qdrant
+    purpose: "Docker-managed RAG-side container in Execution/docker/rag.compose.yaml; stores indexed chunk points and retrieval payloads"
+  execution_launcher:
+    kind: python_cli_launcher
+    source_path: Execution/bin/run_stack.py
+    purpose: "Profile-aware launcher for rag_runtime and eval_engine; resolves configs, datasets, provider choices, and launcher-side effective config snapshots"
+  provider_topology:
+    generation:
+      kind: switchable_provider_surface
+      current_backends:
+        - local: ollama
+        - external: together
+      transport_shape: OpenAI-compatible HTTP
+      env_keys:
+        - OPENAI_COMPATIBLE_URL
+        - TOGETHER_API_KEY
+      notes:
+        - "Generation can run locally through Ollama or remotely through the Together-hosted OpenAI-compatible API."
+    reranking:
+      kind: switchable_provider_surface
+      current_backends:
+        - local_http: RERANKER_ENDPOINT
+        - external: voyage
+      env_keys:
+        - RERANKER_ENDPOINT
+        - VOYAGEAI_API_KEY
+      notes:
+        - "Cross-encoder reranking can use the local HTTP reranker path or the external Voyage API."
+    eval_judging:
+      kind: switchable_provider_surface
+      current_backends:
+        - local: ollama
+        - external: together
+      env_keys:
+        - OPENAI_COMPATIBLE_URL
+        - TOGETHER_API_KEY
+      notes:
+        - "Eval judges can run locally through Ollama or remotely through the Together API."
+
+system_roles:
+  extractor:
+    language: python
+    purpose: "CLI PDF extractor that writes page-level JSONL rows with page, raw_text, and clean_text"
+    reads:
+      - kind: pdf_file
+        logical_name: source_pdf
+        purpose: "Source PDF document processed page by page by the extractor"
+        name_source:
+          kind: cli_argument
+          flag: --pdf
+      - kind: json_file
+        logical_name: extractor_rules_metadata
+        purpose: "Mandatory cleanup rules profile that defines all extractor cleanup behavior"
+        name_source:
+          kind: cli_argument
+          flag: --rules-metadata
+      - kind: json_file
+        logical_name: clean_text_metadata_overrides
+        optional: true
+        purpose: "Optional per-page clean_text overrides; override pages bypass the normal extractor cleanup pipeline"
+        name_source:
+          kind: cli_argument
+          flag: --clean-text-metadata
+      - kind: json_file
+        logical_name: known_terms_metadata
+        optional: true
+        purpose: "Optional term normalization metadata applied after rules-based cleanup"
+        name_source:
+          kind: cli_argument
+          flag: --terms-metadata
+    writes:
+      - kind: jsonl_file
+        logical_name: clean_pages_jsonl
+        purpose: "Page-level JSONL with page, raw_text, and clean_text for downstream chunking"
+        name_source:
+          kind: cli_argument
+          flag: --out
+
+  chunker:
+    language: python
+    purpose: "CLI chunker that builds one chunks JSONL file from clean_text pages and validated content metadata"
+    reads:
+      - kind: jsonl_file
+        logical_name: clean_pages_jsonl
+        purpose: "Page-level clean_text JSONL produced by extractor"
+        name_source:
+          kind: cli_argument
+          flag: --pages
+      - kind: json_file
+        logical_name: book_content_metadata_json
+        purpose: "Validated structural metadata used to build the book section tree"
+        name_source:
+          kind: cli_argument
+          flag: --metadata
+    writes:
+      - kind: jsonl_file
+        logical_name: chunks_jsonl
+        purpose: "Chunk JSONL output used as the canonical input to ingest pipelines"
+        name_source:
+          kind: cli_argument
+          flag: --out
+
+  dense_ingest:
+    language: python
+    purpose: "CLI dense ingest pipeline that reads chunk JSONL, creates chunk embeddings, and upserts Qdrant points"
+    reads:
+      - kind: jsonl_file
+        logical_name: chunks_jsonl
+        purpose: "Chunk JSONL records to be embedded and indexed"
+        name_source:
+          kind: cli_argument
+          flag: --chunks
+      - kind: toml_config
+        logical_name: dense_ingest_config
+        purpose: "Source of truth for dense ingest pipeline behavior"
+        name_source:
+          kind: cli_argument
+          flag: --config
+      - kind: dotenv_file
+        logical_name: dense_ingest_env
+        purpose: "Runtime endpoints for Qdrant and Ollama embedding service"
+        name_source:
+          kind: cli_argument
+          flag: --env-file
+      - kind: embedding_service
+        logical_name: ollama_embedding_service
+        purpose: "Local embedding service used to create one dense embedding per chunk text batch; the same service is also used by rag_runtime for query embeddings"
+        name_source:
+          kind: env_key
+          source: dense_ingest_env
+          key: OLLAMA_URL
+    writes:
+      - kind: qdrant_collection
+        logical_name: primary_chunk_collection
+        purpose: "Dense vector collection that stores indexed chunk points and payloads"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/dense/ingest.toml
+          key: qdrant.collection.name
+      - kind: jsonl_file
+        logical_name: failed_chunk_log
+        purpose: "Hard failure log for chunks that could not be ingested"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/dense/ingest.toml
+          key: logging.failed_chunk_log_path
+      - kind: jsonl_file
+        logical_name: skipped_chunk_log
+        purpose: "Skip log for chunks skipped due to fingerprint-change policy"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/dense/ingest.toml
+          key: logging.skipped_chunk_log_path
+
+  hybrid_ingest:
+    language: python
+    purpose: "CLI hybrid ingest pipeline that reads chunk JSONL, builds sparse vocabulary and BM25 term-stat artifacts, and upserts hybrid Qdrant points"
+    reads:
+      - kind: jsonl_file
+        logical_name: chunks_jsonl
+        purpose: "Chunk JSONL records to be embedded and indexed"
+        name_source:
+          kind: cli_argument
+          flag: --chunks
+      - kind: toml_config
+        logical_name: hybrid_ingest_config
+        purpose: "Source of truth for hybrid ingest pipeline behavior"
+        name_source:
+          kind: cli_argument
+          flag: --config
+      - kind: dotenv_file
+        logical_name: hybrid_ingest_env
+        purpose: "Runtime endpoints for Qdrant and Ollama embedding service"
+        name_source:
+          kind: cli_argument
+          flag: --env-file
+      - kind: embedding_service
+        logical_name: ollama_embedding_service
+        purpose: "Local embedding service used to create the dense side of the hybrid index"
+        name_source:
+          kind: env_key
+          source: hybrid_ingest_env
+          key: OLLAMA_URL
+    writes:
+      - kind: qdrant_collection
+        logical_name: hybrid_chunk_collection
+        purpose: "Hybrid collection that stores dense vectors, sparse vectors, and payloads for indexed chunks"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/hybrid/ingest.toml
+          key: qdrant.collection.name
+      - kind: json_file
+        logical_name: sparse_vocabulary_artifact
+        purpose: "Sparse vocabulary artifact used by hybrid retrieval and ingestion"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/hybrid/ingest.toml
+          key: artifacts.vocabulary_path
+      - kind: json_file
+        logical_name: sparse_term_stats_artifact
+        purpose: "BM25 term statistics artifact used by hybrid retrieval"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/hybrid/ingest.toml
+          key: sparse.bm25_term_stats_path
+
+  run_stack_launcher:
+    language: python
+    purpose: "Thin launcher for rag_runtime and eval_engine that resolves profile-aware inputs, writes effective config snapshots, and optionally executes the selected command"
+    reads:
+      - kind: toml_config
+        logical_name: runtime_config
+        purpose: "Base rag_runtime config selected by the launcher"
+        name_source:
+          kind: cli_argument
+          flag: --runtime-config
+      - kind: toml_config
+        logical_name: eval_config
+        purpose: "Base eval_engine config selected by the launcher"
+        name_source:
+          kind: cli_argument
+          flag: --eval-config
+      - kind: dotenv_file
+        logical_name: root_env
+        purpose: "Repository root env file that provides POSTGRES_URL and TRACING_ENDPOINT for launcher-built eval commands"
+        name_source:
+          kind: runtime_file
+          path: .env
+      - kind: json_file
+        logical_name: question_dataset_bundle
+        purpose: "Question set metadata and questions used to resolve runtime and eval launch inputs"
+        name_source:
+          kind: repository_path
+          path: Evidence/evals/datasets
+      - kind: json_file
+        logical_name: failed_eval_run_manifest
+        optional: true
+        purpose: "Manifest used when the launcher resumes a failed eval run"
+        name_source:
+          kind: repository_path
+          path: Evidence/evals/runs
+    writes:
+      - kind: toml_config
+        logical_name: effective_rag_runtime_config
+        purpose: "Temporary launcher-generated runtime config snapshot with resolved provider and reranker choices"
+        name_source:
+          kind: filesystem_path
+          path: tmp/run_stack_launcher
+      - kind: toml_config
+        logical_name: effective_eval_engine_config
+        purpose: "Temporary launcher-generated eval config snapshot with resolved judge choices"
+        name_source:
+          kind: filesystem_path
+          path: tmp/run_stack_launcher
+
+  rag_runtime:
+    language: rust
+    purpose: "Live request handling: validated query -> configurable dense or hybrid retrieval -> reranking -> generation through a switchable provider surface -> best-effort request capture persistence"
+    writes:
+      - kind: postgres_table
+        name: request_captures
+        purpose: "Best-effort request capture persistence after successful generation; stores retriever kind/config and reranker kind/config together with retrieval and rerank scores; persistence failure must not replace a successful user response"
+      - kind: metric_family
+        logical_name: rag_query_token_count_metric
+        purpose: "Prometheus/OpenTelemetry histogram for normalized input query token count emitted by input validation"
+    reads:
+      - kind: qdrant_service
+        name: qdrant
+        purpose: "Canonical retrieval source for runtime dense or hybrid search; runtime retrieval reads chunk payloads from Qdrant rather than Postgres"
+      - kind: embedding_service
+        logical_name: ollama_embedding_service
+        purpose: "Local embedding service used to create a query embedding before vector search in Qdrant"
+        name_source:
+          kind: runtime_service
+          service: ollama
+      - kind: chat_model_service
+        logical_name: ollama_chat_model
+        purpose: "Ollama-hosted chat model used for local answer generation"
+        name_source:
+          kind: runtime_service
+          service: ollama
+    current_limits:
+      retrieval_mode: configurable
+      reranking: configurable
+      reranker_kinds:
+        - pass_through
+        - heuristic
+        - cross_encoder
+      retriever_kinds:
+        - dense
+        - hybrid
+    external_dependencies:
+      - kind: generation_service
+        logical_name: together_generation_api
+        purpose: "External OpenAI-compatible generation API used when generation.transport_kind is openai"
+        name_source:
+          kind: env_key
+          source: runtime_env
+          key: OPENAI_COMPATIBLE_URL
+      - kind: reranker_service
+        logical_name: mxbai_reranker_api
+        purpose: "Optional external HTTP reranker service used by the cross-encoder reranking implementation"
+        name_source:
+          kind: env_key
+          source: runtime_env
+          key: RERANKER_ENDPOINT
+      - kind: reranker_service
+        logical_name: voyage_reranker_api
+        purpose: "External Voyage reranking API used when reranking.cross_encoder.transport_kind is voyageai"
+        name_source:
+          kind: env_key
+          source: runtime_env
+          key: VOYAGEAI_API_KEY
+    verification_gates:
+      - kind: generated_artifact_set
+        logical_name: rag_runtime_generated_artifacts
+        purpose: "Generation is incomplete until the full required generated artifact set has been produced"
+        source_of_truth: Specification/codegen/rag_runtime/generated_artifacts.md
+      - kind: observability_contract
+        logical_name: rag_runtime_observability_contract
+        purpose: "Business logic generation is incomplete if the required observability contract is missing"
+        source_of_truth: Specification/codegen/rag_runtime/rag_runtime.md
+      - kind: unit_test_contract
+        logical_name: rag_runtime_unit_tests
+        purpose: "Generated Rust implementation is incomplete if required unit tests from unit_tests.md are missing"
+        source_of_truth: Specification/codegen/rag_runtime/unit_tests.md
+      - kind: coverage_gate
+        logical_name: rag_runtime_coverage
+        purpose: "Generated Rust implementation must satisfy required coverage tooling and line-coverage thresholds in a normal local environment"
+        tool: cargo-llvm-cov
+        source_of_truth: Specification/codegen/rag_runtime/unit_tests.md
+      - kind: crate_validation
+        logical_name: rag_runtime_build_and_test
+        purpose: "Generated crate must pass cargo check and cargo test before completion"
+        required_commands:
+          - cargo check
+          - cargo test
+        source_of_truth: Specification/codegen/rag_runtime/rag_runtime.md
+      - kind: end_to_end_cli_validation
+        logical_name: rag_runtime_live_cli_validation
+        purpose: "Successful generation is not established by unit tests and coverage alone; final completion requires one live end-to-end CLI validation run against observability backends"
+        source_of_truth: Specification/codegen/rag_runtime/rag_runtime.md
+      - kind: privileged_validation_rule
+        logical_name: rag_runtime_privilege_escalation_for_validation
+        purpose: "If required tests or final backend verification need privileges beyond the sandbox, those privileges must still be requested and the validation completed"
+        source_of_truth: Specification/codegen/rag_runtime/rag_runtime.md
+
+  eval_engine:
+    language: python
+    purpose: "Sequential eval pipeline for request judging, retrieval judging, request summary build, run artifacts, traces, and CLI progress logging; judge calls can use local or external providers"
+    writes:
+      - kind: postgres_table
+        name: eval_processing_state
+        purpose: "Workflow state machine table for current request stage and status"
+      - kind: postgres_table
+        name: judge_generation_results
+        purpose: "Run-scoped generation judge results keyed by request, run, and suite"
+      - kind: postgres_table
+        name: judge_retrieval_results
+        purpose: "Run-scoped retrieval judge results keyed by request, run, suite, and chunk"
+      - kind: postgres_table
+        name: request_summaries
+        purpose: "Current per-request derived summary and aggregate metrics table used by the live eval dashboard"
+      - kind: postgres_table
+        name: request_run_summaries
+        purpose: "Run-scoped derived summary table used by eval run comparison dashboards for batch evals"
+      - kind: artifact_file
+        logical_name: run_manifest_json
+        purpose: "Structured run-level artifact for run scope, status, and resume state"
+        name: run_manifest
+      - kind: artifact_file
+        logical_name: run_report_markdown
+        purpose: "Human-readable run summary artifact for one eval run"
+        name: run_report
+    reads:
+      - kind: postgres_table
+        name: request_captures
+        purpose: "Eval source of truth for retrieval/generation outcomes and reranker metadata, including cross-encoder request-capture snapshots when present"
+      - kind: jsonl_file
+        logical_name: chunks_jsonl
+        purpose: "Canonical chunk text source used by generation and retrieval judge workers"
+        name_source:
+          kind: orchestrator_parameter
+          field: chunks_path
+      - kind: artifact_file
+        logical_name: run_manifest_json
+        purpose: "Run manifest is read again during same-run resume flow"
+        name: run_manifest
+      - kind: judge_model_service
+        logical_name: ollama_judge_model
+        purpose: "Ollama-hosted judge model used by eval workers for local generation and retrieval judging"
+        name_source:
+          kind: runtime_service
+          service: ollama
+    external_dependencies:
+      - kind: judge_service
+        logical_name: together_judge_api
+        purpose: "External OpenAI-compatible judge API used when the eval judge provider is set to Together"
+        name_source:
+          kind: env_key
+          source: runtime_env
+          key: TOGETHER_API_KEY
+    current_limits:
+      execution_mode: sequential
+      worker_invocation: in_process
+      signals: traces_plus_console_logs
+      run_scope_is_frozen: true
+      resume_mode: same_run_id_only
+
+  qdrant:
+    purpose: "Canonical storage for indexed chunk points, vectors, and retrieval payloads"
+    stores:
+      - kind: qdrant_collection
+        logical_name: primary_chunk_collection
+        purpose: "Config-resolved Qdrant collection that holds the main indexed chunk corpus"
+        name_source:
+          kind: config_file
+          path: Execution/ingest/dense/ingest.toml
+          key: qdrant.collection.name
+
+  embedding_service:
+    purpose: "Logical service role for creating dense embeddings both for ingest chunk texts and for rag_runtime user-query embeddings"
+    note: "This is a logical role, not a separate physical backend; it is currently implemented by the Ollama container"
+    implemented_by:
+      - kind: container_service
+        name: ollama
+
+  generation_provider:
+    purpose: "Switchable generation provider surface used by rag_runtime; current backends are local Ollama and external Together"
+
+  reranking_provider:
+    purpose: "Switchable reranking provider surface used by rag_runtime; current backends are the local HTTP reranker path and external Voyage"
+
+  judge_provider:
+    purpose: "Switchable judge provider surface used by eval_engine; current backends are local Ollama and external Together"
+
+  agent_orchestrator:
+    language: python
+    purpose: "MCP control plane for project multi-agent workflows; coordinates workflow planning, routing decisions, retries, and artifact handoff"
+
+  together:
+    purpose: "External OpenAI-compatible provider used for generation and eval judging"
+
+  voyage:
+    purpose: "External reranking provider used by the cross-encoder reranking path"
+
+  ollama:
+    purpose: "Single Ollama container that hosts the embedding model and local fallback generation and eval judge models"
+    hosts:
+      - kind: embedding_model_role
+        logical_name: dense_embedding_model
+        purpose: "Used by dense_ingest to create dense embeddings for chunk texts and by rag_runtime retrieval to create embeddings for user queries"
+      - kind: chat_model_role
+        logical_name: runtime_chat_model
+        purpose: "Used by rag_runtime as the generation model for live answers"
+      - kind: judge_model_role
+        logical_name: eval_judge_model
+        purpose: "Used by eval_engine as the judge model for offline evaluation"
+
+  postgres:
+    purpose: "Canonical storage for eval data and request capture records, managed by Execution/docker/compose.yaml"
+    stores:
+      - kind: postgres_table
+        name: request_captures
+      - kind: postgres_table
+        name: eval_processing_state
+      - kind: postgres_table
+        name: judge_generation_results
+      - kind: postgres_table
+        name: judge_retrieval_results
+      - kind: postgres_table
+        name: request_summaries
+      - kind: postgres_table
+        name: request_run_summaries
+
+  artifact_storage:
+    purpose: "Repository artifact storage for eval run outputs written under Evidence/evals/runs/"
+    stores:
+      - kind: artifact_file
+        logical_name: run_manifest_json
+        purpose: "Structured run-level manifest artifact"
+      - kind: artifact_file
+        logical_name: run_report_markdown
+        purpose: "Human-readable run report artifact"
+
+  grafana:
+    purpose: "Dashboards over Postgres and Prometheus"
+    reads:
+      - kind: dashboard_directory
+        logical_name: rag_runtime_grafana_dashboards
+        purpose: "Repository-owned Grafana dashboards for rag_runtime observability"
+        name: Measurement/observability/grafana/dashboards
+      - kind: dashboard_directory
+        logical_name: eval_grafana_dashboards
+        purpose: "Repository-owned Grafana dashboards for eval monitoring"
+        name: Measurement/evals/grafana/dashboards
+      - kind: dashboard_file
+        logical_name: eval_live_dashboard
+        purpose: "Live eval dashboard for current request-level eval activity as requests are judged in near real time"
+        name: Measurement/evals/grafana/dashboards/live_evals.json
+      - kind: dashboard_file
+        logical_name: eval_run_dashboard
+        purpose: "Run dashboard for batch eval runs and run-to-run comparison using run-scoped summary rows"
+        name: Measurement/evals/grafana/dashboards/eval_runs.json
+      - kind: provisioning_directory
+        logical_name: rag_runtime_grafana_provisioning
+        purpose: "Grafana provisioning for rag_runtime dashboards and datasources"
+        name: Measurement/observability/grafana/provisioning
+      - kind: provisioning_directory
+        logical_name: eval_grafana_provisioning
+        purpose: "Grafana provisioning for eval dashboards and datasources"
+        name: Measurement/evals/grafana/provisioning
+
+  tempo:
+    purpose: "Trace storage"
+
+  phoenix:
+    purpose: "Trace and LLM observability UI"
+
+  prometheus:
+    purpose: "Metrics storage"
+
+data_flow:
+  - from: source_pdf
+    to: extractor
+    description: "Extractor reads the source PDF via --pdf"
+  - from: extractor_rules_metadata
+    to: extractor
+    description: "Extractor reads mandatory cleanup rules metadata via --rules-metadata"
+  - from: clean_text_metadata_overrides
+    to: extractor
+    description: "Extractor may read optional clean_text page overrides via --clean-text-metadata"
+  - from: known_terms_metadata
+    to: extractor
+    description: "Extractor may read optional term normalization metadata via --terms-metadata"
+  - from: extractor
+    to: clean_pages_jsonl
+    description: "Extractor writes page-level JSONL rows with page, raw_text, and clean_text via --out"
+  - from: clean_pages_jsonl
+    to: chunker
+    description: "Chunker reads page-level clean_text JSONL via --pages"
+  - from: book_content_metadata_json
+    to: chunker
+    description: "Chunker reads validated content metadata JSON via --metadata"
+  - from: chunker
+    to: chunks_jsonl
+    description: "Chunker writes one chunks JSONL output via --out"
+  - from: chunks_jsonl
+    to: dense_ingest
+    description: "Dense ingest reads chunk JSONL via --chunks"
+  - from: dense_ingest_config
+    to: dense_ingest
+    description: "Dense ingest reads pipeline behavior from TOML config via --config"
+  - from: dense_ingest_env
+    to: dense_ingest
+    description: "Dense ingest reads Qdrant and Ollama endpoints from dotenv env file via --env-file"
+  - from: dense_ingest
+    to: embedding_service
+    description: "Dense ingest sends chunk text batches to the embedding service to create dense chunk vectors"
+  - from: dense_ingest
+    to: qdrant
+    description: "Dense ingest creates embeddings and upserts chunk points into the config-resolved Qdrant collection"
+  - from: chunks_jsonl
+    to: hybrid_ingest
+    description: "Hybrid ingest reads chunk JSONL via --chunks"
+  - from: hybrid_ingest_config
+    to: hybrid_ingest
+    description: "Hybrid ingest reads pipeline behavior from TOML config via --config"
+  - from: hybrid_ingest_env
+    to: hybrid_ingest
+    description: "Hybrid ingest reads Qdrant and Ollama endpoints from dotenv env file via --env-file"
+  - from: hybrid_ingest
+    to: embedding_service
+    description: "Hybrid ingest sends chunk text batches to the embedding service to create the dense side of the hybrid index"
+  - from: hybrid_ingest
+    to: qdrant
+    description: "Hybrid ingest creates dense and sparse representations and upserts chunk points into the hybrid Qdrant collection"
+  - from: Execution/bin/run_stack.py
+    to: rag_runtime
+    description: "The launcher resolves profile-aware runtime inputs and starts rag_runtime through the cargo entrypoint"
+  - from: Execution/bin/run_stack.py
+    to: eval_engine
+    description: "The launcher resolves profile-aware eval inputs and starts eval_engine through the eval orchestrator"
+  - from: Execution/bin/run_stack.py
+    to: tmp/run_stack_launcher
+    description: "Interactive launches write temporary effective runtime and eval config snapshots under the launcher artifact directory"
+  - from: rag_runtime
+    to: embedding_service
+    description: "Runtime retrieval sends the validated user query to the embedding service to create a query embedding before vector search"
+  - from: rag_runtime
+    to: qdrant
+    description: "Runtime retrieval sends vector search requests to Qdrant using the query embedding"
+  - from: rag_runtime
+    to: generation_provider
+    description: "Runtime generation uses a switchable provider surface that can target local Ollama or the external Together API"
+  - from: rag_runtime
+    to: reranking_provider
+    description: "Cross-encoder reranking uses a switchable provider surface that can target the local HTTP reranker path or the external Voyage API"
+  - from: rag_runtime
+    to: postgres
+    description: "After successful generation, runtime writes one best-effort request capture row into the request_captures table, including reranker kind/config and both retrieval and rerank scores"
+  - from: ollama
+    to: embedding_service
+    description: "Ollama provides the embedding-model role used both by dense ingest for chunk embeddings and by rag_runtime for query embeddings"
+  - from: ollama
+    to: rag_runtime
+    description: "Ollama provides the chat-model role used by the runtime generation path"
+  - from: ollama
+    to: eval_engine
+    description: "Ollama provides the judge-model role used by eval workers"
+  - from: together
+    to: generation_provider
+    description: "Together provides the external OpenAI-compatible generation API surface"
+  - from: together
+    to: judge_provider
+    description: "Together provides the external judge API surface"
+  - from: voyage
+    to: reranking_provider
+    description: "Voyage provides the external reranking API surface"
+  - from: request_captures
+    to: eval_engine
+    description: "Eval engine reads request-level source rows from request_captures in Postgres, including reranker metadata and final reranked retrieval items"
+  - from: chunks_jsonl
+    to: eval_engine
+    description: "Eval workers resolve chunk text from the canonical chunks JSONL artifact"
+  - from: eval_engine
+    to: judge_provider
+    description: "Eval workers route judge calls through a switchable provider surface that can target local Ollama or external Together"
+  - from: eval_engine
+    to: ollama
+    description: "Eval workers send long-running judge requests to the Ollama-hosted judge model"
+  - from: eval_engine
+    to: postgres
+    description: "Eval workers read request captures and write eval_processing_state, judge tables, request_summaries, and request_run_summaries in Postgres"
+  - from: agent_orchestrator
+    to: Execution/orchestration/agent_workflow_runner.py
+    description: "The workflow control plane coordinates planning, status, retries, and artifact handoff through the execution-side runner"
+  - from: eval_engine
+    to: artifact_storage
+    description: "Eval orchestrator writes and updates the structured run_manifest.json artifact"
+  - from: eval_engine
+    to: artifact_storage
+    description: "Eval orchestrator writes one human-readable run_report.md artifact"
+  - from: eval_engine
+    to: tempo
+    description: "Eval orchestrator and worker stages export traces to Tempo through OTLP and the collector"
+  - from: Measurement/observability
+    to: grafana
+    description: "Grafana loads repository-owned rag_runtime dashboards and provisioning assets from Measurement/observability"
+  - from: Measurement/evals
+    to: grafana
+    description: "Grafana loads repository-owned eval dashboards and provisioning assets from Measurement/evals"
+  - from: grafana
+    to: postgres
+    description: "Grafana reads live request_summaries and batch-oriented request_run_summaries from Postgres"
+  - from: grafana
+    to: prometheus
+    description: "Grafana reads rag_runtime metrics from Prometheus, including normalized input query token count histograms"
+  - from: services
+    to: tempo
+    description: "Services emit traces to Tempo"
+  - from: services
+    to: phoenix
+    description: "Services expose trace and LLM observability data to Phoenix"
+
+debugging_defaults:
+  primary_runtime_signal: observability
+  cli_logs_priority: secondary
+  retrieval_truth: qdrant
+  eval_truth: postgres
+  contract_truth: specification
+  trace_truth: tempo_and_phoenix
+  provider_switch_truth: project_context
+  cli_trace_visibility:
+    default_agent_rust_log: warn
+    symptom: "rag_runtime CLI traces appear missing in Phoenix when launched from the agent shell without overriding RUST_LOG"
+    required_action: "Always launch rag_runtime CLI with a RUST_LOG that allows info spans before using Phoenix as the runtime trace source of truth"
+    suggested_values:
+      - rag_runtime=info
+      - rag_runtime=trace
+  local_metrics_limitations:
+    applies_to: "Prometheus histogram latency panels for local rag_runtime CLI traffic"
+    sparse_traffic_effect: "Sparse or intermittent request flows can push histogram_quantile(rate(..._bucket[window])) panels toward bucket-tail values and make latency graphs look misleading after pauses"
+    interpretation_rule: "For local sparse traffic, treat Phoenix traces as the latency source of truth; Prometheus latency panels become more trustworthy only under steadier request rates"
+    known_tail_example_ms: 2500
+  provider_switch_failure_modes:
+    applies_to:
+      - generation
+      - reranking
+      - eval_judging
+    common_signals:
+      - missing API key
+      - wrong base URL
+      - incompatible response shape
+      - rate limit or timeout
+      - transport_kind/provider mismatch
+    first_checks:
+      - "Confirm the active provider in the relevant TOML config."
+      - "Confirm the provider-specific env vars are present in the runtime env."
+      - "If the path is external, confirm the OpenAI-compatible or provider-specific endpoint shape matches the selected transport."
+
+language_boundaries:
+  rust:
+    use_for:
+      - runtime
+      - retrieval
+      - reranking
+      - production_path_logic
+  python:
+    use_for:
+      - evals
+      - chunking
+      - ingest
+      - orchestration
+      - launchers
+      - offline_tooling
+
+decision_rules:
+  when_question_is_about:
+    service_roles: project_context_mcp
+    data_flow: project_context_mcp
+    debugging_path: project_context_mcp
+    language_choice: project_context_mcp
+    storage_ownership: project_context_mcp

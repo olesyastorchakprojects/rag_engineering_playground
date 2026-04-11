@@ -1,0 +1,73 @@
+{
+  "title": "Runtime Content & Retrieval",
+  "uid": "rag-ai-overview",
+  "schemaVersion": 41,
+  "version": 10,
+  "refresh": "30s",
+  "panels": [
+    {
+      "title": "Token Averages",
+      "type": "timeseries",
+      "gridPos": { "h": 10, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rag_query_token_count_sum) / clamp_min(sum(rag_query_token_count_count), 1)",
+          "legendFormat": "query_tokens_avg",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rag_generation_prompt_tokens_sum) / clamp_min(sum(rag_generation_prompt_tokens_count), 1)",
+          "legendFormat": "prompt_tokens_avg",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rag_generation_completion_tokens_sum) / clamp_min(sum(rag_generation_completion_tokens_count), 1)",
+          "legendFormat": "completion_tokens_avg",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(rag_generation_total_tokens_sum) / clamp_min(sum(rag_generation_total_tokens_count), 1)",
+          "legendFormat": "total_tokens_avg",
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "title": "Chunk Averages",
+      "type": "timeseries",
+      "gridPos": { "h": 10, "w": 8, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rag_retrieved_chunks_count_sum) / clamp_min(sum(rag_retrieved_chunks_count_count), 1)",
+          "legendFormat": "retrieved_chunks_avg",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rag_generation_input_chunks_count_sum) / clamp_min(sum(rag_generation_input_chunks_count_count), 1)",
+          "legendFormat": "generation_input_chunks_avg",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Retrieval Score Averages",
+      "type": "timeseries",
+      "gridPos": { "h": 10, "w": 8, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rag_retrieval_top1_score_sum) / clamp_min(sum(rag_retrieval_top1_score_count), 1)",
+          "legendFormat": "top1_avg",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rag_retrieval_topk_mean_score_sum) / clamp_min(sum(rag_retrieval_topk_mean_score_count), 1)",
+          "legendFormat": "topk_mean_avg",
+          "refId": "B"
+        }
+      ]
+    }
+  ]
+}

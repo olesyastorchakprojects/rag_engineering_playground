@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/page_record.schema.json",
+  "title": "Page Record Schema",
+  "description": "Schema for one JSONL page record used as chunker input.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "page",
+    "clean_text"
+  ],
+  "properties": {
+    "page": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "clean_text": {
+      "type": "string"
+    }
+  }
+}

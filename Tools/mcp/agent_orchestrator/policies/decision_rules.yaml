@@ -1,0 +1,161 @@
+task_mode_rules:
+  implement-change:
+    default_pipeline:
+      - Coordinator
+      - Code Writer Agent
+      - Test Writer Agent
+      - Spec Conformance Agent
+      - Code Review Agent
+      - Coverage & Gaps Agent
+  review-change:
+    default_pipeline:
+      - Coordinator
+      - Spec Conformance Agent
+      - Code Review Agent
+      - Coverage & Gaps Agent
+  spec-driven:
+    default_pipeline:
+      - Coordinator
+      - Spec Conformance Agent
+      - Code Writer Agent
+      - Test Writer Agent
+      - Spec Conformance Agent
+      - Code Review Agent
+      - Coverage & Gaps Agent
+
+execution_defaults:
+  model: gpt-5.4-mini
+  reasoning_effort: medium
+
+agent_execution_overrides:
+  Coordinator:
+    model: gpt-5.4-mini
+    reasoning_effort: medium
+  Code Writer Agent:
+    model: gpt-5.4-mini
+    reasoning_effort: medium
+  Test Writer Agent:
+    model: gpt-5.4-mini
+    reasoning_effort: medium
+  Spec Conformance Agent:
+    model: gpt-5.4-mini
+    reasoning_effort: medium
+  Code Review Agent:
+    model: gpt-5.4-mini
+    reasoning_effort: medium
+  Coverage & Gaps Agent:
+    model: gpt-5.4-mini
+    reasoning_effort: medium
+
+path_rules:
+  - match_prefixes:
+      - Execution/ingest/hybrid/
+      - Execution/ingest/schemas/
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Spec Conformance MCP
+      - Qdrant MCP
+
+  - match_prefixes:
+      - Execution/bin/
+      - Execution/orchestration/
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+    flags:
+      - requires_stale_truth_review
+
+  - match_prefixes:
+      - Execution/rag_runtime/
+      - Specification/codegen/rag_runtime/
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Spec Conformance MCP
+
+  - match_prefixes:
+      - Measurement/observability/
+      - Specification/codegen/rag_runtime/observability/
+    add_mcps:
+      - Observability MCP
+      - Spec MCP
+
+  - match_prefixes:
+      - Measurement/evals/
+      - Execution/evals/
+      - Execution/docker/postgres/init/
+    add_mcps:
+      - Postgres MCP
+      - Eval Experiments MCP
+      - Observability MCP
+      - Spec MCP
+      - Project Context MCP
+
+  - match_prefixes:
+      - Tools/mcp/
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+    flags:
+      - requires_stale_truth_review
+
+  - match_prefixes:
+      - Specification/tasks/multi_agent/
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+
+module_rules:
+  hybrid_ingest:
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Spec Conformance MCP
+      - Qdrant MCP
+  rag_runtime:
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Spec Conformance MCP
+  eval_engine:
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Postgres MCP
+      - Eval Experiments MCP
+  run_stack_launcher:
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Eval Experiments MCP
+  agent_orchestrator:
+    add_mcps:
+      - Project Context MCP
+      - Spec MCP
+      - Spec Conformance MCP
+
+finding_rules:
+  if_spec_conformance_has:
+    code_updates_needed:
+      action: rerun_code_writer
+    spec_updates_needed:
+      action: mark_requires_spec_update
+    mcp_updates_needed:
+      action: rerun_code_writer_for_mcp_scope
+
+  if_code_review_has_findings:
+    action: rerun_code_writer
+
+  if_coverage_has_uncovered_gaps:
+    action: rerun_test_writer
+
+parallelization_rules:
+  - after: Code Writer Agent
+    may_run_in_parallel:
+      - Test Writer Agent
+      - Code Review Agent
+  - after: Test Writer Agent
+    may_run_in_parallel:
+      - Spec Conformance Agent
+      - Code Review Agent

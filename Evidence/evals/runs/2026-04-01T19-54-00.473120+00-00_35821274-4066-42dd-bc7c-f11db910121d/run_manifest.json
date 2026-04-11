@@ -1,0 +1,35 @@
+{
+  "run_id": "35821274-4066-42dd-bc7c-f11db910121d",
+  "run_type": "experiment",
+  "status": "completed",
+  "started_at": "2026-04-01T19:54:00.473120+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "../../Evidence/parsing/understanding_distributed_systems/chunks/fixed_chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434/v1",
+  "judge_model": "qwen2.5:1.5b-instruct-q4_K_M",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 5,
+  "run_scope_request_ids": [
+    "be3a9e72-60cd-4840-93ff-82c61256c706",
+    "87eab15f-98de-4f86-9cb3-5592f5ad94d7",
+    "f62faf62-873b-4357-899d-54d004c6b0b6",
+    "e2d5caf3-8f9a-4887-9984-e293b8e625dc",
+    "b647e6f0-6d20-4704-9499-04d63d68a08c"
+  ],
+  "reranker_kind": "PassThrough",
+  "completed_at": "2026-04-01T20:27:57.019672+00:00"
+}

@@ -1,0 +1,36 @@
+{
+  "run_id": "f2f41aad-10af-45cc-9cfc-04a276715468",
+  "run_type": "experiment",
+  "status": "completed",
+  "started_at": "2026-04-06T14:15:26.967246+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "/home/olesia/code/prompt_gen_proj/Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434/v1",
+  "judge_model": "qwen2.5:1.5b-instruct-ctx32k",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 5,
+  "run_scope_request_ids": [
+    "777a6f8f-d250-4d15-9b97-daeb5d45878a",
+    "deeebe25-cfca-4a92-9f66-9f53b66a3da4",
+    "4f15f91b-c30b-4146-8b95-4661ddb348ce",
+    "0967d7b6-31f2-4368-9e92-136d04df0755",
+    "f5736cf8-4e07-40e2-88c4-09ae7e6a6f92"
+  ],
+  "retriever_kind": "Dense",
+  "reranker_kind": "PassThrough",
+  "completed_at": "2026-04-06T14:59:55.721719+00:00"
+}

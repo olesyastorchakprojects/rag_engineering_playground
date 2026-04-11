@@ -1,0 +1,125 @@
+{
+  "title": "Eval Runs",
+  "uid": "eval-runs",
+  "schemaVersion": 41,
+  "version": 3,
+  "refresh": "1m",
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "baseline_run_id",
+        "label": "Baseline Run",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres"
+        },
+        "refresh": 2,
+        "includeAll": false,
+        "multi": false,
+        "sort": 0,
+        "query": "SELECT run_id AS __value, min(source_received_at)::date::text || '  ' || run_id AS __text FROM request_run_summaries WHERE $__timeFilter(source_received_at) GROUP BY run_id ORDER BY min(source_received_at) DESC",
+        "current": {}
+      },
+      {
+        "name": "candidate_run_id",
+        "label": "Candidate Run",
+        "type": "query",
+        "datasource": {
+          "type": "postgres",
+          "uid": "postgres"
+        },
+        "refresh": 2,
+        "includeAll": false,
+        "multi": false,
+        "sort": 0,
+        "query": "SELECT run_id AS __value, min(source_received_at)::date::text || '  ' || run_id AS __text FROM request_run_summaries WHERE $__timeFilter(source_received_at) GROUP BY run_id ORDER BY min(source_received_at) DESC",
+        "current": {}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "title": "Compare: Run Metadata & Config",
+      "type": "table",
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH b AS (SELECT DISTINCT ON (rrs.run_id) rrs.run_id AS eval_run_id, COALESCE(rc.runtime_run_id, '') AS runtime_run_id, count(*) OVER (PARTITION BY rrs.run_id)::text AS request_count, CASE WHEN rrs.retriever_kind = 'Hybrid' AND rc.retriever_config->'strategy'->>'kind' = 'bag_of_words' THEN 'Hybrid - bow' WHEN rrs.retriever_kind = 'Hybrid' AND rc.retriever_config->'strategy'->>'kind' = 'bm25_like' THEN 'Hybrid - bm25' ELSE rrs.retriever_kind END AS retriever_label, rrs.embedding_model, rc.retriever_config->>'qdrant_collection_name' AS collection, rrs.corpus_version, rc.retriever_config->>'chunking_strategy' AS chunking_strategy, rrs.top_k_requested::text AS top_k, rc.reranker_kind, COALESCE(rc.reranker_config->'cross_encoder'->>'model_name', '') AS reranker_model, COALESCE(rc.reranker_config->'cross_encoder'->>'url', '') AS reranker_endpoint, rrs.generation_model, COALESCE(rc.generation_config->>'model_endpoint', '') AS gen_model_endpoint, COALESCE(rc.generation_config->>'temperature', '') AS temperature, COALESCE(rc.generation_config->>'max_context_chunks', '') AS max_context_chunks, rrs.judge_generation_model FROM request_run_summaries rrs JOIN request_captures rc ON rc.request_id = rrs.request_id WHERE rrs.run_id = '${baseline_run_id}' ORDER BY rrs.run_id, rrs.source_received_at), c AS (SELECT DISTINCT ON (rrs.run_id) rrs.run_id AS eval_run_id, COALESCE(rc.runtime_run_id, '') AS runtime_run_id, count(*) OVER (PARTITION BY rrs.run_id)::text AS request_count, CASE WHEN rrs.retriever_kind = 'Hybrid' AND rc.retriever_config->'strategy'->>'kind' = 'bag_of_words' THEN 'Hybrid - bow' WHEN rrs.retriever_kind = 'Hybrid' AND rc.retriever_config->'strategy'->>'kind' = 'bm25_like' THEN 'Hybrid - bm25' ELSE rrs.retriever_kind END AS retriever_label, rrs.embedding_model, rc.retriever_config->>'qdrant_collection_name' AS collection, rrs.corpus_version, rc.retriever_config->>'chunking_strategy' AS chunking_strategy, rrs.top_k_requested::text AS top_k, rc.reranker_kind, COALESCE(rc.reranker_config->'cross_encoder'->>'model_name', '') AS reranker_model, COALESCE(rc.reranker_config->'cross_encoder'->>'url', '') AS reranker_endpoint, rrs.generation_model, COALESCE(rc.generation_config->>'model_endpoint', '') AS gen_model_endpoint, COALESCE(rc.generation_config->>'temperature', '') AS temperature, COALESCE(rc.generation_config->>'max_context_chunks', '') AS max_context_chunks, rrs.judge_generation_model FROM request_run_summaries rrs JOIN request_captures rc ON rc.request_id = rrs.request_id WHERE rrs.run_id = '${candidate_run_id}' ORDER BY rrs.run_id, rrs.source_received_at) SELECT ord, field, b_val AS baseline, c_val AS candidate FROM (VALUES (1,'eval_run_id',(SELECT eval_run_id FROM b),(SELECT eval_run_id FROM c)), (2,'runtime_run_id',(SELECT runtime_run_id FROM b),(SELECT runtime_run_id FROM c)), (3,'request_count',(SELECT request_count FROM b),(SELECT request_count FROM c)), (4,'retriever.kind',(SELECT retriever_label FROM b),(SELECT retriever_label FROM c)), (5,'retriever.embedding_model',(SELECT embedding_model FROM b),(SELECT embedding_model FROM c)), (6,'retriever.collection',(SELECT collection FROM b),(SELECT collection FROM c)), (7,'retriever.corpus_version',(SELECT corpus_version FROM b),(SELECT corpus_version FROM c)), (8,'retriever.chunking_strategy',(SELECT chunking_strategy FROM b),(SELECT chunking_strategy FROM c)), (9,'retriever.top_k',(SELECT top_k FROM b),(SELECT top_k FROM c)), (10,'reranker.kind',(SELECT reranker_kind FROM b),(SELECT reranker_kind FROM c)), (11,'reranker.model',(SELECT reranker_model FROM b),(SELECT reranker_model FROM c)), (12,'reranker.url',(SELECT reranker_endpoint FROM b),(SELECT reranker_endpoint FROM c)), (13,'generation.model',(SELECT generation_model FROM b),(SELECT generation_model FROM c)), (14,'generation.model_endpoint',(SELECT gen_model_endpoint FROM b),(SELECT gen_model_endpoint FROM c)), (15,'generation.temperature',(SELECT temperature FROM b),(SELECT temperature FROM c)), (16,'generation.max_context_chunks',(SELECT max_context_chunks FROM b),(SELECT max_context_chunks FROM c)), (17,'judge.model',(SELECT judge_generation_model FROM b),(SELECT judge_generation_model FROM c))) AS t(ord, field, b_val, c_val) ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 18 },
+      "fieldConfig": {
+        "defaults": { "custom": { "align": "left" } },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "ord" },
+            "properties": [
+              { "id": "custom.width", "value": 48 }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "Compare: Key Metrics Side-by-Side",
+      "type": "table",
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH b AS (SELECT round(avg(answer_completeness_score)::numeric,4) AS v1, round(avg(groundedness_score)::numeric,4) AS v2, round(avg(answer_relevance_score)::numeric,4) AS v3, round(avg(correct_refusal_score)::numeric,4) AS v4, round(avg(retrieval_relevance_mean)::numeric,4) AS v5, round(avg(retrieval_relevance_selected_mean)::numeric,4) AS v6, round(avg(retrieval_relevance_weighted_topk)::numeric,4) AS v7, round(avg(retrieval_recall_soft)::numeric,4) AS v8, round(avg(retrieval_recall_strict)::numeric,4) AS v9, round(avg(retrieval_ndcg)::numeric,4) AS v10, round(avg(reranking_recall_soft)::numeric,4) AS v11, round(avg(reranking_recall_strict)::numeric,4) AS v12, round(avg(reranking_ndcg)::numeric,4) AS v13, round(avg(retrieval_context_loss_soft)::numeric,4) AS v14, round(avg(retrieval_context_loss_strict)::numeric,4) AS v15, min(retrieval_evaluated_k) AS rk, min(reranking_evaluated_k) AS nk, round((avg(groundedness_score) FILTER (WHERE retrieval_num_relevant_soft > 0))::numeric,4) AS v16, round((avg(groundedness_score) FILTER (WHERE reranking_num_relevant_soft > 0))::numeric,4) AS v17, round((avg(CASE WHEN groundedness_score = 1.0 AND answer_completeness_score = 1.0 THEN 1.0 ELSE 0.0 END) FILTER (WHERE retrieval_num_relevant_soft > 0))::numeric,4) AS v18, round((avg(CASE WHEN groundedness_score = 1.0 AND answer_completeness_score = 1.0 THEN 1.0 ELSE 0.0 END) FILTER (WHERE reranking_num_relevant_soft > 0))::numeric,4) AS v19 FROM request_run_summaries WHERE run_id = '${baseline_run_id}'), c AS (SELECT round(avg(answer_completeness_score)::numeric,4) AS v1, round(avg(groundedness_score)::numeric,4) AS v2, round(avg(answer_relevance_score)::numeric,4) AS v3, round(avg(correct_refusal_score)::numeric,4) AS v4, round(avg(retrieval_relevance_mean)::numeric,4) AS v5, round(avg(retrieval_relevance_selected_mean)::numeric,4) AS v6, round(avg(retrieval_relevance_weighted_topk)::numeric,4) AS v7, round(avg(retrieval_recall_soft)::numeric,4) AS v8, round(avg(retrieval_recall_strict)::numeric,4) AS v9, round(avg(retrieval_ndcg)::numeric,4) AS v10, round(avg(reranking_recall_soft)::numeric,4) AS v11, round(avg(reranking_recall_strict)::numeric,4) AS v12, round(avg(reranking_ndcg)::numeric,4) AS v13, round(avg(retrieval_context_loss_soft)::numeric,4) AS v14, round(avg(retrieval_context_loss_strict)::numeric,4) AS v15, min(retrieval_evaluated_k) AS rk, min(reranking_evaluated_k) AS nk, round((avg(groundedness_score) FILTER (WHERE retrieval_num_relevant_soft > 0))::numeric,4) AS v16, round((avg(groundedness_score) FILTER (WHERE reranking_num_relevant_soft > 0))::numeric,4) AS v17, round((avg(CASE WHEN groundedness_score = 1.0 AND answer_completeness_score = 1.0 THEN 1.0 ELSE 0.0 END) FILTER (WHERE retrieval_num_relevant_soft > 0))::numeric,4) AS v18, round((avg(CASE WHEN groundedness_score = 1.0 AND answer_completeness_score = 1.0 THEN 1.0 ELSE 0.0 END) FILTER (WHERE reranking_num_relevant_soft > 0))::numeric,4) AS v19 FROM request_run_summaries WHERE run_id = '${candidate_run_id}'), rows AS (SELECT ord, metric, bv, cv FROM (VALUES (1,'answer_completeness_mean',(SELECT v1 FROM b),(SELECT v1 FROM c)),(2,'groundedness_mean',(SELECT v2 FROM b),(SELECT v2 FROM c)),(3,'answer_relevance_mean',(SELECT v3 FROM b),(SELECT v3 FROM c)),(4,'correct_refusal_rate',(SELECT v4 FROM b),(SELECT v4 FROM c)),(5,'retrieval_relevance_mean',(SELECT v5 FROM b),(SELECT v5 FROM c)),(6,'retrieval_relevance_selected_mean',(SELECT v6 FROM b),(SELECT v6 FROM c)),(7,'retrieval_relevance_weighted_topk_mean',(SELECT v7 FROM b),(SELECT v7 FROM c)),(8,'Recall soft top'||(SELECT rk FROM b),(SELECT v8 FROM b),(SELECT v8 FROM c)),(9,'Recall strict top'||(SELECT rk FROM b),(SELECT v9 FROM b),(SELECT v9 FROM c)),(10,'nDCG top'||(SELECT rk FROM b),(SELECT v10 FROM b),(SELECT v10 FROM c)),(11,'Recall soft top'||(SELECT nk FROM b),(SELECT v11 FROM b),(SELECT v11 FROM c)),(12,'Recall strict top'||(SELECT nk FROM b),(SELECT v12 FROM b),(SELECT v12 FROM c)),(13,'nDCG top'||(SELECT nk FROM b),(SELECT v13 FROM b),(SELECT v13 FROM c)),(14,'retrieval_context_loss_soft',(SELECT v14 FROM b),(SELECT v14 FROM c)),(15,'retrieval_context_loss_strict',(SELECT v15 FROM b),(SELECT v15 FROM c)),(16,'groundedness_given_relevant_context_top'||(SELECT rk FROM b)||'_soft',(SELECT v16 FROM b),(SELECT v16 FROM c)),(17,'groundedness_given_relevant_context_top'||(SELECT nk FROM b)||'_soft',(SELECT v17 FROM b),(SELECT v17 FROM c)),(18,'success_rate_when_at_least_one_relevant_in_topk_top'||(SELECT rk FROM b)||'_soft',(SELECT v18 FROM b),(SELECT v18 FROM c)),(19,'success_rate_when_at_least_one_relevant_in_topk_top'||(SELECT nk FROM b)||'_soft',(SELECT v19 FROM b),(SELECT v19 FROM c))) t(ord,metric,bv,cv)) SELECT metric, bv AS baseline, cv AS candidate, CASE WHEN cv IS NULL OR bv IS NULL THEN 'n/a' WHEN cv-bv >= 0 THEN '+'||to_char(cv-bv,'FM0.0000') ELSE to_char(cv-bv,'FM0.0000') END AS \"delta (candidate - baseline)\" FROM rows ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 18, "w": 24, "h": 22 },
+      "fieldConfig": { "defaults": { "custom": { "align": "left" } }, "overrides": [] }
+    },
+    {
+      "title": "Compare: Label Distributions",
+      "type": "table",
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH all_labels AS (SELECT suite_name, label FROM (VALUES ('answer_completeness','complete'),('answer_completeness','partial'),('answer_completeness','incomplete'),('groundedness','grounded'),('groundedness','partially_grounded'),('groundedness','ungrounded'),('answer_relevance','relevant'),('answer_relevance','partially_relevant'),('answer_relevance','irrelevant'),('correct_refusal','correct_refusal'),('correct_refusal','unnecessary_refusal'),('correct_refusal','non_refusal')) t(suite_name, label)), b AS (SELECT suite_name, label, count(*) AS cnt FROM (SELECT 'answer_completeness' AS suite_name, answer_completeness_label AS label FROM request_run_summaries WHERE run_id = '${baseline_run_id}' UNION ALL SELECT 'groundedness', groundedness_label FROM request_run_summaries WHERE run_id = '${baseline_run_id}' UNION ALL SELECT 'answer_relevance', answer_relevance_label FROM request_run_summaries WHERE run_id = '${baseline_run_id}' UNION ALL SELECT 'correct_refusal', correct_refusal_label FROM request_run_summaries WHERE run_id = '${baseline_run_id}') x GROUP BY suite_name, label), c AS (SELECT suite_name, label, count(*) AS cnt FROM (SELECT 'answer_completeness' AS suite_name, answer_completeness_label AS label FROM request_run_summaries WHERE run_id = '${candidate_run_id}' UNION ALL SELECT 'groundedness', groundedness_label FROM request_run_summaries WHERE run_id = '${candidate_run_id}' UNION ALL SELECT 'answer_relevance', answer_relevance_label FROM request_run_summaries WHERE run_id = '${candidate_run_id}' UNION ALL SELECT 'correct_refusal', correct_refusal_label FROM request_run_summaries WHERE run_id = '${candidate_run_id}') x GROUP BY suite_name, label), b_total AS (SELECT suite_name, sum(cnt) AS total FROM b GROUP BY suite_name), c_total AS (SELECT suite_name, sum(cnt) AS total FROM c GROUP BY suite_name) SELECT a.suite_name AS suite, a.label, COALESCE(b.cnt, 0) AS baseline_count, round(100.0 * COALESCE(b.cnt, 0) / NULLIF(bt.total, 0), 1)::text || '%' AS \"baseline_%\", COALESCE(c.cnt, 0) AS candidate_count, round(100.0 * COALESCE(c.cnt, 0) / NULLIF(ct.total, 0), 1)::text || '%' AS \"candidate_%\" FROM all_labels a LEFT JOIN b ON b.suite_name = a.suite_name AND b.label = a.label LEFT JOIN c ON c.suite_name = a.suite_name AND c.label = a.label LEFT JOIN b_total bt ON bt.suite_name = a.suite_name LEFT JOIN c_total ct ON ct.suite_name = a.suite_name ORDER BY a.suite_name, a.label",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 40, "w": 24, "h": 16 },
+      "fieldConfig": { "defaults": { "custom": { "align": "left" } }, "overrides": [] }
+    },
+    {
+      "title": "Compare: Token Usage & Cost",
+      "type": "table",
+      "datasource": {
+        "type": "postgres",
+        "uid": "postgres"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "rawSql": "WITH b_runtime AS (SELECT count(*)::numeric AS requests, COALESCE(sum(rc.prompt_tokens), 0)::numeric AS prompt_tokens, COALESCE(sum(rc.completion_tokens), 0)::numeric AS completion_tokens, COALESCE(sum(rc.total_tokens), 0)::numeric AS total_tokens, COALESCE(sum(rc.prompt_tokens * ((rc.generation_config->>'input_cost_per_million_tokens')::numeric) / 1000000.0), 0)::numeric(20,8) AS prompt_cost_usd, COALESCE(sum(rc.completion_tokens * ((rc.generation_config->>'output_cost_per_million_tokens')::numeric) / 1000000.0), 0)::numeric(20,8) AS completion_cost_usd FROM request_captures rc JOIN request_run_summaries rrs ON rrs.request_id = rc.request_id WHERE rrs.run_id = '${baseline_run_id}'), c_runtime AS (SELECT count(*)::numeric AS requests, COALESCE(sum(rc.prompt_tokens), 0)::numeric AS prompt_tokens, COALESCE(sum(rc.completion_tokens), 0)::numeric AS completion_tokens, COALESCE(sum(rc.total_tokens), 0)::numeric AS total_tokens, COALESCE(sum(rc.prompt_tokens * ((rc.generation_config->>'input_cost_per_million_tokens')::numeric) / 1000000.0), 0)::numeric(20,8) AS prompt_cost_usd, COALESCE(sum(rc.completion_tokens * ((rc.generation_config->>'output_cost_per_million_tokens')::numeric) / 1000000.0), 0)::numeric(20,8) AS completion_cost_usd FROM request_captures rc JOIN request_run_summaries rrs ON rrs.request_id = rc.request_id WHERE rrs.run_id = '${candidate_run_id}'), b_judge AS (SELECT stage_name, count(*)::numeric AS eval_calls, COALESCE(sum(prompt_tokens), 0)::numeric AS prompt_tokens, COALESCE(sum(completion_tokens), 0)::numeric AS completion_tokens, COALESCE(sum(total_tokens), 0)::numeric AS total_tokens, COALESCE(sum(prompt_tokens * input_cost_per_million_tokens / 1000000.0), 0)::numeric(20,8) AS prompt_cost_usd, COALESCE(sum(completion_tokens * output_cost_per_million_tokens / 1000000.0), 0)::numeric(20,8) AS completion_cost_usd, COALESCE(sum(total_cost_usd), 0)::numeric(20,8) AS total_cost_usd FROM judge_llm_calls WHERE run_id = '${baseline_run_id}' GROUP BY stage_name), c_judge AS (SELECT stage_name, count(*)::numeric AS eval_calls, COALESCE(sum(prompt_tokens), 0)::numeric AS prompt_tokens, COALESCE(sum(completion_tokens), 0)::numeric AS completion_tokens, COALESCE(sum(total_tokens), 0)::numeric AS total_tokens, COALESCE(sum(prompt_tokens * input_cost_per_million_tokens / 1000000.0), 0)::numeric(20,8) AS prompt_cost_usd, COALESCE(sum(completion_tokens * output_cost_per_million_tokens / 1000000.0), 0)::numeric(20,8) AS completion_cost_usd, COALESCE(sum(total_cost_usd), 0)::numeric(20,8) AS total_cost_usd FROM judge_llm_calls WHERE run_id = '${candidate_run_id}' GROUP BY stage_name), rows AS (SELECT ord, scope, metric, baseline, candidate FROM (VALUES (1, 'runtime', 'requests', (SELECT requests FROM b_runtime), (SELECT requests FROM c_runtime)), (2, 'runtime', 'prompt_tokens', (SELECT prompt_tokens FROM b_runtime), (SELECT prompt_tokens FROM c_runtime)), (3, 'runtime', 'completion_tokens', (SELECT completion_tokens FROM b_runtime), (SELECT completion_tokens FROM c_runtime)), (4, 'runtime', 'total_tokens', (SELECT total_tokens FROM b_runtime), (SELECT total_tokens FROM c_runtime)), (5, 'runtime', 'prompt_cost_usd', (SELECT prompt_cost_usd FROM b_runtime), (SELECT prompt_cost_usd FROM c_runtime)), (6, 'runtime', 'completion_cost_usd', (SELECT completion_cost_usd FROM b_runtime), (SELECT completion_cost_usd FROM c_runtime)), (7, 'runtime', 'total_cost_usd', (SELECT COALESCE(prompt_cost_usd, 0) + COALESCE(completion_cost_usd, 0) FROM b_runtime), (SELECT COALESCE(prompt_cost_usd, 0) + COALESCE(completion_cost_usd, 0) FROM c_runtime)), (8, 'judge_generation', 'eval_calls', (SELECT COALESCE(eval_calls, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(eval_calls, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (9, 'judge_generation', 'prompt_tokens', (SELECT COALESCE(prompt_tokens, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(prompt_tokens, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (10, 'judge_generation', 'completion_tokens', (SELECT COALESCE(completion_tokens, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(completion_tokens, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (11, 'judge_generation', 'total_tokens', (SELECT COALESCE(total_tokens, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(total_tokens, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (12, 'judge_generation', 'prompt_cost_usd', (SELECT COALESCE(prompt_cost_usd, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(prompt_cost_usd, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (13, 'judge_generation', 'completion_cost_usd', (SELECT COALESCE(completion_cost_usd, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(completion_cost_usd, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (14, 'judge_generation', 'total_cost_usd', (SELECT COALESCE(total_cost_usd, 0) FROM b_judge WHERE stage_name = 'judge_generation'), (SELECT COALESCE(total_cost_usd, 0) FROM c_judge WHERE stage_name = 'judge_generation')), (15, 'judge_retrieval', 'eval_calls', (SELECT COALESCE(eval_calls, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(eval_calls, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (16, 'judge_retrieval', 'prompt_tokens', (SELECT COALESCE(prompt_tokens, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(prompt_tokens, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (17, 'judge_retrieval', 'completion_tokens', (SELECT COALESCE(completion_tokens, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(completion_tokens, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (18, 'judge_retrieval', 'total_tokens', (SELECT COALESCE(total_tokens, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(total_tokens, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (19, 'judge_retrieval', 'prompt_cost_usd', (SELECT COALESCE(prompt_cost_usd, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(prompt_cost_usd, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (20, 'judge_retrieval', 'completion_cost_usd', (SELECT COALESCE(completion_cost_usd, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(completion_cost_usd, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (21, 'judge_retrieval', 'total_cost_usd', (SELECT COALESCE(total_cost_usd, 0) FROM b_judge WHERE stage_name = 'judge_retrieval'), (SELECT COALESCE(total_cost_usd, 0) FROM c_judge WHERE stage_name = 'judge_retrieval')), (22, 'judge_total', 'eval_calls', (SELECT COALESCE(sum(eval_calls), 0) FROM b_judge), (SELECT COALESCE(sum(eval_calls), 0) FROM c_judge)), (23, 'judge_total', 'prompt_tokens', (SELECT COALESCE(sum(prompt_tokens), 0) FROM b_judge), (SELECT COALESCE(sum(prompt_tokens), 0) FROM c_judge)), (24, 'judge_total', 'completion_tokens', (SELECT COALESCE(sum(completion_tokens), 0) FROM b_judge), (SELECT COALESCE(sum(completion_tokens), 0) FROM c_judge)), (25, 'judge_total', 'total_tokens', (SELECT COALESCE(sum(total_tokens), 0) FROM b_judge), (SELECT COALESCE(sum(total_tokens), 0) FROM c_judge)), (26, 'judge_total', 'prompt_cost_usd', (SELECT COALESCE(sum(prompt_cost_usd), 0) FROM b_judge), (SELECT COALESCE(sum(prompt_cost_usd), 0) FROM c_judge)), (27, 'judge_total', 'completion_cost_usd', (SELECT COALESCE(sum(completion_cost_usd), 0) FROM b_judge), (SELECT COALESCE(sum(completion_cost_usd), 0) FROM c_judge)), (28, 'judge_total', 'total_cost_usd', (SELECT COALESCE(sum(total_cost_usd), 0) FROM b_judge), (SELECT COALESCE(sum(total_cost_usd), 0) FROM c_judge)), (29, 'run_total', 'total_cost_usd', (SELECT COALESCE(prompt_cost_usd, 0) + COALESCE(completion_cost_usd, 0) FROM b_runtime) + (SELECT COALESCE(sum(total_cost_usd), 0) FROM b_judge), (SELECT COALESCE(prompt_cost_usd, 0) + COALESCE(completion_cost_usd, 0) FROM c_runtime) + (SELECT COALESCE(sum(total_cost_usd), 0) FROM c_judge))) t(ord, scope, metric, baseline, candidate)) SELECT scope, metric, CASE WHEN metric LIKE '%cost_usd' THEN to_char(COALESCE(baseline, 0), 'FM999999990.00000000') ELSE to_char(COALESCE(baseline, 0), 'FM999999999999') END AS baseline, CASE WHEN metric LIKE '%cost_usd' THEN to_char(COALESCE(candidate, 0), 'FM999999990.00000000') ELSE to_char(COALESCE(candidate, 0), 'FM999999999999') END AS candidate, CASE WHEN baseline IS NULL OR candidate IS NULL THEN NULL WHEN metric LIKE '%cost_usd' THEN CASE WHEN candidate - baseline >= 0 THEN '+' || to_char(candidate - baseline, 'FM999999990.00000000') ELSE to_char(candidate - baseline, 'FM999999990.00000000') END ELSE CASE WHEN candidate - baseline >= 0 THEN '+' || to_char(candidate - baseline, 'FM999999999999') ELSE to_char(candidate - baseline, 'FM999999999999') END END AS delta FROM rows ORDER BY ord",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 56, "w": 24, "h": 24 },
+      "fieldConfig": { "defaults": { "custom": { "align": "left" } }, "overrides": [] }
+    }
+  ]
+}

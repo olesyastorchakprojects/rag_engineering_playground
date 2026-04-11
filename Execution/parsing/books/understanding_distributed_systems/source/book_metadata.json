@@ -1,0 +1,18 @@
+{
+  "document_title": "Understanding Distributed Systems (2nd Edition)",
+  "source_pdf": "Understanding-Distributed-Systems-2nd-Edition.pdf",
+  "url": "local://Understanding-Distributed-Systems-2nd-Edition.pdf",
+  "tags": [
+    "distributed-systems",
+    "book",
+    "architecture",
+    "qdrant-learning"
+  ],
+  "book": {
+    "title": "Understanding Distributed Systems",
+    "edition": "Second Edition",
+    "version": "2.0.0",
+    "author": "Roberto Vitillo",
+    "date": "March 2022"
+  }
+}

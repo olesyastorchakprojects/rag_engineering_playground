@@ -1,0 +1,76 @@
+[pipeline]
+name = "hybrid_ingest"
+chunk_schema_version = 1
+ingest_config_version = "v2"
+corpus_version = "v2"
+chunking_strategy = "fixed"
+
+[embedding.model]
+name = "qwen3-embedding:0.6b"
+dimension = 1024
+
+[embedding.input]
+text_source = "chunk.text"
+
+[embedding.transport]
+timeout_sec = 60
+max_batch_size = 1
+
+[embedding.retry]
+max_attempts = 3
+backoff = "exponential"
+
+[sparse.strategy]
+kind = "bag_of_words"
+version = "v1"
+
+[sparse.input]
+text_source = "chunk.text"
+
+[sparse.tokenizer]
+library = "tokenizers"
+source = "Qwen/Qwen3-Embedding-0.6B"
+
+[sparse.preprocessing]
+kind = "basic_word_v1"
+lowercase = true
+min_token_length = 2
+
+[sparse.bag_of_words]
+document = "term_frequency"
+query = "binary_presence"
+
+[artifacts]
+manifest_path = "Execution/ingest/hybrid/artifacts/manifests/2026-04-02T00-00-00Z_00000000-0000-0000-0000-000000000000/run_manifest.json"
+
+[qdrant.collection]
+name = "chunks_hybrid_qwen3_fixed"
+distance = "Cosine"
+dense_vector_name = "dense"
+sparse_vector_name = "sparse"
+create_if_missing = true
+
+[qdrant.point_id]
+strategy = "uuid5(chunk.chunk_id)"
+namespace_uuid = "05a17c2f-4ee5-5c40-ab34-99631356c9b3"
+format = "canonical_uuid"
+
+[qdrant.transport]
+timeout_sec = 30
+upsert_batch_size = 64
+
+[qdrant.retry]
+max_attempts = 3
+backoff = "exponential"
+
+[idempotency]
+strategy = "field_tuple_hash"
+fingerprint_fields = [
+  "content_hash",
+]
+on_fingerprint_change = "log_and_skip"
+on_metadata_change = "update_changed_fields"
+
+[logging]
+failed_chunk_log_path = "Execution/ingest/hybrid/artifacts/logs/fixed_ingest_failed_chunks.jsonl"
+skipped_chunk_log_path = "Execution/ingest/hybrid/artifacts/logs/fixed_ingest_skipped_chunks.jsonl"

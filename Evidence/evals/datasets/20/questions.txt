@@ -1,0 +1,20 @@
+Why is TCP considered a transport layer that creates a reliable channel on top of unreliable IP, and what mechanisms does it use to compensate for packet loss, duplication, corruption, and out-of-order delivery?
+Why are opening new network connections expensive, why does geographic proximity reduce this penalty, and why do systems try to reuse connections instead of recreating them repeatedly?
+What is the difference between flow control and congestion control in TCP, and what type of overload is each mechanism designed to prevent?
+Why can UDP be a better foundation than TCP for real-time protocols such as multiplayer games, even though UDP does not provide reliability, ordering, or congestion-control guarantees?
+How does TLS authenticate a server, what role does the certificate chain play, and why can an expired certificate bring an application down?
+Why does TLS still verify message integrity with an HMAC even though TCP already includes a checksum, and what kinds of problems does this extra protection address?
+How does DNS resolution work, why does the TTL create a trade-off between fast propagation and lower lookup load, and why can serving stale records be more robust than serving no records at all?
+Why does HTTP 1.1 suffer from head-of-line blocking, and how do HTTP 2 and HTTP 3 improve throughput and reduce the impact of packet loss?
+Why can retrying a POST request after a timeout create an inconsistent system state, and how do idempotency keys together with transactional atomicity solve this problem?
+Why is the partially synchronous model usually a better fit for real distributed systems than either the strictly synchronous model or the fully asynchronous one?
+Why are Lamport logical clocks not sufficient to capture causality precisely, and how do vector clocks improve on them?
+How does Raft elect a leader, and why are randomized timeouts and periodic heartbeats important for preventing split votes and detecting failed leaders?
+Why does allowing clients to read from any follower improve availability but weaken consistency, and how does the CAP theorem frame the choice during a network partition?
+Why is eventual consistency not always enough for applications with causally related operations, and how does causal consistency strengthen the guarantees without requiring full strong consistency?
+What is the difference between isolation and atomicity in transactions, and why is two-phase commit needed when atomicity must be coordinated across multiple processes?
+Why can dual writes to a primary database and a secondary system such as a search index leave the system in an inconsistent state, and how does the outbox pattern address this problem?
+How do sagas use compensating transactions to preserve atomicity across services, and why do they still sacrifice the isolation guarantees of traditional ACID transactions?
+What trade-offs separate range partitioning from hash partitioning, and why can each approach still suffer from hotspots under certain access patterns?
+What is the difference between transport-layer and application-layer load balancing, and what extra capabilities does an L7 load balancer gain by understanding HTTP traffic?
+Why is exactly-once message delivery impossible in practice, and how can a consumer approximate exactly-once processing with idempotent handling and careful delete timing?

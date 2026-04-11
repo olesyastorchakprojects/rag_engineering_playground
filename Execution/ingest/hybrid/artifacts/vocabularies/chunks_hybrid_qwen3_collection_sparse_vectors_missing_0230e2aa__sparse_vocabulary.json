@@ -1,0 +1,40 @@
+{
+  "collection_name": "chunks_hybrid_qwen3_collection_sparse_vectors_missing_0230e2aa",
+  "created_at": "2026-04-03T14:14:45Z",
+  "text_processing": {
+    "lowercase": true,
+    "min_token_length": 2,
+    "preprocessing_kind": "basic_word_v1"
+  },
+  "tokenizer": {
+    "library": "tokenizers",
+    "source": "Qwen/Qwen3-Embedding-0.6B"
+  },
+  "tokens": [
+    {
+      "token": "hy",
+      "token_id": 0
+    },
+    {
+      "token": "brid",
+      "token_id": 1
+    },
+    {
+      "token": "\u0121ingest",
+      "token_id": 2
+    },
+    {
+      "token": "\u0121test",
+      "token_id": 3
+    },
+    {
+      "token": "\u0121chunk",
+      "token_id": 4
+    },
+    {
+      "token": "endoftext",
+      "token_id": 5
+    }
+  ],
+  "vocabulary_name": "chunks_hybrid_qwen3_collection_sparse_vectors_missing_0230e2aa__sparse_vocabulary"
+}

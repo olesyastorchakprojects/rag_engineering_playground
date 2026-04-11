@@ -1,0 +1,30 @@
+# Local environment and secrets
+.env
+
+# Python environments and caches
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editor and local tool state
+.vscode/
+.claude/
+.codex
+
+# Temporary local artifacts
+tmp/
+out/
+Tools/mcp/agent_orchestrator/state/
+
+# Rust and build outputs
+target/
+**/target/
+
+# OS-specific metadata
+*:Zone.Identifier
+
+# Archives and ad hoc exports
+*.tar.gz
+Trace-*.json

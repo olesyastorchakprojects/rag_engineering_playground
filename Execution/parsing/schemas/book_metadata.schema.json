@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/book_metadata.schema.json",
+  "title": "Book Metadata Schema",
+  "description": "Schema for document-level book metadata used by chunkers for chunk payload fields.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "document_title",
+    "source_pdf",
+    "url",
+    "tags",
+    "book"
+  ],
+  "properties": {
+    "document_title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_pdf": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "book": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "edition",
+        "version",
+        "author",
+        "date"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "edition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

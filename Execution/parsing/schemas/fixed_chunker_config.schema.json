@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/fixed_chunker_config.schema.json",
+  "title": "Fixed Chunker Config Schema",
+  "description": "Schema for fixed chunker runtime configuration.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "chunking",
+    "sentence_segmentation",
+    "tokenizer"
+  ],
+  "properties": {
+    "chunking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_tokens",
+        "overlap_ratio",
+        "chunking_version"
+      ],
+      "properties": {
+        "target_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "overlap_ratio": {
+          "type": "number",
+          "minimum": 0.0,
+          "exclusiveMaximum": 1.0
+        },
+        "chunking_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "sentence_segmentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "library",
+        "library_version",
+        "language"
+      ],
+      "properties": {
+        "library": {
+          "type": "string",
+          "const": "spacy"
+        },
+        "library_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "language": {
+          "type": "string",
+          "const": "en"
+        }
+      }
+    },
+    "tokenizer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "library",
+        "source"
+      ],
+      "properties": {
+        "library": {
+          "type": "string",
+          "const": "tokenizers"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

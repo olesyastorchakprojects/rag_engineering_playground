@@ -1,0 +1,51 @@
+{
+  "dictionary_name": "terms_dictionary",
+  "version": 1,
+  "description": "Dictionary of canonical terms that were observed in split form in extractor output and must be normalized back to their unsplit form.",
+  "entry_description": {
+    "word": "Canonical term that should appear in clean_text without internal spaces.",
+    "split_variants": "Observed split variants that must be normalized to the canonical term."
+  },
+  "entries": [
+    {
+      "word": "CockroachDB",
+      "split_variants": ["Cockroach DB"]
+    },
+    {
+      "word": "OpenAPI",
+      "split_variants": ["Open API"]
+    },
+    {
+      "word": "NoSQL",
+      "split_variants": ["No SQL"]
+    },
+    {
+      "word": "DynamoDB",
+      "split_variants": ["Dynamo DB"]
+    },
+    {
+      "word": "CloudWatch",
+      "split_variants": ["Cloud Watch"]
+    },
+    {
+      "word": "AppConfig",
+      "split_variants": ["App Config"]
+    },
+    {
+      "word": "AppendEntries",
+      "split_variants": ["Append Entries"]
+    },
+    {
+      "word": "JavaScript",
+      "split_variants": ["Java Script"]
+    },
+    {
+      "word": "MySQL",
+      "split_variants": ["My SQL"]
+    },
+    {
+      "word": "PostgreSQL",
+      "split_variants": ["Postgre SQL"]
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+{
+  "title": "Runtime Reliability & Latency",
+  "uid": "rag-request-overview",
+  "schemaVersion": 41,
+  "version": 18,
+  "refresh": "30s",
+  "panels": [
+    {
+      "title": "Request Duration p50",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_request_duration_ms_bucket[120s])))",
+          "legendFormat": "p50",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Request Duration p90",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_request_duration_ms_bucket[120s])))",
+          "legendFormat": "p90",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Request Duration p99",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_request_duration_ms_bucket[120s])))",
+          "legendFormat": "p99",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Fast Stage Latency p50",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"input_validation\"}[120s])))",
+          "legendFormat": "input_validation",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"retrieval\"}[120s])))",
+          "legendFormat": "retrieval",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"reranking\"}[120s])))",
+          "legendFormat": "reranking",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Fast Stage Latency p90",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"input_validation\"}[120s])))",
+          "legendFormat": "input_validation",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"retrieval\"}[120s])))",
+          "legendFormat": "retrieval",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"reranking\"}[120s])))",
+          "legendFormat": "reranking",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Fast Stage Latency p99",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"input_validation\"}[120s])))",
+          "legendFormat": "input_validation",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"retrieval\"}[120s])))",
+          "legendFormat": "retrieval",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"reranking\"}[120s])))",
+          "legendFormat": "reranking",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Generation Latency p50",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"generation\"}[120s])))",
+          "legendFormat": "generation",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Generation Latency p90",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"generation\"}[120s])))",
+          "legendFormat": "generation",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Generation Latency p99",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 16 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_stage_duration_ms_bucket{stage=\"generation\"}[120s])))",
+          "legendFormat": "generation",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Fast Dependency Latency p50",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 24 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"embedding\"}[120s])))",
+          "legendFormat": "embedding",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"vector_search\"}[120s])))",
+          "legendFormat": "vector_search",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"rerank\"}[120s])))",
+          "legendFormat": "rerank",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Fast Dependency Latency p90",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 24 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"embedding\"}[120s])))",
+          "legendFormat": "embedding",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"vector_search\"}[120s])))",
+          "legendFormat": "vector_search",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"rerank\"}[120s])))",
+          "legendFormat": "rerank",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Fast Dependency Latency p99",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 24 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"embedding\"}[120s])))",
+          "legendFormat": "embedding",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"vector_search\"}[120s])))",
+          "legendFormat": "vector_search",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"rerank\"}[120s])))",
+          "legendFormat": "rerank",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "title": "Chat Latency p50",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"chat\"}[120s])))",
+          "legendFormat": "chat",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Chat Latency p90",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"chat\"}[120s])))",
+          "legendFormat": "chat",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Chat Latency p99",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 32 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(rag_dependency_duration_ms_bucket{dependency=\"chat\"}[120s])))",
+          "legendFormat": "chat",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Requests Total",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rag_requests_total)",
+          "legendFormat": "requests_total",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "title": "Failures",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum(rag_requests_failed_total)",
+          "legendFormat": "requests_failed_total",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (dependency) (rag_dependency_failures_total)",
+          "legendFormat": "dependency {{dependency}}",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "title": "Retry Attempts",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [
+        {
+          "expr": "sum by (dependency) (rag_retry_attempts_total)",
+          "legendFormat": "{{dependency}}",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

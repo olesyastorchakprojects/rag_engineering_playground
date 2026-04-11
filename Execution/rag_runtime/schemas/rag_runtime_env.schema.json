@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Execution/rag_runtime/schemas/rag_runtime_env.schema.json",
+  "title": "RAG Runtime Environment",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "QDRANT_URL",
+    "OLLAMA_URL",
+    "POSTGRES_URL",
+    "TRACING_ENDPOINT",
+    "METRICS_ENDPOINT",
+    "RUST_LOG"
+  ],
+  "properties": {
+    "QDRANT_URL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "OLLAMA_URL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "POSTGRES_URL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "RERANKER_ENDPOINT": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VOYAGEAI_RERANK_URL": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VOYAGEAI_API_KEY": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TRACING_ENDPOINT": {
+      "type": "string",
+      "minLength": 1
+    },
+    "METRICS_ENDPOINT": {
+      "type": "string",
+      "minLength": 1
+    },
+    "RUST_LOG": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

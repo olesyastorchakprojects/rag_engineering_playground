@@ -1,0 +1,2573 @@
+{
+  "dataset": "understanding_distributed_systems_pages",
+  "source_pdf": "Understanding-Distributed-Systems-2nd-Edition.pdf",
+  "generated_from": "Content.json",
+  "generated_on": "2026-03-04",
+  "book": {
+    "title": "Understanding Distributed Systems",
+    "edition": "Second Edition",
+    "version": "2.0.0",
+    "author": "Roberto Vitillo",
+    "date": "March 2022"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 18,
+    "book_to_pdf_formula": "pdf_page = book_page + 18",
+    "pdf_to_book_formula": "book_page = pdf_page - 18",
+    "notes": [
+      "book_page matches logical pagination from table of contents",
+      "pdf_page matches extracted page ids in understanding_distributed_systems_pages.jsonl"
+    ]
+  },
+  "front_matter": [
+    {
+      "title": "Copyright",
+      "ranges": {
+        "book": {
+          "start": 9,
+          "end": 9
+        },
+        "pdf": {
+          "start": 27,
+          "end": 27
+        }
+      }
+    },
+    {
+      "title": "About the author",
+      "ranges": {
+        "book": {
+          "start": 11,
+          "end": 11
+        },
+        "pdf": {
+          "start": 29,
+          "end": 29
+        }
+      }
+    },
+    {
+      "title": "Acknowledgements",
+      "ranges": {
+        "book": {
+          "start": 13,
+          "end": 13
+        },
+        "pdf": {
+          "start": 31,
+          "end": 31
+        }
+      }
+    },
+    {
+      "title": "Preface",
+      "ranges": {
+        "book": {
+          "start": 15,
+          "end": 15
+        },
+        "pdf": {
+          "start": 33,
+          "end": 33
+        }
+      }
+    }
+  ],
+  "parts": [
+    {
+      "part": "I",
+      "title": "Communication",
+      "ranges": {
+        "book": {
+          "start": 11,
+          "end": 52
+        },
+        "pdf": {
+          "start": 29,
+          "end": 70
+        }
+      }
+    },
+    {
+      "part": "II",
+      "title": "Coordination",
+      "ranges": {
+        "book": {
+          "start": 53,
+          "end": 136
+        },
+        "pdf": {
+          "start": 71,
+          "end": 154
+        }
+      }
+    },
+    {
+      "part": "III",
+      "title": "Scalability",
+      "ranges": {
+        "book": {
+          "start": 137,
+          "end": 228
+        },
+        "pdf": {
+          "start": 155,
+          "end": 246
+        }
+      }
+    },
+    {
+      "part": "IV",
+      "title": "Resiliency",
+      "ranges": {
+        "book": {
+          "start": 229,
+          "end": 274
+        },
+        "pdf": {
+          "start": 247,
+          "end": 292
+        }
+      }
+    },
+    {
+      "part": "V",
+      "title": "Maintainability",
+      "ranges": {
+        "book": {
+          "start": 275,
+          "end": 346
+        },
+        "pdf": {
+          "start": 293,
+          "end": 346
+        }
+      }
+    }
+  ],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Introduction",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 10
+        },
+        "pdf": {
+          "start": 19,
+          "end": 28
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Reliable links",
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 17,
+          "end": 24
+        },
+        "pdf": {
+          "start": 35,
+          "end": 42
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Secure links",
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 25,
+          "end": 30
+        },
+        "pdf": {
+          "start": 43,
+          "end": 48
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Discovery",
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 31,
+          "end": 34
+        },
+        "pdf": {
+          "start": 49,
+          "end": 52
+        }
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "APIs",
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 35,
+          "end": 52
+        },
+        "pdf": {
+          "start": 53,
+          "end": 70
+        }
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "System models",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 57,
+          "end": 60
+        },
+        "pdf": {
+          "start": 75,
+          "end": 78
+        }
+      }
+    },
+    {
+      "chapter": 7,
+      "title": "Failure detection",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 61,
+          "end": 62
+        },
+        "pdf": {
+          "start": 79,
+          "end": 80
+        }
+      }
+    },
+    {
+      "chapter": 8,
+      "title": "Time",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 63,
+          "end": 70
+        },
+        "pdf": {
+          "start": 81,
+          "end": 88
+        }
+      }
+    },
+    {
+      "chapter": 9,
+      "title": "Leader election",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 71,
+          "end": 76
+        },
+        "pdf": {
+          "start": 89,
+          "end": 94
+        }
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "Replication",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 77,
+          "end": 94
+        },
+        "pdf": {
+          "start": 95,
+          "end": 112
+        }
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "Coordination avoidance",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 95,
+          "end": 110
+        },
+        "pdf": {
+          "start": 113,
+          "end": 128
+        }
+      }
+    },
+    {
+      "chapter": 12,
+      "title": "Transactions",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 111,
+          "end": 126
+        },
+        "pdf": {
+          "start": 129,
+          "end": 144
+        }
+      }
+    },
+    {
+      "chapter": 13,
+      "title": "Asynchronous transactions",
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 127,
+          "end": 136
+        },
+        "pdf": {
+          "start": 145,
+          "end": 154
+        }
+      }
+    },
+    {
+      "chapter": 14,
+      "title": "HTTP caching",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 145,
+          "end": 150
+        },
+        "pdf": {
+          "start": 163,
+          "end": 168
+        }
+      }
+    },
+    {
+      "chapter": 15,
+      "title": "Content delivery networks",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 151,
+          "end": 154
+        },
+        "pdf": {
+          "start": 169,
+          "end": 172
+        }
+      }
+    },
+    {
+      "chapter": 16,
+      "title": "Partitioning",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 155,
+          "end": 162
+        },
+        "pdf": {
+          "start": 173,
+          "end": 180
+        }
+      }
+    },
+    {
+      "chapter": 17,
+      "title": "File storage",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 163,
+          "end": 168
+        },
+        "pdf": {
+          "start": 181,
+          "end": 186
+        }
+      }
+    },
+    {
+      "chapter": 18,
+      "title": "Network load balancing",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 169,
+          "end": 180
+        },
+        "pdf": {
+          "start": 187,
+          "end": 198
+        }
+      }
+    },
+    {
+      "chapter": 19,
+      "title": "Data storage",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 181,
+          "end": 190
+        },
+        "pdf": {
+          "start": 199,
+          "end": 208
+        }
+      }
+    },
+    {
+      "chapter": 20,
+      "title": "Caching",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 191,
+          "end": 196
+        },
+        "pdf": {
+          "start": 209,
+          "end": 214
+        }
+      }
+    },
+    {
+      "chapter": 21,
+      "title": "Microservices",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 197,
+          "end": 208
+        },
+        "pdf": {
+          "start": 215,
+          "end": 226
+        }
+      }
+    },
+    {
+      "chapter": 22,
+      "title": "Control planes and data planes",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 209,
+          "end": 216
+        },
+        "pdf": {
+          "start": 227,
+          "end": 234
+        }
+      }
+    },
+    {
+      "chapter": 23,
+      "title": "Messaging",
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 217,
+          "end": 228
+        },
+        "pdf": {
+          "start": 235,
+          "end": 246
+        }
+      }
+    },
+    {
+      "chapter": 24,
+      "title": "Common failure causes",
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 233,
+          "end": 242
+        },
+        "pdf": {
+          "start": 251,
+          "end": 260
+        }
+      }
+    },
+    {
+      "chapter": 25,
+      "title": "Redundancy",
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 243,
+          "end": 246
+        },
+        "pdf": {
+          "start": 261,
+          "end": 264
+        }
+      }
+    },
+    {
+      "chapter": 26,
+      "title": "Fault isolation",
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 247,
+          "end": 252
+        },
+        "pdf": {
+          "start": 265,
+          "end": 270
+        }
+      }
+    },
+    {
+      "chapter": 27,
+      "title": "Downstream resiliency",
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 253,
+          "end": 260
+        },
+        "pdf": {
+          "start": 271,
+          "end": 278
+        }
+      }
+    },
+    {
+      "chapter": 28,
+      "title": "Upstream resiliency",
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 261,
+          "end": 274
+        },
+        "pdf": {
+          "start": 279,
+          "end": 292
+        }
+      }
+    },
+    {
+      "chapter": 29,
+      "title": "Testing",
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 279,
+          "end": 288
+        },
+        "pdf": {
+          "start": 297,
+          "end": 306
+        }
+      }
+    },
+    {
+      "chapter": 30,
+      "title": "Continuous delivery and deployment",
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 289,
+          "end": 296
+        },
+        "pdf": {
+          "start": 307,
+          "end": 314
+        }
+      }
+    },
+    {
+      "chapter": 31,
+      "title": "Monitoring",
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 297,
+          "end": 314
+        },
+        "pdf": {
+          "start": 315,
+          "end": 332
+        }
+      }
+    },
+    {
+      "chapter": 32,
+      "title": "Observability",
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 315,
+          "end": 322
+        },
+        "pdf": {
+          "start": 333,
+          "end": 340
+        }
+      }
+    },
+    {
+      "chapter": 33,
+      "title": "Manageability",
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 323,
+          "end": 326
+        },
+        "pdf": {
+          "start": 341,
+          "end": 344
+        }
+      }
+    },
+    {
+      "chapter": 34,
+      "title": "Final words",
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 327,
+          "end": 328
+        },
+        "pdf": {
+          "start": 345,
+          "end": 346
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "1.1",
+      "title": "Communication",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 20,
+          "end": 20
+        }
+      }
+    },
+    {
+      "section": "1.2",
+      "title": "Coordination",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 21,
+          "end": 21
+        }
+      }
+    },
+    {
+      "section": "1.3",
+      "title": "Scalability",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 4
+        },
+        "pdf": {
+          "start": 21,
+          "end": 22
+        }
+      }
+    },
+    {
+      "section": "1.4",
+      "title": "Resiliency",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 23,
+          "end": 23
+        }
+      }
+    },
+    {
+      "section": "1.5",
+      "title": "Maintainability",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 24,
+          "end": 24
+        }
+      }
+    },
+    {
+      "section": "1.6",
+      "title": "Anatomy of a distributed system",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 10
+        },
+        "pdf": {
+          "start": 25,
+          "end": 28
+        }
+      }
+    },
+    {
+      "section": "2.1",
+      "title": "Reliability",
+      "chapter": 2,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 18,
+          "end": 18
+        },
+        "pdf": {
+          "start": 36,
+          "end": 36
+        }
+      }
+    },
+    {
+      "section": "2.2",
+      "title": "Connection lifecycle",
+      "chapter": 2,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 18,
+          "end": 19
+        },
+        "pdf": {
+          "start": 36,
+          "end": 37
+        }
+      }
+    },
+    {
+      "section": "2.3",
+      "title": "Flow control",
+      "chapter": 2,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 20,
+          "end": 20
+        },
+        "pdf": {
+          "start": 38,
+          "end": 38
+        }
+      }
+    },
+    {
+      "section": "2.4",
+      "title": "Congestion control",
+      "chapter": 2,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 21,
+          "end": 22
+        },
+        "pdf": {
+          "start": 39,
+          "end": 40
+        }
+      }
+    },
+    {
+      "section": "2.5",
+      "title": "Custom protocols",
+      "chapter": 2,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 23,
+          "end": 24
+        },
+        "pdf": {
+          "start": 41,
+          "end": 42
+        }
+      }
+    },
+    {
+      "section": "3.1",
+      "title": "Encryption",
+      "chapter": 3,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 25,
+          "end": 25
+        },
+        "pdf": {
+          "start": 43,
+          "end": 43
+        }
+      }
+    },
+    {
+      "section": "3.2",
+      "title": "Authentication",
+      "chapter": 3,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 26,
+          "end": 27
+        },
+        "pdf": {
+          "start": 44,
+          "end": 45
+        }
+      }
+    },
+    {
+      "section": "3.3",
+      "title": "Integrity",
+      "chapter": 3,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 28,
+          "end": 28
+        },
+        "pdf": {
+          "start": 46,
+          "end": 46
+        }
+      }
+    },
+    {
+      "section": "3.4",
+      "title": "Handshake",
+      "chapter": 3,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 29,
+          "end": 30
+        },
+        "pdf": {
+          "start": 47,
+          "end": 48
+        }
+      }
+    },
+    {
+      "section": "5.1",
+      "title": "HTTP",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 37,
+          "end": 38
+        },
+        "pdf": {
+          "start": 55,
+          "end": 56
+        }
+      }
+    },
+    {
+      "section": "5.2",
+      "title": "Resources",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 39,
+          "end": 40
+        },
+        "pdf": {
+          "start": 57,
+          "end": 58
+        }
+      }
+    },
+    {
+      "section": "5.3",
+      "title": "Request methods",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 41,
+          "end": 41
+        },
+        "pdf": {
+          "start": 59,
+          "end": 59
+        }
+      }
+    },
+    {
+      "section": "5.4",
+      "title": "Response status codes",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 42,
+          "end": 42
+        },
+        "pdf": {
+          "start": 60,
+          "end": 60
+        }
+      }
+    },
+    {
+      "section": "5.5",
+      "title": "OpenAPI",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 43,
+          "end": 44
+        },
+        "pdf": {
+          "start": 61,
+          "end": 62
+        }
+      }
+    },
+    {
+      "section": "5.6",
+      "title": "Evolution",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 45,
+          "end": 45
+        },
+        "pdf": {
+          "start": 63,
+          "end": 63
+        }
+      }
+    },
+    {
+      "section": "5.7",
+      "title": "Idempotency",
+      "chapter": 5,
+      "part": "I",
+      "ranges": {
+        "book": {
+          "start": 46,
+          "end": 52
+        },
+        "pdf": {
+          "start": 64,
+          "end": 70
+        }
+      }
+    },
+    {
+      "section": "8.1",
+      "title": "Physical clocks",
+      "chapter": 8,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 63,
+          "end": 64
+        },
+        "pdf": {
+          "start": 81,
+          "end": 82
+        }
+      }
+    },
+    {
+      "section": "8.2",
+      "title": "Logical clocks",
+      "chapter": 8,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 65,
+          "end": 66
+        },
+        "pdf": {
+          "start": 83,
+          "end": 84
+        }
+      }
+    },
+    {
+      "section": "8.3",
+      "title": "Vector clocks",
+      "chapter": 8,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 67,
+          "end": 70
+        },
+        "pdf": {
+          "start": 85,
+          "end": 88
+        }
+      }
+    },
+    {
+      "section": "9.1",
+      "title": "Raft leader election",
+      "chapter": 9,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 72,
+          "end": 72
+        },
+        "pdf": {
+          "start": 90,
+          "end": 90
+        }
+      }
+    },
+    {
+      "section": "9.2",
+      "title": "Practical considerations",
+      "chapter": 9,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 73,
+          "end": 76
+        },
+        "pdf": {
+          "start": 91,
+          "end": 94
+        }
+      }
+    },
+    {
+      "section": "10.1",
+      "title": "State machine replication",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 78,
+          "end": 80
+        },
+        "pdf": {
+          "start": 96,
+          "end": 98
+        }
+      }
+    },
+    {
+      "section": "10.2",
+      "title": "Consensus",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 81,
+          "end": 82
+        },
+        "pdf": {
+          "start": 99,
+          "end": 100
+        }
+      }
+    },
+    {
+      "section": "10.3",
+      "title": "Consistency models",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 83,
+          "end": 90
+        },
+        "pdf": {
+          "start": 101,
+          "end": 108
+        }
+      }
+    },
+    {
+      "section": "10.4",
+      "title": "Chain replication",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 90,
+          "end": 94
+        },
+        "pdf": {
+          "start": 108,
+          "end": 112
+        }
+      }
+    },
+    {
+      "section": "11.1",
+      "title": "Broadcast protocols",
+      "chapter": 11,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 96,
+          "end": 97
+        },
+        "pdf": {
+          "start": 114,
+          "end": 115
+        }
+      }
+    },
+    {
+      "section": "11.2",
+      "title": "Conflict-free replicated data types",
+      "chapter": 11,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 98,
+          "end": 102
+        },
+        "pdf": {
+          "start": 116,
+          "end": 120
+        }
+      }
+    },
+    {
+      "section": "11.3",
+      "title": "Dynamo-style data stores",
+      "chapter": 11,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 103,
+          "end": 104
+        },
+        "pdf": {
+          "start": 121,
+          "end": 122
+        }
+      }
+    },
+    {
+      "section": "11.4",
+      "title": "The CALM theorem",
+      "chapter": 11,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 105,
+          "end": 105
+        },
+        "pdf": {
+          "start": 123,
+          "end": 123
+        }
+      }
+    },
+    {
+      "section": "11.5",
+      "title": "Causal consistency",
+      "chapter": 11,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 106,
+          "end": 109
+        },
+        "pdf": {
+          "start": 124,
+          "end": 127
+        }
+      }
+    },
+    {
+      "section": "11.6",
+      "title": "Practical considerations",
+      "chapter": 11,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 110,
+          "end": 110
+        },
+        "pdf": {
+          "start": 128,
+          "end": 128
+        }
+      }
+    },
+    {
+      "section": "12.1",
+      "title": "ACID",
+      "chapter": 12,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 112,
+          "end": 112
+        },
+        "pdf": {
+          "start": 130,
+          "end": 130
+        }
+      }
+    },
+    {
+      "section": "12.2",
+      "title": "Isolation",
+      "chapter": 12,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 113,
+          "end": 119
+        },
+        "pdf": {
+          "start": 131,
+          "end": 137
+        }
+      }
+    },
+    {
+      "section": "12.3",
+      "title": "Atomicity",
+      "chapter": 12,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 119,
+          "end": 122
+        },
+        "pdf": {
+          "start": 137,
+          "end": 140
+        }
+      }
+    },
+    {
+      "section": "12.4",
+      "title": "NewSQL",
+      "chapter": 12,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 122,
+          "end": 126
+        },
+        "pdf": {
+          "start": 140,
+          "end": 144
+        }
+      }
+    },
+    {
+      "section": "13.1",
+      "title": "Outbox pattern",
+      "chapter": 13,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 128,
+          "end": 129
+        },
+        "pdf": {
+          "start": 146,
+          "end": 147
+        }
+      }
+    },
+    {
+      "section": "13.2",
+      "title": "Sagas",
+      "chapter": 13,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 130,
+          "end": 132
+        },
+        "pdf": {
+          "start": 148,
+          "end": 150
+        }
+      }
+    },
+    {
+      "section": "13.3",
+      "title": "Isolation",
+      "chapter": 13,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 133,
+          "end": 136
+        },
+        "pdf": {
+          "start": 151,
+          "end": 154
+        }
+      }
+    },
+    {
+      "section": "14.1",
+      "title": "Reverse proxies",
+      "chapter": 14,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 148,
+          "end": 150
+        },
+        "pdf": {
+          "start": 166,
+          "end": 168
+        }
+      }
+    },
+    {
+      "section": "15.1",
+      "title": "Overlay network",
+      "chapter": 15,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 151,
+          "end": 152
+        },
+        "pdf": {
+          "start": 169,
+          "end": 170
+        }
+      }
+    },
+    {
+      "section": "15.2",
+      "title": "Caching",
+      "chapter": 15,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 153,
+          "end": 154
+        },
+        "pdf": {
+          "start": 171,
+          "end": 172
+        }
+      }
+    },
+    {
+      "section": "16.1",
+      "title": "Range partitioning",
+      "chapter": 16,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 157,
+          "end": 157
+        },
+        "pdf": {
+          "start": 175,
+          "end": 175
+        }
+      }
+    },
+    {
+      "section": "16.2",
+      "title": "Hash partitioning",
+      "chapter": 16,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 158,
+          "end": 162
+        },
+        "pdf": {
+          "start": 176,
+          "end": 180
+        }
+      }
+    },
+    {
+      "section": "17.1",
+      "title": "Blob storage architecture",
+      "chapter": 17,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 163,
+          "end": 168
+        },
+        "pdf": {
+          "start": 181,
+          "end": 186
+        }
+      }
+    },
+    {
+      "section": "18.1",
+      "title": "DNS load balancing",
+      "chapter": 18,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 174,
+          "end": 174
+        },
+        "pdf": {
+          "start": 192,
+          "end": 192
+        }
+      }
+    },
+    {
+      "section": "18.2",
+      "title": "Transport layer load balancing",
+      "chapter": 18,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 175,
+          "end": 177
+        },
+        "pdf": {
+          "start": 193,
+          "end": 195
+        }
+      }
+    },
+    {
+      "section": "18.3",
+      "title": "Application layer load balancing",
+      "chapter": 18,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 178,
+          "end": 180
+        },
+        "pdf": {
+          "start": 196,
+          "end": 198
+        }
+      }
+    },
+    {
+      "section": "19.1",
+      "title": "Replication",
+      "chapter": 19,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 181,
+          "end": 183
+        },
+        "pdf": {
+          "start": 199,
+          "end": 201
+        }
+      }
+    },
+    {
+      "section": "19.2",
+      "title": "Partitioning",
+      "chapter": 19,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 184,
+          "end": 184
+        },
+        "pdf": {
+          "start": 202,
+          "end": 202
+        }
+      }
+    },
+    {
+      "section": "19.3",
+      "title": "NoSQL",
+      "chapter": 19,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 185,
+          "end": 190
+        },
+        "pdf": {
+          "start": 203,
+          "end": 208
+        }
+      }
+    },
+    {
+      "section": "20.1",
+      "title": "Policies",
+      "chapter": 20,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 192,
+          "end": 192
+        },
+        "pdf": {
+          "start": 210,
+          "end": 210
+        }
+      }
+    },
+    {
+      "section": "20.2",
+      "title": "Local cache",
+      "chapter": 20,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 193,
+          "end": 193
+        },
+        "pdf": {
+          "start": 211,
+          "end": 211
+        }
+      }
+    },
+    {
+      "section": "20.3",
+      "title": "External cache",
+      "chapter": 20,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 194,
+          "end": 196
+        },
+        "pdf": {
+          "start": 212,
+          "end": 214
+        }
+      }
+    },
+    {
+      "section": "21.1",
+      "title": "Caveats",
+      "chapter": 21,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 199,
+          "end": 201
+        },
+        "pdf": {
+          "start": 217,
+          "end": 219
+        }
+      }
+    },
+    {
+      "section": "21.2",
+      "title": "API gateway",
+      "chapter": 21,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 202,
+          "end": 208
+        },
+        "pdf": {
+          "start": 220,
+          "end": 226
+        }
+      }
+    },
+    {
+      "section": "22.1",
+      "title": "Scale imbalance",
+      "chapter": 22,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 211,
+          "end": 213
+        },
+        "pdf": {
+          "start": 229,
+          "end": 231
+        }
+      }
+    },
+    {
+      "section": "22.2",
+      "title": "Control theory",
+      "chapter": 22,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 214,
+          "end": 216
+        },
+        "pdf": {
+          "start": 232,
+          "end": 234
+        }
+      }
+    },
+    {
+      "section": "23.1",
+      "title": "Guarantees",
+      "chapter": 23,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 221,
+          "end": 222
+        },
+        "pdf": {
+          "start": 239,
+          "end": 240
+        }
+      }
+    },
+    {
+      "section": "23.2",
+      "title": "Exactly-once processing",
+      "chapter": 23,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 223,
+          "end": 223
+        },
+        "pdf": {
+          "start": 241,
+          "end": 241
+        }
+      }
+    },
+    {
+      "section": "23.3",
+      "title": "Failures",
+      "chapter": 23,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 224,
+          "end": 224
+        },
+        "pdf": {
+          "start": 242,
+          "end": 242
+        }
+      }
+    },
+    {
+      "section": "23.4",
+      "title": "Backlogs",
+      "chapter": 23,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 224,
+          "end": 224
+        },
+        "pdf": {
+          "start": 242,
+          "end": 242
+        }
+      }
+    },
+    {
+      "section": "23.5",
+      "title": "Fault isolation",
+      "chapter": 23,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 225,
+          "end": 228
+        },
+        "pdf": {
+          "start": 243,
+          "end": 246
+        }
+      }
+    },
+    {
+      "section": "24.1",
+      "title": "Hardware faults",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 233,
+          "end": 233
+        },
+        "pdf": {
+          "start": 251,
+          "end": 251
+        }
+      }
+    },
+    {
+      "section": "24.2",
+      "title": "Incorrect error handling",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 234,
+          "end": 234
+        },
+        "pdf": {
+          "start": 252,
+          "end": 252
+        }
+      }
+    },
+    {
+      "section": "24.3",
+      "title": "Configuration changes",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 234,
+          "end": 234
+        },
+        "pdf": {
+          "start": 252,
+          "end": 252
+        }
+      }
+    },
+    {
+      "section": "24.4",
+      "title": "Single points of failure",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 235,
+          "end": 235
+        },
+        "pdf": {
+          "start": 253,
+          "end": 253
+        }
+      }
+    },
+    {
+      "section": "24.5",
+      "title": "Network faults",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 236,
+          "end": 236
+        },
+        "pdf": {
+          "start": 254,
+          "end": 254
+        }
+      }
+    },
+    {
+      "section": "24.6",
+      "title": "Resource leaks",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 237,
+          "end": 237
+        },
+        "pdf": {
+          "start": 255,
+          "end": 255
+        }
+      }
+    },
+    {
+      "section": "24.7",
+      "title": "Load pressure",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 238,
+          "end": 238
+        },
+        "pdf": {
+          "start": 256,
+          "end": 256
+        }
+      }
+    },
+    {
+      "section": "24.8",
+      "title": "Cascading failures",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 238,
+          "end": 239
+        },
+        "pdf": {
+          "start": 256,
+          "end": 257
+        }
+      }
+    },
+    {
+      "section": "24.9",
+      "title": "Managing risk",
+      "chapter": 24,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 240,
+          "end": 242
+        },
+        "pdf": {
+          "start": 258,
+          "end": 260
+        }
+      }
+    },
+    {
+      "section": "25.1",
+      "title": "Correlation",
+      "chapter": 25,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 244,
+          "end": 246
+        },
+        "pdf": {
+          "start": 262,
+          "end": 264
+        }
+      }
+    },
+    {
+      "section": "26.1",
+      "title": "Shuffle sharding",
+      "chapter": 26,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 248,
+          "end": 249
+        },
+        "pdf": {
+          "start": 266,
+          "end": 267
+        }
+      }
+    },
+    {
+      "section": "26.2",
+      "title": "Cellular architecture",
+      "chapter": 26,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 250,
+          "end": 252
+        },
+        "pdf": {
+          "start": 268,
+          "end": 270
+        }
+      }
+    },
+    {
+      "section": "27.1",
+      "title": "Timeout",
+      "chapter": 27,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 253,
+          "end": 254
+        },
+        "pdf": {
+          "start": 271,
+          "end": 272
+        }
+      }
+    },
+    {
+      "section": "27.2",
+      "title": "Retry",
+      "chapter": 27,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 255,
+          "end": 258
+        },
+        "pdf": {
+          "start": 273,
+          "end": 276
+        }
+      }
+    },
+    {
+      "section": "27.3",
+      "title": "Circuit breaker",
+      "chapter": 27,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 258,
+          "end": 260
+        },
+        "pdf": {
+          "start": 276,
+          "end": 278
+        }
+      }
+    },
+    {
+      "section": "28.1",
+      "title": "Load shedding",
+      "chapter": 28,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 261,
+          "end": 261
+        },
+        "pdf": {
+          "start": 279,
+          "end": 279
+        }
+      }
+    },
+    {
+      "section": "28.2",
+      "title": "Load leveling",
+      "chapter": 28,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 262,
+          "end": 262
+        },
+        "pdf": {
+          "start": 280,
+          "end": 280
+        }
+      }
+    },
+    {
+      "section": "28.3",
+      "title": "Rate-limiting",
+      "chapter": 28,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 263,
+          "end": 269
+        },
+        "pdf": {
+          "start": 281,
+          "end": 287
+        }
+      }
+    },
+    {
+      "section": "28.4",
+      "title": "Constant work",
+      "chapter": 28,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 269,
+          "end": 274
+        },
+        "pdf": {
+          "start": 287,
+          "end": 292
+        }
+      }
+    },
+    {
+      "section": "29.1",
+      "title": "Scope",
+      "chapter": 29,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 280,
+          "end": 280
+        },
+        "pdf": {
+          "start": 298,
+          "end": 298
+        }
+      }
+    },
+    {
+      "section": "29.2",
+      "title": "Size",
+      "chapter": 29,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 281,
+          "end": 282
+        },
+        "pdf": {
+          "start": 299,
+          "end": 300
+        }
+      }
+    },
+    {
+      "section": "29.3",
+      "title": "Practical considerations",
+      "chapter": 29,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 283,
+          "end": 284
+        },
+        "pdf": {
+          "start": 301,
+          "end": 302
+        }
+      }
+    },
+    {
+      "section": "29.4",
+      "title": "Formal verification",
+      "chapter": 29,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 285,
+          "end": 288
+        },
+        "pdf": {
+          "start": 303,
+          "end": 306
+        }
+      }
+    },
+    {
+      "section": "30.1",
+      "title": "Review and build",
+      "chapter": 30,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 290,
+          "end": 291
+        },
+        "pdf": {
+          "start": 308,
+          "end": 309
+        }
+      }
+    },
+    {
+      "section": "30.2",
+      "title": "Pre-production",
+      "chapter": 30,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 292,
+          "end": 292
+        },
+        "pdf": {
+          "start": 310,
+          "end": 310
+        }
+      }
+    },
+    {
+      "section": "30.3",
+      "title": "Production",
+      "chapter": 30,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 293,
+          "end": 293
+        },
+        "pdf": {
+          "start": 311,
+          "end": 311
+        }
+      }
+    },
+    {
+      "section": "30.4",
+      "title": "Rollbacks",
+      "chapter": 30,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 293,
+          "end": 296
+        },
+        "pdf": {
+          "start": 311,
+          "end": 314
+        }
+      }
+    },
+    {
+      "section": "31.1",
+      "title": "Metrics",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 298,
+          "end": 300
+        },
+        "pdf": {
+          "start": 316,
+          "end": 318
+        }
+      }
+    },
+    {
+      "section": "31.2",
+      "title": "Service-level indicators",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 301,
+          "end": 303
+        },
+        "pdf": {
+          "start": 319,
+          "end": 321
+        }
+      }
+    },
+    {
+      "section": "31.3",
+      "title": "Service-level objectives",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 304,
+          "end": 305
+        },
+        "pdf": {
+          "start": 322,
+          "end": 323
+        }
+      }
+    },
+    {
+      "section": "31.4",
+      "title": "Alerts",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 306,
+          "end": 307
+        },
+        "pdf": {
+          "start": 324,
+          "end": 325
+        }
+      }
+    },
+    {
+      "section": "31.5",
+      "title": "Dashboards",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 308,
+          "end": 312
+        },
+        "pdf": {
+          "start": 326,
+          "end": 330
+        }
+      }
+    },
+    {
+      "section": "31.6",
+      "title": "Being on call",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 312,
+          "end": 314
+        },
+        "pdf": {
+          "start": 330,
+          "end": 332
+        }
+      }
+    },
+    {
+      "section": "32.1",
+      "title": "Logs",
+      "chapter": 32,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 316,
+          "end": 318
+        },
+        "pdf": {
+          "start": 334,
+          "end": 336
+        }
+      }
+    },
+    {
+      "section": "32.2",
+      "title": "Traces",
+      "chapter": 32,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 319,
+          "end": 320
+        },
+        "pdf": {
+          "start": 337,
+          "end": 338
+        }
+      }
+    },
+    {
+      "section": "32.3",
+      "title": "Putting it all together",
+      "chapter": 32,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 321,
+          "end": 322
+        },
+        "pdf": {
+          "start": 339,
+          "end": 340
+        }
+      }
+    }
+  ],
+  "subsections": [
+    {
+      "subsection": "10.3.1",
+      "title": "Strong consistency",
+      "section": "10.3",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 85,
+          "end": 86
+        },
+        "pdf": {
+          "start": 103,
+          "end": 104
+        }
+      }
+    },
+    {
+      "subsection": "10.3.2",
+      "title": "Sequential consistency",
+      "section": "10.3",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 86,
+          "end": 87
+        },
+        "pdf": {
+          "start": 104,
+          "end": 105
+        }
+      }
+    },
+    {
+      "subsection": "10.3.3",
+      "title": "Eventual consistency",
+      "section": "10.3",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 87,
+          "end": 88
+        },
+        "pdf": {
+          "start": 105,
+          "end": 106
+        }
+      }
+    },
+    {
+      "subsection": "10.3.4",
+      "title": "The CAP theorem",
+      "section": "10.3",
+      "chapter": 10,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 88,
+          "end": 90
+        },
+        "pdf": {
+          "start": 106,
+          "end": 108
+        }
+      }
+    },
+    {
+      "subsection": "12.2.1",
+      "title": "Concurrency control",
+      "section": "12.2",
+      "chapter": 12,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 116,
+          "end": 119
+        },
+        "pdf": {
+          "start": 134,
+          "end": 137
+        }
+      }
+    },
+    {
+      "subsection": "12.3.1",
+      "title": "Two-phase commit",
+      "section": "12.3",
+      "chapter": 12,
+      "part": "II",
+      "ranges": {
+        "book": {
+          "start": 120,
+          "end": 122
+        },
+        "pdf": {
+          "start": 138,
+          "end": 140
+        }
+      }
+    },
+    {
+      "subsection": "21.2.1",
+      "title": "Core responsibilities",
+      "section": "21.2",
+      "chapter": 21,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 202,
+          "end": 204
+        },
+        "pdf": {
+          "start": 220,
+          "end": 222
+        }
+      }
+    },
+    {
+      "subsection": "21.2.2",
+      "title": "Cross-cutting concerns",
+      "section": "21.2",
+      "chapter": 21,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 204,
+          "end": 206
+        },
+        "pdf": {
+          "start": 222,
+          "end": 224
+        }
+      }
+    },
+    {
+      "subsection": "21.2.3",
+      "title": "Caveats",
+      "section": "21.2",
+      "chapter": 21,
+      "part": "III",
+      "ranges": {
+        "book": {
+          "start": 206,
+          "end": 207
+        },
+        "pdf": {
+          "start": 224,
+          "end": 225
+        }
+      }
+    },
+    {
+      "subsection": "27.2.1",
+      "title": "Exponential backoff",
+      "section": "27.2",
+      "chapter": 27,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 256,
+          "end": 257
+        },
+        "pdf": {
+          "start": 274,
+          "end": 275
+        }
+      }
+    },
+    {
+      "subsection": "27.2.2",
+      "title": "Retry amplification",
+      "section": "27.2",
+      "chapter": 27,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 257,
+          "end": 258
+        },
+        "pdf": {
+          "start": 275,
+          "end": 276
+        }
+      }
+    },
+    {
+      "subsection": "28.3.1",
+      "title": "Single-process implementation",
+      "section": "28.3",
+      "chapter": 28,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 265,
+          "end": 267
+        },
+        "pdf": {
+          "start": 283,
+          "end": 285
+        }
+      }
+    },
+    {
+      "subsection": "28.3.2",
+      "title": "Distributed implementation",
+      "section": "28.3",
+      "chapter": 28,
+      "part": "IV",
+      "ranges": {
+        "book": {
+          "start": 267,
+          "end": 269
+        },
+        "pdf": {
+          "start": 285,
+          "end": 287
+        }
+      }
+    },
+    {
+      "subsection": "31.5.1",
+      "title": "Best practices",
+      "section": "31.5",
+      "chapter": 31,
+      "part": "V",
+      "ranges": {
+        "book": {
+          "start": 310,
+          "end": 312
+        },
+        "pdf": {
+          "start": 328,
+          "end": 330
+        }
+      }
+    }
+  ],
+  "counts": {
+    "front_matter": 4,
+    "parts": 5,
+    "chapters": 34,
+    "sections": 104,
+    "subsections": 14
+  }
+}

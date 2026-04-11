@@ -1,0 +1,401 @@
+{
+  "document": {
+    "name": "project_structure",
+    "purpose": "Machine-readable repository layout for code-generating models and coding agents.",
+    "human_companion": "Specification/architecture/project_structure.md",
+    "rules": [
+      "Prefer this structure over inventing new locations.",
+      "Use OldStructure only as legacy reference.",
+      "Keep .env in repository root.",
+      "Use Specification/architecture/module_variant_policy.md to distinguish implementation variants, shared logic, and runtime profiles."
+    ]
+  },
+  "top_level": {
+    "Execution": {
+      "purpose": "Runnable system code, executable tests, runtime configs, runtime schemas, and thin entrypoints.",
+      "allowed_contents": [
+        "production code",
+        "executable tests",
+        "runtime configs",
+        "runtime schemas",
+        "book-specific runtime resources",
+        "thin entrypoints"
+      ]
+    },
+    "Specification": {
+      "purpose": "The specifications used to guide code generation, test generation, architecture decisions, and repository organization.",
+      "allowed_contents": [
+        "codegen prompts",
+        "testgen prompts",
+        "high-level task prompts",
+        "human-readable contracts",
+        "architecture docs",
+        "test matrices"
+      ]
+    },
+    "Measurement": {
+      "purpose": "Rules and tooling for measuring quality, latency, cost, robustness, and usefulness.",
+      "allowed_contents": [
+        "evaluation harnesses",
+        "benchmark definitions",
+        "scoring logic",
+        "dashboard configs",
+        "comparison tooling"
+      ]
+    },
+    "Evidence": {
+      "purpose": "Artifacts produced by concrete runs, evaluations, and experiments.",
+      "allowed_contents": [
+        "pages.jsonl",
+        "chunks.jsonl",
+        "ingest manifests",
+        "failed chunk logs",
+        "run metadata",
+        "benchmark outputs",
+        "retrieval outputs",
+        "answer outputs",
+        "generated reports",
+        "metric snapshots",
+        "experiment result tables"
+      ]
+    },
+    "AgentContext": {
+      "purpose": "Agent-operating rules and repository conventions.",
+      "allowed_contents": [
+        "AGENTS.md",
+        "agent workflow rules",
+        "repo conventions",
+        "tooling rules",
+        "review checklists"
+      ],
+      "related_architecture": [
+        "Specification/architecture/agent_workflow_policy.md"
+      ]
+    },
+    "Documentation": {
+      "purpose": "Human-oriented documentation and writeups.",
+      "allowed_contents": [
+        "README-like material",
+        "narrative docs",
+        "project writeups",
+        "explanatory documentation"
+      ]
+    },
+    "OldStructure": {
+      "purpose": "Archived legacy repository layout kept only for reference during migration.",
+      "rules": [
+        "Do not place new files here.",
+        "Use only as historical reference."
+      ]
+    }
+  },
+  "execution": {
+    "parsing": {
+      "purpose": "Offline parsing pipeline: extract, validate metadata, chunk, and apply runtime-used schemas for parsing inputs and outputs.",
+      "paths": {
+        "extractor": "Execution/parsing/extractor/",
+        "chunker_fixed": "Execution/parsing/chunker/fixed/",
+        "chunker_structural": "Execution/parsing/chunker/structural/",
+        "common": "Execution/parsing/common/",
+        "books": "Execution/parsing/books/",
+        "schemas": "Execution/parsing/schemas/"
+      },
+      "current_files": [
+        "Execution/parsing/extractor/extractor.py",
+        "Execution/parsing/chunker/structural/chunker.py",
+        "Execution/parsing/common/book_metadata_validation.py",
+        "Execution/schemas/chunk.schema.json"
+      ],
+      "book_layout": {
+        "root_pattern": "Execution/parsing/books/<book_id>/",
+        "source": "Execution/parsing/books/<book_id>/source/",
+        "cleanup": "Execution/parsing/books/<book_id>/cleanup/",
+        "current_book": "understanding_distributed_systems",
+        "current_files": [
+          "Execution/parsing/books/understanding_distributed_systems/source/book_content_metadata.json",
+          "Execution/parsing/books/understanding_distributed_systems/source/Understanding-Distributed-Systems-2nd-Edition.pdf",
+          "Execution/parsing/books/understanding_distributed_systems/cleanup/rules_metadata.json",
+          "Execution/parsing/books/understanding_distributed_systems/cleanup/terms_dictionary.json",
+          "Execution/parsing/books/understanding_distributed_systems/cleanup/clean_text_overrides_metadata.json"
+        ]
+      }
+    },
+    "ingest": {
+      "purpose": "Offline indexing pipeline.",
+      "paths": {
+        "dense": "Execution/ingest/dense/",
+        "hybrid": "Execution/ingest/hybrid/",
+        "schemas": "Execution/ingest/schemas/"
+      },
+      "current_files": [
+        "Execution/ingest/dense/ingest.py",
+        "Execution/ingest/dense/ingest.toml",
+        "Execution/ingest/hybrid/ingest.toml",
+        "Execution/ingest/hybrid/profiles/fixed.toml",
+        "Execution/ingest/hybrid/profiles/structural.toml",
+        "Execution/ingest/hybrid/examples/bm25_like.toml",
+        "Execution/ingest/schemas/dense_ingest_config.schema.json",
+        "Execution/ingest/schemas/dense_ingest_env.schema.json",
+        "Execution/ingest/schemas/hybrid_ingest_config.schema.json",
+        "Execution/ingest/schemas/common/sparse_vocabulary.schema.json",
+        "Execution/ingest/schemas/hybrid_ingest_manifest.schema.json"
+      ],
+      "rules": [
+        "Ingest implementation variants belong in Execution/ingest/<variant>/.",
+        "Chunk-source presets such as fixed or structural belong under profiles/ inside the ingest variant.",
+        "Hybrid ingest may emit sparse-point exports, sparse corpus stats, and run manifests, but those outputs belong in Evidence/ or another runtime output location referenced by config, not inside Execution/ingest/hybrid/."
+      ],
+      "naming": {
+        "variant_runtime": "ingest.py",
+        "variant_config": "ingest.toml"
+      }
+    },
+    "retrieval": {
+      "purpose": "Rust runtime for retrieval and reranking.",
+      "paths": {
+        "crate_root": "Execution/retrieval/",
+        "dense": "Execution/retrieval/src/dense/",
+        "hybrid": "Execution/retrieval/src/hybrid/",
+        "rerank": "Execution/retrieval/src/rerank/",
+        "models": "Execution/retrieval/src/models/"
+      },
+      "expected_files": [
+        "Execution/retrieval/Cargo.toml",
+        "Execution/retrieval/src/dense/retriever.rs",
+        "Execution/retrieval/src/hybrid/retriever.rs",
+        "Execution/retrieval/src/rerank/cross_encoder.rs"
+      ]
+    },
+    "orchestration": {
+      "purpose": "Rust runtime for online answer generation using retrieval plus LLM.",
+      "paths": {
+        "crate_root": "Execution/orchestration/",
+        "src": "Execution/orchestration/src/"
+      },
+      "expected_files": [
+        "Execution/orchestration/Cargo.toml",
+        "Execution/orchestration/src/answer_pipeline.rs",
+        "Execution/orchestration/src/context_builder.rs",
+        "Execution/orchestration/src/llm_client.rs"
+      ]
+    },
+    "tests": {
+      "purpose": "Executable tests and shared runtime fixtures.",
+      "paths": {
+        "parsing": "Execution/tests/parsing/",
+        "ingest": "Execution/tests/ingest/",
+        "retrieval": "Execution/tests/retrieval/",
+        "orchestration": "Execution/tests/orchestration/",
+        "fixtures": "Execution/tests/fixtures/"
+      },
+      "rules": [
+        "Executable tests belong under the stage they verify.",
+        "Reusable fixtures belong under Execution/tests/fixtures.",
+        "Dense ingest engine tests belong under Execution/tests/ingest/dense/ unless they depend on fixed- or structural-specific chunk semantics."
+      ],
+      "current_fixtures": [
+        "Execution/tests/fixtures/parsing/chunker/fixed/synthetic_chunking_cases.json",
+        "Execution/tests/fixtures/parsing/chunker/structural/synthetic_chunking_cases.json",
+        "Execution/tests/fixtures/parsing/extractor/synthetic_cleanup_cases.json"
+      ]
+    },
+    "bin": {
+      "purpose": "Thin entrypoints and launch scripts.",
+      "path": "Execution/bin/",
+      "rules": [
+        "Keep entrypoints thin.",
+        "Do not place business logic directly in Execution/bin."
+      ]
+    }
+  },
+  "specification": {
+    "architecture": {
+      "purpose": "Stable architectural and structural guidance.",
+      "path": "Specification/architecture/",
+      "current_files": [
+        "Specification/architecture/module_variant_policy.md",
+        "Specification/architecture/project_structure.md",
+        "Specification/architecture/project_structure.json"
+      ]
+    },
+    "codegen": {
+      "purpose": "Prompts/specs for generating production code.",
+      "paths": {
+        "extractor": "Specification/codegen/extractor/",
+        "chunker": "Specification/codegen/chunker/",
+        "ingest": "Specification/codegen/ingest/",
+        "retrieval": "Specification/codegen/retrieval/",
+        "orchestrator": "Specification/codegen/orchestrator/"
+      },
+      "naming_rules": [
+        "If a component has multiple variants, use one file per variant such as dense.md, hybrid.md, fixed.md, structural.md.",
+        "If a component has only one implementation, a descriptive single file such as extractor.md is acceptable."
+      ],
+      "current_files": [
+        "Specification/codegen/extractor/extractor.md",
+        "Specification/codegen/chunker/structural.md",
+        "Specification/codegen/ingest/dense.md",
+        "Specification/codegen/ingest/hybrid.md"
+      ]
+    },
+    "testgen": {
+      "purpose": "Prompts/specs for generating executable tests.",
+      "paths": {
+        "extractor": "Specification/testgen/extractor/",
+        "chunker": "Specification/testgen/chunker/",
+        "ingest": "Specification/testgen/ingest/",
+        "orchestrator": "Specification/testgen/orchestrator/"
+      },
+      "rules": [
+        "These files describe how to generate tests, not the tests themselves.",
+        "Generated executable tests belong in Execution/tests/...",
+        "Dense ingest test-generation specs belong under Specification/testgen/ingest/dense/ unless they depend on fixed- or structural-specific chunk semantics.",
+        "Hybrid ingest test-generation specs belong under Specification/testgen/ingest/hybrid/ unless they depend on fixed- or structural-specific chunk semantics."
+      ],
+      "current_files": [
+        "Specification/testgen/extractor/sanity.md",
+        "Specification/testgen/extractor/cleanup_quality.md",
+        "Specification/testgen/extractor/rules_metrics.md",
+        "Specification/testgen/extractor/synthetic_regression.md",
+        "Specification/testgen/chunker/determinism.md",
+        "Specification/testgen/chunker/sanitation.md",
+        "Specification/testgen/chunker/schema_validation.md",
+        "Specification/testgen/chunker/span_quality.md",
+        "Specification/testgen/chunker/structure.md",
+        "Specification/testgen/chunker/truth_consistency.md",
+        "Specification/testgen/chunker/synthetic_regression.md",
+        "Specification/testgen/ingest/dense/e2e.md",
+        "Specification/testgen/ingest/dense/integration.md",
+        "Specification/testgen/ingest/dense/without_containers.md",
+        "Specification/testgen/ingest/hybrid/e2e.md",
+        "Specification/testgen/ingest/hybrid/integration.md",
+        "Specification/testgen/ingest/hybrid/without_containers.md"
+      ]
+    },
+    "tasks": {
+      "purpose": "High-level orchestration prompts for agents.",
+      "paths": {
+        "extractor": "Specification/tasks/extractor/",
+        "chunker": "Specification/tasks/chunker/",
+        "ingest": "Specification/tasks/ingest/",
+        "retrieval": "Specification/tasks/retrieval/",
+        "orchestrator": "Specification/tasks/orchestrator/"
+      },
+      "rules": [
+        "Use for prompts similar to direct chat instructions.",
+        "Tasks may instruct the model to generate code, generate tests, run repair loops, and consult structure and contract files."
+      ],
+      "current_files": [
+      ]
+    },
+    "contracts": {
+      "purpose": "Human-readable contracts.",
+      "paths": {
+        "chunk": "Specification/contracts/chunk/",
+        "ingest": "Specification/contracts/ingest/",
+        "retrieval": "Specification/contracts/retrieval/"
+      },
+      "rules": [
+        "Human-readable contracts belong here.",
+        "Machine-readable runtime schemas belong in Execution/.../schemas/."
+      ],
+      "current_files": [
+        "Specification/contracts/chunk/spec.md",
+        "Specification/contracts/ingest/dense_config.md",
+        "Specification/contracts/ingest/dense_env.md"
+      ]
+    },
+    "tests": {
+      "purpose": "Human-readable test matrices and coverage planning.",
+      "path": "Specification/tests/",
+      "current_files": [
+        "Specification/tests/TESTS_MATRIX.md",
+        "Specification/tests/dense_ingest_TESTS_MATRIX.md",
+        "Specification/tests/hybrid_ingest_TESTS_MATRIX.md"
+      ]
+    }
+  },
+  "measurement": {
+    "purpose": "Measurement rules and tooling rather than concrete outputs.",
+    "examples": [
+      "evaluation harnesses",
+      "benchmark suites",
+      "cost/latency scoring",
+      "quality scoring",
+      "robustness metrics",
+      "Grafana dashboards"
+    ]
+  },
+  "evidence": {
+    "purpose": "Concrete outputs from runs, debug sessions, and comparisons.",
+    "paths": {
+      "parsing": "Evidence/parsing/",
+      "ingest": "Evidence/ingest/",
+      "retrieval": "Evidence/retrieval/",
+      "orchestration": "Evidence/orchestration/",
+      "experiments": "Evidence/experiments/",
+      "debug": "Evidence/debug/"
+    },
+    "current_files": [
+      "Evidence/parsing/understanding_distributed_systems/pages/pages.jsonl",
+      "Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+      "Evidence/ingest/dense/understanding_distributed_systems/failed_chunks/ingest_failed_chunks.jsonl",
+      "Evidence/debug/parsing/understanding_distributed_systems/contract/CV1dJ6.out.jsonl",
+      "Evidence/debug/parsing/understanding_distributed_systems/contract/CV1dJ6.override.json",
+      "Evidence/debug/parsing/understanding_distributed_systems/contract/Eav9Br.out.jsonl",
+      "Evidence/debug/parsing/understanding_distributed_systems/contract/Eav9Br.override.json"
+    ],
+    "experiment_layout": {
+      "pattern": "Evidence/experiments/<experiment_name>/<subject>/",
+      "children": [
+        "runs/",
+        "reports/"
+      ],
+      "current_experiments": [
+        "fixed_vs_structural",
+        "dense_vs_hybrid"
+      ]
+    }
+  },
+  "placement_rules": {
+    "production_extractor_code": "Execution/parsing/extractor/",
+    "production_chunker_code": "Execution/parsing/chunker/<variant>/",
+    "parsing_shared_helper": "Execution/parsing/common/",
+    "book_specific_source_asset": "Execution/parsing/books/<book_id>/source/",
+    "book_specific_cleanup_rule": "Execution/parsing/books/<book_id>/cleanup/",
+    "runtime_parsing_schema": "Execution/parsing/schemas/",
+    "ingest_code": "Execution/ingest/<variant>/",
+    "ingest_runtime_schema": "Execution/ingest/schemas/",
+    "retrieval_code": "Execution/retrieval/src/<area>/",
+    "orchestration_code": "Execution/orchestration/src/",
+    "executable_test": "Execution/tests/<stage>/...",
+    "shared_test_fixture": "Execution/tests/fixtures/<stage>/...",
+    "code_generation_prompt": "Specification/codegen/<component>/...",
+    "test_generation_prompt": "Specification/testgen/<component>/...",
+    "high_level_task_prompt": "Specification/tasks/<component>/...",
+    "human_readable_contract": "Specification/contracts/...",
+    "architecture_guidance": "Specification/architecture/",
+    "test_matrix": "Specification/tests/",
+    "measurement_logic": "Measurement/...",
+    "run_artifact": "Evidence/..."
+  },
+  "agent_read_order": {
+    "before_generating_code": [
+      "Specification/architecture/project_structure.md",
+      "Specification/architecture/project_structure.json",
+      "Relevant file in Specification/codegen/...",
+      "Relevant file in Specification/testgen/... if tests are also required",
+      "Relevant files in Specification/contracts/...",
+      "Relevant runtime schemas in Execution/.../schemas/",
+      "Neighboring implementations in Execution/...",
+      "Neighboring executable tests in Execution/tests/..."
+    ],
+    "before_generating_high_level_task_workflow": [
+      "Specification/architecture/project_structure.md",
+      "Specification/architecture/project_structure.json",
+      "Relevant files in Specification/tasks/...",
+      "Supporting prompts in Specification/codegen/...",
+      "Supporting prompts in Specification/testgen/..."
+    ]
+  }
+}

@@ -1,0 +1,503 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Execution/rag_runtime/schemas/rag_runtime_config.schema.json",
+  "title": "RAG Runtime Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pipeline",
+    "input_validation",
+    "retrieval",
+    "generation",
+    "reranking",
+    "observability"
+  ],
+  "properties": {
+    "pipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config_version"],
+      "properties": {
+        "config_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "input_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_query_tokens",
+        "tokenizer_source",
+        "reject_empty_query",
+        "trim_whitespace",
+        "collapse_internal_whitespace"
+      ],
+      "properties": {
+        "max_query_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tokenizer_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reject_empty_query": {
+          "type": "boolean"
+        },
+        "trim_whitespace": {
+          "type": "boolean"
+        },
+        "collapse_internal_whitespace": {
+          "type": "boolean"
+        }
+      }
+    },
+    "retrieval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "retriever_version",
+        "top_k",
+        "score_threshold",
+        "embedding_retry",
+        "qdrant_retry"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["dense", "hybrid"]
+        },
+        "retriever_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "top_k": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "score_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "embedding_retry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_attempts", "backoff"],
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "backoff": {
+              "type": "string",
+              "enum": ["exponential"]
+            }
+          }
+        },
+        "qdrant_retry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_attempts", "backoff"],
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "backoff": {
+              "type": "string",
+              "enum": ["exponential"]
+            }
+          }
+        }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transport_kind",
+        "tokenizer_source",
+        "temperature",
+        "max_context_chunks",
+        "max_prompt_tokens",
+        "retry"
+      ],
+      "properties": {
+        "transport_kind": {
+          "type": "string",
+          "enum": ["ollama", "openai"]
+        },
+        "tokenizer_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_context_chunks": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_prompt_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "retry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_attempts", "backoff"],
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "backoff": {
+              "type": "string",
+              "enum": ["exponential"]
+            }
+          }
+        },
+        "ollama": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model_name", "timeout_sec"],
+          "properties": {
+            "model_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "timeout_sec": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "input_cost_per_million_tokens": {
+              "type": "number",
+              "minimum": 0,
+              "default": 0.0
+            },
+            "output_cost_per_million_tokens": {
+              "type": "number",
+              "minimum": 0,
+              "default": 0.0
+            }
+          }
+        },
+        "openai": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model_name", "timeout_sec"],
+          "properties": {
+            "model_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "timeout_sec": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "input_cost_per_million_tokens": {
+              "type": "number",
+              "minimum": 0,
+              "default": 0.0
+            },
+            "output_cost_per_million_tokens": {
+              "type": "number",
+              "minimum": 0,
+              "default": 0.0
+            }
+          }
+        }
+      }
+    },
+    "reranking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "weights"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["pass_through", "heuristic", "cross_encoder"]
+        },
+        "weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "retrieval_score",
+            "query_term_coverage",
+            "phrase_match_bonus",
+            "title_section_match_bonus"
+          ],
+          "properties": {
+            "retrieval_score": {
+              "type": "number",
+              "minimum": 0
+            },
+            "query_term_coverage": {
+              "type": "number",
+              "minimum": 0
+            },
+            "phrase_match_bonus": {
+              "type": "number",
+              "minimum": 0
+            },
+            "title_section_match_bonus": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "cross_encoder": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["transport_kind"],
+          "properties": {
+            "transport_kind": {
+              "type": "string",
+              "enum": ["mixedbread-ai", "voyageai"]
+            },
+            "mixedbread-ai": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model_name",
+                "batch_size",
+                "timeout_sec",
+                "tokenizer_source",
+                "max_attempts",
+                "backoff"
+              ],
+              "properties": {
+                "model_name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "batch_size": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "timeout_sec": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "cost_per_million_tokens": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0.0
+                },
+                "tokenizer_source": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "max_attempts": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "backoff": {
+                  "type": "string",
+                  "enum": ["exponential"]
+                }
+              }
+            },
+            "voyageai": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "model_name",
+                "batch_size",
+                "timeout_sec",
+                "max_attempts",
+                "backoff"
+              ],
+              "properties": {
+                "model_name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "batch_size": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "timeout_sec": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "cost_per_million_tokens": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 0.0
+                },
+                "max_attempts": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "backoff": {
+                  "type": "string",
+                  "enum": ["exponential"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "observability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tracing_enabled",
+        "metrics_enabled",
+        "trace_batch_scheduled_delay_ms",
+        "metrics_export_interval_ms"
+      ],
+      "properties": {
+        "tracing_enabled": {
+          "type": "boolean"
+        },
+        "metrics_enabled": {
+          "type": "boolean"
+        },
+        "trace_batch_scheduled_delay_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "metrics_export_interval_ms": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "reranking": {
+            "type": "object",
+            "properties": {
+              "kind": { "const": "cross_encoder" }
+            },
+            "required": ["kind"]
+          }
+        },
+        "required": ["reranking"]
+      },
+      "then": {
+        "properties": {
+          "reranking": {
+            "required": ["kind", "weights", "cross_encoder"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reranking": {
+            "type": "object",
+            "properties": {
+              "kind": { "const": "cross_encoder" },
+              "cross_encoder": {
+                "type": "object",
+                "properties": {
+                  "transport_kind": { "const": "mixedbread-ai" }
+                },
+                "required": ["transport_kind"]
+              }
+            },
+            "required": ["kind", "cross_encoder"]
+          }
+        },
+        "required": ["reranking"]
+      },
+      "then": {
+        "properties": {
+          "reranking": {
+            "properties": {
+              "cross_encoder": {
+                "required": ["transport_kind", "mixedbread-ai"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reranking": {
+            "type": "object",
+            "properties": {
+              "kind": { "const": "cross_encoder" },
+              "cross_encoder": {
+                "type": "object",
+                "properties": {
+                  "transport_kind": { "const": "voyageai" }
+                },
+                "required": ["transport_kind"]
+              }
+            },
+            "required": ["kind", "cross_encoder"]
+          }
+        },
+        "required": ["reranking"]
+      },
+      "then": {
+        "properties": {
+          "reranking": {
+            "properties": {
+              "cross_encoder": {
+                "required": ["transport_kind", "voyageai"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "generation": {
+            "type": "object",
+            "properties": {
+              "transport_kind": { "const": "ollama" }
+            },
+            "required": ["transport_kind"]
+          }
+        },
+        "required": ["generation"]
+      },
+      "then": {
+        "properties": {
+          "generation": {
+            "required": ["transport_kind", "tokenizer_source", "temperature", "max_context_chunks", "max_prompt_tokens", "retry", "ollama"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "generation": {
+            "type": "object",
+            "properties": {
+              "transport_kind": { "const": "openai" }
+            },
+            "required": ["transport_kind"]
+          }
+        },
+        "required": ["generation"]
+      },
+      "then": {
+        "properties": {
+          "generation": {
+            "required": ["transport_kind", "tokenizer_source", "temperature", "max_context_chunks", "max_prompt_tokens", "retry", "openai"]
+          }
+        }
+      }
+    }
+  ]
+}

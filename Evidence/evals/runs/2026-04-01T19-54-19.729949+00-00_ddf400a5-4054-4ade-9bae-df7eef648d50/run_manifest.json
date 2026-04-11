@@ -1,0 +1,29 @@
+{
+  "run_id": "ddf400a5-4054-4ade-9bae-df7eef648d50",
+  "run_type": "experiment",
+  "status": "failed",
+  "started_at": "2026-04-01T19:54:19.729949+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "../../Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_base_url": "http://localhost:11434/v1",
+  "judge_model": "qwen2.5:1.5b-instruct-q4_K_M",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 0,
+  "run_scope_request_ids": [],
+  "completed_at": "2026-04-01T19:54:19.793008+00:00",
+  "last_error": "name '_parse_started_at' is not defined"
+}

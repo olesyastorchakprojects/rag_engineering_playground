@@ -1,0 +1,1314 @@
+version: 1
+
+modules:
+  hybrid_ingest:
+    description: "Pre-codegen spec/code drift scaffold for the hybrid ingest pipeline."
+    checks:
+      - id: hybrid_ingest.public_api.single_python_entrypoint_exists
+        direction: requirement
+        category: public_api
+        confidence: high
+        title: "Hybrid ingest must exist as one Python entrypoint"
+        description: "The generated implementation should be one Python script at Execution/ingest/hybrid/ingest.py."
+        spec_paths:
+          - Specification/codegen/ingest/hybrid.md
+        code_paths:
+          - Execution/ingest/hybrid/ingest.py
+        test_paths:
+          - Execution/tests/ingest/hybrid/full_ingest_e2e.py
+        test_mode: any
+        status_text:
+          conforms: "Hybrid ingest entrypoint exists at the expected path."
+          violates_spec: "Hybrid ingest entrypoint does not exist yet at Execution/ingest/hybrid/ingest.py."
+        code_rules:
+          - path: Execution/ingest/hybrid/ingest.py
+            exists: true
+            contains_all:
+              - "def main()"
+              - "if __name__ == \"__main__\":"
+        spec_rules:
+          - path: Specification/codegen/ingest/hybrid.md
+            contains_all:
+              - "the generated implementation must still be one Python script: `hybrid_ingest.py`"
+
+      - id: hybrid_ingest.collection_name.derives_effective_name_from_strategy
+        direction: requirement
+        category: qdrant
+        confidence: high
+        title: "Hybrid ingest must derive effective collection name from strategy"
+        description: "The implementation should automatically derive <base>_bow or <base>_bm25 and use it for Qdrant calls."
+        spec_paths:
+          - Specification/codegen/ingest/hybrid.md
+          - Specification/contracts/ingest/hybrid_config.md
+        code_paths:
+          - Execution/ingest/hybrid/ingest.py
+        test_paths:
+          - Execution/tests/ingest/hybrid/effective_collection_name_derivation.py
+          - Execution/tests/ingest/hybrid/hybrid_collection_create_shape.py
+        test_mode: any
+        status_text:
+          conforms: "Hybrid ingest clearly derives and uses the effective collection name from strategy kind."
+          violates_spec: "Hybrid ingest does not clearly derive and use the effective collection name from strategy kind."
+        code_rules:
+          - path: Execution/ingest/hybrid/ingest.py
+            exists: true
+            contains_all:
+              - "bag_of_words"
+              - "bm25_like"
+              - "bow"
+              - "bm25"
+        spec_rules:
+          - path: Specification/codegen/ingest/hybrid.md
+            contains_all:
+              - "bag_of_words` -> `bow`"
+              - "bm25_like` -> `bm25`"
+              - "effective collection name must equal:"
+
+      - id: hybrid_ingest.qdrant.collection_create_uses_dense_sparse_and_metadata
+        direction: requirement
+        category: qdrant
+        confidence: high
+        title: "Hybrid ingest collection create path must send dense vectors, sparse_vectors, and metadata"
+        description: "Collection creation should use the hybrid Qdrant body rather than a dense-only layout."
+        spec_paths:
+          - Specification/codegen/ingest/hybrid.md
+        code_paths:
+          - Execution/ingest/hybrid/ingest.py
+        test_paths:
+          - Execution/tests/ingest/hybrid/hybrid_collection_create_shape.py
+          - Execution/tests/ingest/hybrid/qdrant_collection_metadata_roundtrip.py
+        test_mode: any
+        status_text:
+          conforms: "Hybrid ingest collection creation clearly includes named vectors, sparse_vectors, and metadata."
+          violates_spec: "Hybrid ingest collection creation does not clearly include the required hybrid Qdrant body."
+        code_rules:
+          - path: Execution/ingest/hybrid/ingest.py
+            exists: true
+            contains_all:
+              - "\"sparse_vectors\""
+              - "\"metadata\""
+              - "dense_vector_name"
+              - "sparse_vector_name"
+        spec_rules:
+          - path: Specification/codegen/ingest/hybrid.md
+            contains_all:
+              - "dense vectors are configured in `vectors`"
+              - "sparse vectors are configured in `sparse_vectors`"
+              - "Collection metadata must include:"
+
+      - id: hybrid_ingest.artifacts.vocabulary_and_bm25_term_stats_lifecycle_exists
+        direction: requirement
+        category: artifacts
+        confidence: high
+        title: "Hybrid ingest must implement vocabulary lifecycle and bm25 term-stats lifecycle"
+        description: "The implementation should load or create singleton vocabulary and, for bm25_like, load or create term stats before point processing."
+        spec_paths:
+          - Specification/codegen/ingest/hybrid.md
+          - Specification/contracts/ingest/common/sparse_vocabulary.md
+          - Specification/contracts/ingest/common/bm25_term_stats.md
+          - Specification/contracts/ingest/common/sparse_strategies/bm25_like.md
+        code_paths:
+          - Execution/ingest/hybrid/ingest.py
+        test_paths:
+          - Execution/tests/ingest/hybrid/vocabulary_bootstrap_and_reuse.py
+          - Execution/tests/ingest/hybrid/bm25_term_stats_lifecycle.py
+          - Execution/tests/ingest/hybrid/vocabulary_reuse_e2e.py
+          - Execution/tests/ingest/hybrid/bm25_term_stats_roundtrip.py
+        test_mode: any
+        status_text:
+          conforms: "Hybrid ingest clearly implements vocabulary and BM25 term-stats lifecycle handling."
+          violates_spec: "Hybrid ingest does not clearly implement the required artifact lifecycle handling yet."
+        code_rules:
+          - path: Execution/ingest/hybrid/ingest.py
+            exists: true
+            contains_all:
+              - "vocabulary_path"
+              - "term_stats_path"
+              - "rank_bm25"
+        spec_rules:
+          - path: Specification/codegen/ingest/hybrid.md
+            contains_all:
+              - "vocabulary is a singleton keyed by the configured base collection name"
+              - "if `term_stats_path` already exists, hybrid ingest must load and validate it"
+              - "if `term_stats_path` does not exist, hybrid ingest must build corpus-level term stats"
+
+  fixed_chunker:
+    description: "Detect high-signal spec/code drift for the fixed chunker."
+    checks:
+      - id: fixed_chunker.sentence_segmentation.uses_spacy_sentencizer
+        direction: requirement
+        category: sentence_segmentation
+        confidence: high
+        title: "Fixed chunker sentence segmentation must use spaCy sentencizer"
+        description: "The fixed chunker should initialize a blank spaCy pipeline and add only the sentencizer."
+        spec_paths:
+          - Specification/codegen/chunker/fixed.md
+        code_paths:
+          - Execution/parsing/chunker/fixed/chunker.py
+        test_paths:
+          - Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+        test_mode: any
+        status_text:
+          conforms: "Fixed chunker sentence segmentation uses spaCy sentencizer as specified."
+          violates_spec: "Fixed chunker sentence segmentation does not clearly use the specified spaCy sentencizer setup."
+        code_rules:
+          - path: Execution/parsing/chunker/fixed/chunker.py
+            contains_all:
+              - "import spacy"
+              - "nlp = spacy.blank(language)"
+              - "nlp.add_pipe(\"sentencizer\")"
+        spec_rules:
+          - path: Specification/codegen/chunker/fixed.md
+            contains_all:
+              - "spaCy sentencizer"
+              - "create `nlp` through `spacy.blank(CONFIG.sentence_segmentation.language)`"
+              - "add `sentencizer` through `nlp.add_pipe(\"sentencizer\")`"
+
+      - id: fixed_chunker.tokenizer.uses_hf_tokenizers
+        direction: requirement
+        category: tokenizer
+        confidence: high
+        title: "Fixed chunker token counting must use Hugging Face tokenizers"
+        description: "Token counting should use the configured tokenizer artifact through the tokenizers library."
+        spec_paths:
+          - Specification/codegen/chunker/fixed.md
+        code_paths:
+          - Execution/parsing/chunker/fixed/chunker.py
+        test_paths:
+          - Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+        test_mode: any
+        status_text:
+          conforms: "Fixed chunker token counting uses the tokenizers library and configured artifact."
+          violates_spec: "Fixed chunker token counting does not clearly use the specified tokenizers-based path."
+        code_rules:
+          - path: Execution/parsing/chunker/fixed/chunker.py
+            contains_all:
+              - "from tokenizers import Tokenizer"
+              - "Tokenizer.from_pretrained(source"
+              - "len(tokenizer.encode(stripped).ids)"
+        spec_rules:
+          - path: Specification/codegen/chunker/fixed.md
+            contains_all:
+              - "tokenizer.library"
+              - "tokenizer.source"
+              - "`token_count` must be computed by the normative tokenizer"
+
+      - id: fixed_chunker.content_start_page.ignores_front_matter_for_derivation
+        direction: requirement
+        category: metadata
+        confidence: high
+        title: "content_start_page must ignore front_matter and derive from body ranges"
+        description: "The fixed chunker should derive content_start_page only from parts, chapters, sections, and subsections."
+        spec_paths:
+          - Specification/codegen/chunker/fixed.md
+        code_paths:
+          - Execution/parsing/chunker/fixed/chunker.py
+        test_paths:
+          - Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+          - Execution/tests/parsing/chunker/fixed/page_mapping.py
+        test_mode: any
+        status_text:
+          conforms: "content_start_page derivation is scoped to body metadata levels and retains the required fail-fast path."
+          violates_spec: "content_start_page derivation does not clearly match the specified metadata scope."
+        code_rules:
+          - path: Execution/parsing/chunker/fixed/chunker.py
+            contains_all:
+              - "for key in (\"parts\", \"chapters\", \"sections\", \"subsections\"):"
+              - "Unable to determine content_start_page from CONTENT_METADATA"
+        spec_rules:
+          - path: Specification/codegen/chunker/fixed.md
+            contains_all:
+              - "`front_matter` must not participate in the computation of `content_start_page`"
+              - "`content_start_page = min(all_collected_starts)`"
+              - "if there is no valid start at these levels, the chunker must fail"
+
+      - id: fixed_chunker.overlap.page_mapping_regression_runners_exist
+        direction: requirement
+        category: tests
+        confidence: medium
+        title: "Fixed chunker regression runners for overlap and page mapping must exist"
+        description: "The curated executable regression runners for page mapping and synthetic behavior should remain present."
+        spec_paths:
+          - Specification/codegen/chunker/fixed.md
+          - Specification/testgen/chunker/fixed/page_mapping.md
+          - Specification/testgen/chunker/fixed/synthetic_regression.md
+        code_paths:
+          - Execution/tests/parsing/chunker/fixed/page_mapping.py
+          - Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+        test_paths:
+          - Execution/tests/parsing/chunker/fixed/page_mapping.py
+          - Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+        test_mode: all
+        status_text:
+          conforms: "Curated fixed chunker executable regression runners are present."
+          violates_spec: "One or more curated fixed chunker executable regression runners are missing."
+        code_rules:
+          - path: Execution/tests/parsing/chunker/fixed/page_mapping.py
+            exists: true
+          - path: Execution/tests/parsing/chunker/fixed/synthetic_regression.py
+            exists: true
+        spec_rules:
+          - path: Specification/testgen/chunker/fixed/page_mapping.md
+            exists: true
+          - path: Specification/testgen/chunker/fixed/synthetic_regression.md
+            exists: true
+
+  rag_runtime:
+    description: "Detect high-signal spec/code drift for the RAG runtime."
+    checks:
+      - id: rag_runtime.generation.token_counting.uses_real_tokenizer
+        direction: requirement
+        category: generation
+        confidence: high
+        title: "Generation token counting must use the real tokenizer"
+        description: "Generation token accounting must not fall back to whitespace splitting."
+        spec_paths:
+          - Specification/codegen/rag_runtime/generation/generation.md
+        code_paths:
+          - Execution/rag_runtime/src/generation/mod.rs
+        backlog_keywords:
+          - whitespace-based token counting
+          - tokenizer-based counting
+        status_text:
+          conforms: "Generation token counting does not show the whitespace-splitting fallback."
+          violates_spec: "Generation token counting still uses whitespace splitting."
+        code_rules:
+          - path: Execution/rag_runtime/src/generation/mod.rs
+            contains_all:
+              - ".count_tokens(&full_chat_prompt(prompt))"
+            contains_none:
+              - "split_whitespace().count()"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/generation/generation.md
+            contains_all:
+              - "generation token accounting must use a Hugging Face compatible tokenizer"
+
+      - id: rag_runtime.observability.runtime_dashboard_inventory
+        direction: requirement
+        category: dashboards
+        confidence: high
+        title: "Runtime dashboard inventory must match the spec"
+        description: "The two required runtime Grafana dashboards must exist."
+        spec_paths:
+          - Specification/codegen/rag_runtime/observability/grafana_dashboards.md
+          - Specification/codegen/rag_runtime/generated_artifacts.md
+        code_paths:
+          - Measurement/observability/grafana/dashboards/request_overview.json
+          - Measurement/observability/grafana/dashboards/ai_overview.json
+        status_text:
+          conforms: "Both required runtime dashboards exist."
+          violates_spec: "One or more required runtime dashboards are missing."
+        code_rules:
+          - path: Measurement/observability/grafana/dashboards/request_overview.json
+            exists: true
+          - path: Measurement/observability/grafana/dashboards/ai_overview.json
+            exists: true
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/observability/grafana_dashboards.md
+            contains_all:
+              - "Measurement/observability/grafana/dashboards/request_overview.json"
+              - "Measurement/observability/grafana/dashboards/ai_overview.json"
+
+      - id: rag_runtime.config.metrics_enabled_is_typed_and_schema_backed
+        direction: requirement
+        category: config
+        confidence: high
+        title: "metrics_enabled must exist in typed config and schema"
+        description: "Observability config should stay aligned across spec, typed settings, and JSON schema."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/codegen/rag_runtime/observability/implementation.md
+        code_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        test_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "metrics_enabled is present in typed config and JSON schema."
+          violates_spec: "metrics_enabled is missing from typed config or JSON schema."
+        code_rules:
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "pub metrics_enabled: bool"
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"metrics_enabled\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "metrics_enabled: bool"
+
+      - id: rag_runtime.input_validation.token_counting.uses_real_tokenizer
+        direction: requirement
+        category: input_validation
+        confidence: high
+        title: "Input validation token counting must use the real tokenizer"
+        description: "Input validation token accounting must not fall back to whitespace splitting."
+        spec_paths:
+          - Specification/codegen/rag_runtime/input_validation.md
+        code_paths:
+          - Execution/rag_runtime/src/input_validation/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/input_validation/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Input validation token counting does not show the whitespace-splitting fallback."
+          violates_spec: "Input validation token counting still uses whitespace splitting."
+        code_rules:
+          - path: Execution/rag_runtime/src/input_validation/mod.rs
+            contains_all:
+              - "record_query_token_count(token_count)"
+            contains_none:
+              - "split_whitespace().count()"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/input_validation.md
+            contains_all:
+              - "the implementation must use a Hugging Face compatible tokenizer"
+
+      - id: rag_runtime.config.top_k_may_exceed_max_context_chunks
+        direction: requirement
+        category: config
+        confidence: high
+        title: "Startup must allow top_k greater than max_context_chunks"
+        description: "Runtime startup must allow retrieval.top_k to exceed generation.max_context_chunks so reranking can operate on a larger candidate set."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/codegen/rag_runtime/unit_tests.md
+        code_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Startup allows retrieval.top_k to exceed generation.max_context_chunks."
+          violates_spec: "Runtime still appears to reject retrieval.top_k greater than generation.max_context_chunks."
+        code_rules:
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "top_k_above_max_context_chunks_is_allowed_for_reranking"
+            contains_none:
+              - "retrieval.top_k {} must not exceed generation.max_context_chunks {}"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "startup validation must allow `RetrievalSettings.top_k > GenerationSettings.max_context_chunks`"
+
+      - id: rag_runtime.generation.request_shape_matches_ollama_contract
+        direction: requirement
+        category: generation
+        confidence: high
+        title: "Generation request shape must match the Ollama chat contract"
+        description: "Generation should send stream=false and exactly two chat messages."
+        spec_paths:
+          - Specification/codegen/rag_runtime/generation/ollama_transport.md
+        code_paths:
+          - Execution/rag_runtime/src/generation/ollama.rs
+        test_paths:
+          - Execution/rag_runtime/src/generation/ollama.rs
+        test_mode: any
+        status_text:
+          conforms: "Generation request body includes stream=false and the expected two-message shape."
+          violates_spec: "Generation request body does not show the expected Ollama chat request shape."
+        code_rules:
+          - path: Execution/rag_runtime/src/generation/ollama.rs
+            contains_all:
+              - "\"stream\": false"
+              - "\"messages\": ["
+              - "{\"role\": \"system\", \"content\": prompt.system}"
+              - "{\"role\": \"user\", \"content\": prompt.user}"
+              - "\"temperature\": runtime.temperature"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/generation/ollama_transport.md
+            contains_all:
+              - "`stream` — boolean; must be `false`"
+              - "`messages` — non-empty array; each item is an object with `role` (non-empty string) and `content` (string)"
+              - "`options.temperature` — floating-point number"
+
+      - id: rag_runtime.retrieval.retry_uses_backon
+        direction: requirement
+        category: retrieval
+        confidence: high
+        title: "Retrieval retry paths must use backon"
+        description: "Embedding and Qdrant retry execution should use the backon crate through the shared helper."
+        spec_paths:
+          - Specification/codegen/rag_runtime/retrieve/dense_retrieval.md
+          - Specification/codegen/rag_runtime/retrieve/hybrid_retrieval.md
+        code_paths:
+          - Execution/rag_runtime/src/retrieval/mod.rs
+          - Execution/rag_runtime/Cargo.toml
+        test_paths:
+          - Execution/rag_runtime/src/retrieval/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Retrieval retry paths use backon through the shared retry helper."
+          violates_spec: "Retrieval retry paths do not clearly use backon through the shared helper."
+        code_rules:
+          - path: Execution/rag_runtime/src/retrieval/mod.rs
+            contains_all:
+              - "use backon::{ExponentialBuilder, Retryable};"
+              - "retry_with_policy("
+              - "ExponentialBuilder::default()"
+              - ".with_jitter()"
+          - path: Execution/rag_runtime/Cargo.toml
+            contains_all:
+              - "backon = "
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/retrieve/dense_retrieval.md
+            contains_all:
+              - "retrieval retry/backoff execution must use the `backon` crate"
+          - path: Specification/codegen/rag_runtime/retrieve/hybrid_retrieval.md
+            contains_all:
+              - "retrieval retry/backoff execution must use the `backon` crate"
+
+      - id: rag_runtime.retrieval.settings_contract_is_typed_and_schema_backed
+        direction: requirement
+        category: retrieval
+        confidence: high
+        title: "Retrieval settings must expose typed kind/ingest/strategy contracts"
+        description: "The runtime retrieval config contract should be represented as typed RetrievalKind, RetrievalIngest, and RetrievalStrategy objects, with schema support for kind."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/config.md
+        code_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        test_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Retrieval settings clearly expose typed retrieval kind, ingest, and strategy contracts with schema support."
+          violates_spec: "Retrieval settings do not yet clearly expose the required typed retrieval kind/ingest/strategy contracts."
+        code_rules:
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "pub enum RetrievalKind"
+              - "pub kind: RetrievalKind"
+              - "pub enum RetrievalIngest"
+              - "pub enum RetrievalStrategy"
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"retrieval\""
+              - "\"kind\""
+              - "\"hybrid\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "`RetrievalIngest` enum variants:"
+              - "`RetrievalStrategy` enum variants:"
+              - "`ingest: RetrievalIngest`"
+
+      - id: rag_runtime.retrieval.orchestration_factory_maps_ingest_to_implementation
+        direction: requirement
+        category: retrieval
+        confidence: high
+        title: "Orchestration must map retrieval ingest variant to the concrete retriever"
+        description: "The orchestration layer should construct dense or hybrid retrievers behind the shared Retriever trait."
+        spec_paths:
+          - Specification/codegen/rag_runtime/orchestration.md
+          - Specification/codegen/rag_runtime/retrieve/integration.md
+        code_paths:
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Orchestration clearly maps retrieval ingest variants to concrete retriever implementations behind the shared trait."
+          violates_spec: "Orchestration does not yet clearly map retrieval ingest variants to concrete retriever implementations behind the shared trait."
+        code_rules:
+          - path: Execution/rag_runtime/src/orchestration/mod.rs
+            contains_all:
+              - "Box<dyn Retriever + Send + Sync>"
+              - "DenseRetriever"
+              - "HybridRetriever"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/orchestration.md
+            contains_all:
+              - "Box<dyn Retriever + Send + Sync>"
+              - "DenseRetriever"
+              - "HybridRetriever"
+          - path: Specification/codegen/rag_runtime/retrieve/integration.md
+            contains_all:
+              - "pub trait Retriever"
+              - "&ValidatedUserRequest"
+              - "&RetrievalSettings"
+
+      - id: rag_runtime.retrieval.request_capture_fields_are_typed_and_persisted
+        direction: requirement
+        category: retrieval
+        confidence: high
+        title: "RequestCapture must persist retriever metadata"
+        description: "The request-capture shape and storage contract must include retriever kind and config snapshots."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/request_capture.md
+          - Specification/contracts/storage/request_captures_storage.md
+        code_paths:
+          - Execution/rag_runtime/src/models/mod.rs
+          - Execution/rag_runtime/src/request_capture_store/mod.rs
+          - Execution/rag_runtime/schemas/request_capture.schema.json
+          - Execution/docker/postgres/init/001_request_captures.sql
+        test_paths:
+          - Execution/rag_runtime/src/request_capture_store/mod.rs
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "RequestCapture clearly persists retriever kind and config snapshots."
+          violates_spec: "RequestCapture does not clearly persist the required retriever metadata yet."
+        code_rules:
+          - path: Execution/rag_runtime/src/models/mod.rs
+            contains_all:
+              - "pub retriever_kind: RetrieverKind"
+              - "pub retriever_config: RetrieverConfig"
+          - path: Execution/rag_runtime/src/request_capture_store/mod.rs
+            contains_all:
+              - "retriever_kind"
+              - "retriever_config"
+          - path: Execution/rag_runtime/schemas/request_capture.schema.json
+            contains_all:
+              - "\"retriever_kind\""
+              - "\"retriever_config\""
+          - path: Execution/docker/postgres/init/001_request_captures.sql
+            contains_all:
+              - "retriever_kind"
+              - "retriever_config"
+        spec_rules:
+          - path: Specification/contracts/rag_runtime/request_capture.md
+            contains_all:
+              - "`retriever_kind`"
+              - "`retriever_config`"
+
+      - id: rag_runtime.public_api.main_entrypoints_exist
+        direction: requirement
+        category: public_api
+        confidence: high
+        title: "RagRuntime public entrypoints must exist"
+        description: "The crate should expose RagRuntime::from_config_paths and RagRuntime::handle_request."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+        code_paths:
+          - Execution/rag_runtime/src/lib.rs
+        test_paths:
+          - Execution/rag_runtime/src/lib.rs
+          - Execution/rag_runtime/tests/e2e_smoke.rs
+        test_mode: any
+        status_text:
+          conforms: "RagRuntime exposes the required public entrypoints."
+          violates_spec: "RagRuntime is missing one or more required public entrypoints."
+        code_rules:
+          - path: Execution/rag_runtime/src/lib.rs
+            contains_all:
+              - "pub struct RagRuntime"
+              - "pub async fn from_config_paths("
+              - "pub async fn handle_request("
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "`RagRuntime::from_config_paths(...)`"
+              - "`RagRuntime::handle_request(...)`"
+
+      - id: rag_runtime.observability.trace_batch_delay_wired
+        direction: requirement
+        category: observability
+        confidence: high
+        title: "Trace batch scheduled delay must be wired from config"
+        description: "Observability initialization should explicitly use Settings.observability.trace_batch_scheduled_delay_ms."
+        spec_paths:
+          - Specification/codegen/rag_runtime/observability/implementation.md
+          - Specification/codegen/rag_runtime/rag_runtime.md
+        code_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        test_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Trace batch scheduled delay is wired from typed config into observability initialization."
+          violates_spec: "Trace batch scheduled delay is not clearly wired from typed config into observability initialization."
+        code_rules:
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "pub trace_batch_scheduled_delay_ms: u64"
+          - path: Execution/rag_runtime/src/observability/mod.rs
+            contains_all:
+              - "settings.trace_batch_scheduled_delay_ms"
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"trace_batch_scheduled_delay_ms\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/observability/implementation.md
+            contains_all:
+              - "the batch span processor scheduled delay is set from `Settings.observability.trace_batch_scheduled_delay_ms`"
+
+      - id: rag_runtime.reranking.settings_contract_is_typed_and_schema_backed
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Reranking settings must be typed and schema backed"
+        description: "The reranking config subtree must exist in typed settings and JSON schema."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/config.md
+        code_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        test_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Reranking settings are typed, schema-backed, and derive candidate/final k from existing settings."
+          violates_spec: "Reranking settings are missing typed config, schema coverage, or candidate/final k derivation."
+        code_rules:
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "pub struct RerankingSettings"
+              - "pub reranker: RerankerSettings"
+              - "pub enum RerankerSettings"
+              - "pub struct HeuristicRerankerSettings"
+              - "pub candidate_k: usize"
+              - "pub final_k: usize"
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"reranking\""
+              - "\"kind\""
+              - "\"weights\""
+              - "\"pass_through\""
+              - "\"heuristic\""
+              - "\"cross_encoder\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "RerankingSettings"
+              - "RerankerSettings"
+              - "HeuristicWeights"
+          - path: Specification/contracts/rag_runtime/config.md
+            contains_all:
+              - "`reranking.kind`"
+              - "`pass_through` -> `RerankerSettings::PassThrough(...)`"
+              - "`heuristic` -> `RerankerSettings::Heuristic(...)`"
+              - "`cross_encoder` -> `RerankerSettings::CrossEncoder(...)`"
+              - "`candidate_k` and `final_k` must not be declared inside `[reranking]`"
+
+      - id: rag_runtime.reranking.domain_types_exist
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "RerankerKind and HeuristicWeights must exist as typed domain objects"
+        description: "The domain model must expose the reranker enum and heuristic weight struct."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/request_capture.md
+        code_paths:
+          - Execution/rag_runtime/src/models/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/models/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "RerankerKind and HeuristicWeights are present as typed domain objects."
+          violates_spec: "RerankerKind or HeuristicWeights are missing from the domain model."
+        code_rules:
+          - path: Execution/rag_runtime/src/models/mod.rs
+            contains_all:
+              - "pub enum RerankerKind"
+              - "PassThrough"
+              - "Heuristic"
+              - "pub struct HeuristicWeights"
+              - "retrieval_score"
+              - "query_term_coverage"
+              - "phrase_match_bonus"
+              - "title_section_match_bonus"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "RerankerKind"
+              - "HeuristicWeights"
+          - path: Specification/contracts/rag_runtime/request_capture.md
+            contains_all:
+              - "RerankerKind"
+              - "HeuristicWeights"
+
+      - id: rag_runtime.reranking.ranked_output_type_exists
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "RerankedRetrievalOutput must exist as a dedicated type"
+        description: "The reranking stage must not overload RetrievalOutput for final rerank semantics."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/codegen/rag_runtime/reranking/integration.md
+        code_paths:
+          - Execution/rag_runtime/src/reranking/mod.rs
+          - Execution/rag_runtime/src/models/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/reranking/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "RerankedRetrievalOutput exists and is used as the dedicated reranking output type."
+          violates_spec: "RerankedRetrievalOutput is missing or reranking still overloads RetrievalOutput."
+        code_rules:
+          - path: Execution/rag_runtime/src/reranking/mod.rs
+            exists: true
+            contains_all:
+              - "pub trait Reranker"
+          - path: Execution/rag_runtime/src/models/mod.rs
+            contains_all:
+              - "pub struct RerankedRetrievalOutput"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "RerankedRetrievalOutput"
+          - path: Specification/codegen/rag_runtime/reranking/integration.md
+            contains_all:
+              - "RerankedRetrievalOutput"
+
+      - id: rag_runtime.reranking.orchestration_factory_maps_kind_to_implementation
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Orchestration must map reranker kind to the concrete implementation"
+        description: "The orchestration layer must construct the concrete reranker and hold it behind a dyn trait."
+        spec_paths:
+          - Specification/codegen/rag_runtime/orchestration.md
+          - Specification/codegen/rag_runtime/reranking/integration.md
+        code_paths:
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Orchestration constructs the selected reranker and invokes it through the reranking interface."
+          violates_spec: "Orchestration does not clearly construct and route the selected reranker implementation."
+        code_rules:
+          - path: Execution/rag_runtime/src/orchestration/mod.rs
+            contains_all:
+              - "PassThroughReranker::new()"
+              - "HeuristicReranker::new(settings.weights.clone())"
+              - "CrossEncoderReranker::new("
+              - "Box<dyn Reranker + Send + Sync>"
+              - "build_reranker(&settings.reranking)?"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/orchestration.md
+            contains_all:
+              - "Settings.reranking.reranker = RerankerSettings::PassThrough"
+              - "Settings.reranking.reranker = RerankerSettings::Heuristic(settings)"
+              - "Settings.reranking.reranker = RerankerSettings::CrossEncoder(settings)"
+              - "Box<dyn Reranker + Send + Sync>"
+          - path: Specification/codegen/rag_runtime/reranking/integration.md
+            contains_all:
+              - "orchestration owns reranker selection and concrete reranker construction based on `Settings.reranking.reranker`"
+
+      - id: rag_runtime.reranking.pass_through_preserves_retrieval_order_and_scores
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Pass-through reranking must preserve candidate order and scores"
+        description: "The pass-through implementation must copy the retrieval output unchanged except for the rerank score aliasing retrieval score."
+        spec_paths:
+          - Specification/codegen/rag_runtime/reranking/integration.md
+          - Specification/codegen/rag_runtime/orchestration.md
+        code_paths:
+          - Execution/rag_runtime/src/reranking/mod.rs
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Pass-through reranking preserves retrieval order and sets rerank_score = retrieval_score."
+          violates_spec: "Pass-through reranking does not clearly preserve the retrieval order or score aliasing contract."
+        code_rules:
+          - path: Execution/rag_runtime/src/reranking/mod.rs
+            exists: true
+            contains_all:
+              - "fn rerank_output("
+              - "retrieval_score: retrieved.score"
+              - "rerank_score: retrieved.score"
+          - path: Execution/rag_runtime/src/orchestration/mod.rs
+            contains_all:
+              - "PassThroughReranker::new()"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/reranking/integration.md
+            contains_all:
+              - "copy every input candidate"
+              - "set `rerank_score = retrieval_score` for every candidate"
+              - "same candidate count as the input `RetrievalOutput`"
+
+      - id: rag_runtime.reranking.request_capture_fields_are_typed_and_persisted
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "RequestCapture must persist reranking metadata and rerank scores"
+        description: "The request-capture shape and storage contract must include reranker metadata and new retrieval score fields."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/request_capture.md
+          - Specification/contracts/storage/request_captures_storage.md
+        code_paths:
+          - Execution/rag_runtime/src/models/mod.rs
+          - Execution/rag_runtime/src/request_capture_store/mod.rs
+          - Execution/rag_runtime/schemas/request_capture.schema.json
+          - Execution/docker/postgres/init/001_request_captures.sql
+        test_paths:
+          - Execution/rag_runtime/src/request_capture_store/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "RequestCapture persists reranker metadata and retrieval/rerank scores with the expected typed shape."
+          violates_spec: "RequestCapture is missing reranker metadata or the new retrieval/rerank score fields."
+        code_rules:
+          - path: Execution/rag_runtime/src/models/mod.rs
+            contains_all:
+              - "pub reranker_kind: RerankerKind"
+              - "pub reranker_config: Option<RerankerConfig>"
+              - "pub retrieval_score: f32"
+              - "pub rerank_score: f32"
+          - path: Execution/rag_runtime/src/request_capture_store/mod.rs
+            contains_all:
+              - "reranker_kind: reranker_kind_to_storage_text(&capture.reranker_kind).to_string()"
+              - "reranker_config: match &capture.reranker_config"
+              - "serde_json::to_value(config)"
+              - "retrieval_score"
+              - "rerank_score"
+          - path: Execution/rag_runtime/schemas/request_capture.schema.json
+            contains_all:
+              - "\"reranker_kind\""
+              - "\"reranker_config\""
+              - "\"retrieval_score\""
+              - "\"rerank_score\""
+          - path: Execution/docker/postgres/init/001_request_captures.sql
+            contains_all:
+              - "reranker_kind text not null"
+              - "reranker_config jsonb null"
+              - "retrieval_score"
+              - "rerank_score"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "reranker_kind: RerankerKind"
+              - "reranker_config: Option<RerankerConfig>"
+              - "retrieval_score"
+              - "rerank_score"
+          - path: Specification/contracts/rag_runtime/request_capture.md
+            contains_all:
+              - "reranker_kind"
+              - "reranker_config"
+              - "retrieval_score"
+              - "rerank_score"
+          - path: Specification/contracts/storage/request_captures_storage.md
+            contains_all:
+              - "`reranker_kind` is stored as the canonical serialized text form of the semantic enum `RerankerKind`"
+              - "`reranker_config` stores the serialized form of `Option<RerankerConfig>`"
+              - "the array must preserve final reranked order"
+
+      - id: rag_runtime.reranking.observability_stage_is_emitted
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Reranking must emit its own observability stage"
+        description: "The reranking stage must have explicit span and metric coverage."
+        spec_paths:
+          - Specification/codegen/rag_runtime/reranking/integration.md
+          - Specification/codegen/rag_runtime/observability/spans.md
+          - Specification/codegen/rag_runtime/observability/metrics.md
+        code_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Reranking observability is emitted as its own stage and recorded through rag_stage_duration_ms."
+          violates_spec: "Reranking observability stage coverage is missing or not clearly wired."
+        code_rules:
+          - path: Execution/rag_runtime/src/observability/mod.rs
+            contains_all:
+              - "rag_stage_duration_ms"
+              - "reranking"
+          - path: Execution/rag_runtime/src/orchestration/mod.rs
+            contains_all:
+              - "reranking"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/observability/spans.md
+            contains_all:
+              - "reranking"
+              - "`reranking`"
+          - path: Specification/codegen/rag_runtime/observability/metrics.md
+            contains_all:
+              - "`rag_stage_duration_ms`"
+              - "reranking"
+
+      - id: rag_runtime.reranking.cross_encoder_types_and_config_exist
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Cross-encoder reranking types and config must exist as typed domain objects"
+        description: "The runtime model and config contract must expose CrossEncoder as a typed reranker implementation with typed settings and request-capture config snapshot."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/config.md
+          - Specification/contracts/rag_runtime/request_capture.md
+        code_paths:
+          - Execution/rag_runtime/src/models/mod.rs
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/schemas/request_capture.schema.json
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        test_paths:
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/src/request_capture_store/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Cross-encoder reranking is represented by typed runtime/config/request-capture objects."
+          violates_spec: "Cross-encoder reranking is missing from the typed runtime, config, or request-capture model."
+        code_rules:
+          - path: Execution/rag_runtime/src/models/mod.rs
+            contains_all:
+              - "pub enum RerankerKind"
+              - "CrossEncoder"
+              - "pub enum RerankerConfig"
+              - "CrossEncoderConfig"
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "pub struct RerankingSettings"
+              - "pub reranker: RerankerSettings"
+              - "pub struct CrossEncoderRerankerSettings"
+              - "pub enum CrossEncoderTransportSettings"
+              - "MixedbreadAiCrossEncoderTransportSettings"
+              - "VoyageAiCrossEncoderTransportSettings"
+              - "RERANKER_ENDPOINT"
+              - "VOYAGEAI_RERANK_URL"
+              - "VOYAGEAI_API_KEY"
+          - path: Execution/rag_runtime/schemas/request_capture.schema.json
+            contains_all:
+              - "\"CrossEncoder\""
+              - "\"model_name\""
+              - "\"url\""
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"cross_encoder\""
+              - "\"mixedbread-ai\""
+              - "\"voyageai\""
+              - "\"batch_size\""
+              - "\"timeout_sec\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "CrossEncoder"
+              - "CrossEncoderConfig"
+              - "CrossEncoderRerankerSettings"
+              - "CrossEncoderTransportSettings"
+          - path: Specification/contracts/rag_runtime/config.md
+            contains_all:
+              - "`[reranking.cross_encoder]`"
+              - "CrossEncoderRerankerSettings"
+              - "CrossEncoderTransportSettings::MixedbreadAi(...)"
+              - "CrossEncoderTransportSettings::VoyageAi(...)"
+              - "RERANKER_ENDPOINT"
+              - "VOYAGEAI_RERANK_URL"
+              - "VOYAGEAI_API_KEY"
+          - path: Specification/contracts/rag_runtime/request_capture.md
+            contains_all:
+              - "CrossEncoder"
+              - "model_name"
+              - "url"
+
+      - id: rag_runtime.reranking.cross_encoder_request_capture_schema_and_sql_support_exist
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Cross-encoder request-capture schema and SQL must support the new reranker kind"
+        description: "The request-capture JSON schema and physical SQL storage contract must both accept CrossEncoder and its config snapshot shape."
+        spec_paths:
+          - Specification/contracts/rag_runtime/request_capture.md
+          - Specification/contracts/storage/request_captures_storage.md
+        code_paths:
+          - Execution/rag_runtime/schemas/request_capture.schema.json
+          - Execution/docker/postgres/init/001_request_captures.sql
+        status_text:
+          conforms: "Request-capture schema and SQL both support CrossEncoder reranker snapshots."
+          violates_spec: "Request-capture schema or SQL still misses CrossEncoder reranker support."
+        code_rules:
+          - path: Execution/rag_runtime/schemas/request_capture.schema.json
+            contains_all:
+              - "\"CrossEncoder\""
+              - "\"model_name\""
+              - "\"url\""
+          - path: Execution/docker/postgres/init/001_request_captures.sql
+            contains_all:
+              - "CrossEncoder"
+              - "model_name"
+              - "url"
+        spec_rules:
+          - path: Specification/contracts/rag_runtime/request_capture.md
+            contains_all:
+              - "CrossEncoder"
+              - "model_name"
+              - "url"
+          - path: Specification/contracts/storage/request_captures_storage.md
+            contains_all:
+              - "CrossEncoder"
+              - "model_name"
+              - "url"
+
+      - id: rag_runtime.reranking.cross_encoder_config_schema_support_exists
+        direction: requirement
+        category: reranking
+        confidence: high
+        title: "Cross-encoder config schema must expose the reranking subtree"
+        description: "The runtime JSON config schema must include kind=cross_encoder and the typed [reranking.cross_encoder] subtree fields required by the spec."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+          - Specification/contracts/rag_runtime/config.md
+        code_paths:
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        status_text:
+          conforms: "The runtime config schema includes cross_encoder and its typed subtree."
+          violates_spec: "The runtime config schema is still missing cross_encoder or its required typed subtree."
+        code_rules:
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"cross_encoder\""
+              - "\"batch_size\""
+              - "\"timeout_sec\""
+              - "\"retry\""
+              - "\"max_attempts\""
+              - "\"backoff\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "CrossEncoderSettings"
+              - "batch_size"
+              - "timeout_sec"
+          - path: Specification/contracts/rag_runtime/config.md
+            contains_all:
+              - "`[reranking.cross_encoder]`"
+              - "batch_size"
+              - "timeout_sec"
+              - "retry"
+              - "max_attempts"
+              - "backoff"
+
+      - id: rag_runtime.reranking.cross_encoder_api_and_mapping_are_implemented
+        direction: requirement
+        category: reranking
+        confidence: medium
+        title: "Cross-encoder reranking must implement the mxbai-reranker API contract"
+        description: "The cross-encoder client must call the external reranker service, map response indices back to candidates, and emit the reranker order-visibility attributes."
+        spec_paths:
+          - Specification/codegen/rag_runtime/reranking/cross_encoder.md
+          - Specification/codegen/rag_runtime/reranking/mixedbread_ai_api.md
+          - Specification/codegen/rag_runtime/reranking/transport_integration.md
+          - Specification/codegen/rag_runtime/observability/openinference_spans.md
+        code_paths:
+          - Execution/rag_runtime/src/reranking/transports/mixedbread_ai.rs
+          - Execution/rag_runtime/src/reranking/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/reranking/transports/mixedbread_ai.rs
+          - Execution/rag_runtime/src/reranking/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Cross-encoder reranking implements the service API, response mapping, and reranker observability contract."
+          violates_spec: "Cross-encoder reranking does not clearly implement the external API, mapping, or observability contract."
+        code_rules:
+          - path: Execution/rag_runtime/src/reranking/transports/mixedbread_ai.rs
+            contains_all:
+              - "/rerank"
+              - "results: Vec<MixedbreadResultItem>"
+              - "index: batch_offset + result.index"
+              - "score: result.score"
+              - "\"warming\""
+              - "/health"
+              - "max_attempts"
+          - path: Execution/rag_runtime/src/reranking/mod.rs
+            contains_all:
+              - "reranker.result_indices"
+              - "reranker.retrieval_scores"
+              - "reranker.rerank_scores"
+          - path: Execution/rag_runtime/src/reranking/transports/mixedbread_ai.rs
+            contains_any:
+              - "warming"
+              - "/health"
+              - "max_attempts"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/reranking/mixedbread_ai_api.md
+            contains_all:
+              - "`POST /rerank`"
+              - "`results[*].index`"
+              - "`results[*].score`"
+          - path: Specification/codegen/rag_runtime/reranking/cross_encoder.md
+            contains_all:
+              - "`RerankingTransportResponse.results[*].score` must be written into `RerankedChunk.rerank_score`"
+              - "`RerankingTransportResponse.results[*].index` must be used to recover the matching retrieval candidate"
+          - path: Specification/codegen/rag_runtime/reranking/transport_integration.md
+            contains_all:
+              - "provider-specific retryable readiness semantics, such as Mixedbread `warming`, are defined by the corresponding provider API contract and executed by the transport."
+          - path: Specification/codegen/rag_runtime/observability/openinference_spans.md
+            contains_all:
+              - "`reranker.result_indices`"
+
+      - id: rag_runtime.testing.e2e_smoke_artifact_exists
+        direction: requirement
+        category: testing
+        confidence: high
+        title: "The required e2e smoke artifact must exist"
+        description: "The mandatory integration smoke test file should exist under Execution/rag_runtime/tests/e2e_smoke.rs."
+        spec_paths:
+          - Specification/codegen/rag_runtime/unit_tests.md
+          - Specification/codegen/rag_runtime/generated_artifacts.md
+        code_paths:
+          - Execution/rag_runtime/tests/e2e_smoke.rs
+        test_paths:
+          - Execution/rag_runtime/tests/e2e_smoke.rs
+        test_mode: any
+        status_text:
+          conforms: "The required e2e smoke artifact exists."
+          violates_spec: "The required e2e smoke artifact is missing."
+        code_rules:
+          - path: Execution/rag_runtime/tests/e2e_smoke.rs
+            exists: true
+            contains_all:
+              - "async fn e2e_smoke_reports_startup_failure_without_required_env()"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/unit_tests.md
+            contains_all:
+              - "Execution/rag_runtime/tests/e2e_smoke.rs"
+
+      - id: rag_runtime.metrics.rag_query_token_count_exists
+        direction: requirement
+        category: metrics
+        confidence: high
+        title: "rag_query_token_count metric must be implemented"
+        description: "The runtime metric contract requires rag_query_token_count."
+        spec_paths:
+          - Specification/codegen/rag_runtime/observability/metrics.md
+        code_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "rag_query_token_count exists in observability instrumentation."
+          violates_spec: "rag_query_token_count is missing from observability instrumentation."
+        code_rules:
+          - path: Execution/rag_runtime/src/observability/mod.rs
+            contains_all:
+              - "rag_query_token_count"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/observability/metrics.md
+            contains_all:
+              - "`rag_query_token_count`"
+
+      - id: rag_runtime.metrics.rag_retry_attempts_total_exists
+        direction: requirement
+        category: metrics
+        confidence: high
+        title: "rag_retry_attempts_total metric must be implemented"
+        description: "Retry attempt instrumentation should exist under the required metric name."
+        spec_paths:
+          - Specification/codegen/rag_runtime/observability/metrics.md
+        code_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/observability/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "rag_retry_attempts_total exists in observability instrumentation."
+          violates_spec: "rag_retry_attempts_total is missing from observability instrumentation."
+        code_rules:
+          - path: Execution/rag_runtime/src/observability/mod.rs
+            contains_all:
+              - "rag_retry_attempts_total"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/observability/metrics.md
+            contains_all:
+              - "`rag_retry_attempts_total`"
+
+      - id: rag_runtime.spans.llm_prompt_token_attribute_exists
+        direction: requirement
+        category: spans
+        confidence: high
+        title: "OpenInference prompt token attribute must be emitted"
+        description: "The generation chat span should include llm.token_count.prompt."
+        spec_paths:
+          - Specification/codegen/rag_runtime/observability/openinference_spans.md
+        code_paths:
+          - Execution/rag_runtime/src/generation/mod.rs
+        test_paths:
+          - Execution/rag_runtime/src/generation/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Generation chat span includes llm.token_count.prompt."
+          violates_spec: "Generation chat span is missing llm.token_count.prompt."
+        code_rules:
+          - path: Execution/rag_runtime/src/generation/mod.rs
+            contains_all:
+              - "\"llm.token_count.prompt\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/observability/openinference_spans.md
+            contains_all:
+              - "`llm.token_count.prompt`"
+
+      - id: rag_runtime.generation.retry
+        direction: capability
+        category: generation
+        confidence: high
+        title: "Generation retry is implemented in code"
+        description: "The runtime now supports generation retry configuration and execution."
+        spec_paths:
+          - Specification/codegen/rag_runtime/generation/generation.md
+          - Specification/codegen/rag_runtime/rag_runtime.md
+        code_paths:
+          - Execution/rag_runtime/src/generation/mod.rs
+          - Execution/rag_runtime/src/config/mod.rs
+          - Execution/rag_runtime/rag_runtime.toml
+          - Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+        test_paths:
+          - Execution/rag_runtime/src/generation/mod.rs
+          - Execution/rag_runtime/src/orchestration/mod.rs
+        test_mode: any
+        status_text:
+          conforms: "Generation retry exists in code and appears explicitly documented."
+          undocumented_code: "Generation retry exists in code but is not explicitly covered in generation/generation.md."
+          needs_review: "Could not prove generation retry capability from code."
+        code_rules:
+          - path: Execution/rag_runtime/src/generation/mod.rs
+            contains_all:
+              - "retry_generation_with_policy"
+          - path: Execution/rag_runtime/src/config/mod.rs
+            contains_all:
+              - "pub retry: RetrySettings"
+          - path: Execution/rag_runtime/rag_runtime.toml
+            contains_all:
+              - "[generation.retry]"
+          - path: Execution/rag_runtime/schemas/rag_runtime_config.schema.json
+            contains_all:
+              - "\"retry\""
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/generation/generation.md
+            contains_all:
+              - "Generation retry logic"
+
+      - id: rag_runtime.cli.questions_file_batch_mode
+        direction: capability
+        category: cli
+        confidence: high
+        title: "CLI batch question-file mode exists in code"
+        description: "The CLI supports sequential batch execution through --questions-file."
+        spec_paths:
+          - Specification/codegen/rag_runtime/rag_runtime.md
+        code_paths:
+          - Execution/rag_runtime/src/main.rs
+        test_paths:
+          - Execution/rag_runtime/src/main.rs
+        test_mode: any
+        status_text:
+          conforms: "CLI batch file mode exists in code and appears documented."
+          undocumented_code: "CLI batch file mode exists in code but is not described in the spec."
+          needs_review: "Could not prove CLI batch file mode from code."
+        code_rules:
+          - path: Execution/rag_runtime/src/main.rs
+            contains_all:
+              - "--questions-file"
+              - "parse_batch_queries"
+        spec_rules:
+          - path: Specification/codegen/rag_runtime/rag_runtime.md
+            contains_all:
+              - "questions-file"

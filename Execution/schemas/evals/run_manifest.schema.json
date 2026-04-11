@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Execution/schemas/evals/run_manifest.schema.json",
+  "title": "Eval Run Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "run_type",
+    "status",
+    "started_at",
+    "stages",
+    "postgres_url",
+    "chunks_path",
+    "tracing_endpoint",
+    "judge_provider",
+    "judge_base_url",
+    "judge_model",
+    "generation_suite_versions",
+    "retrieval_suite_versions",
+    "request_count",
+    "run_scope_request_ids"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_type": {
+      "type": "string",
+      "enum": [
+        "continuous",
+        "nightly",
+        "experiment"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "completed",
+        "failed"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {
+          "const": "judge_generation"
+        },
+        {
+          "const": "judge_retrieval"
+        },
+        {
+          "const": "build_request_summary"
+        }
+      ],
+      "items": false
+    },
+    "postgres_url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "chunks_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tracing_endpoint": {
+      "type": "string",
+      "minLength": 1
+    },
+    "judge_provider": {
+      "type": "string",
+      "enum": ["ollama", "together"]
+    },
+    "judge_base_url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "judge_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation_suite_versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "answer_completeness",
+        "groundedness",
+        "answer_relevance",
+        "correct_refusal"
+      ],
+      "properties": {
+        "answer_completeness": {
+          "type": "string",
+          "minLength": 1
+        },
+        "groundedness": {
+          "type": "string",
+          "minLength": 1
+        },
+        "answer_relevance": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correct_refusal": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "retrieval_suite_versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retrieval_relevance"
+      ],
+      "properties": {
+        "retrieval_relevance": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "request_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "retriever_kind": {
+      "type": "string",
+      "enum": [
+        "Dense",
+        "Hybrid"
+      ]
+    },
+    "reranker_kind": {
+      "type": "string",
+      "enum": [
+        "PassThrough",
+        "Heuristic",
+        "CrossEncoder"
+      ]
+    },
+    "run_scope_request_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "last_error": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "running"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "completed_at"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "completed",
+              "failed"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "completed_at"
+        ]
+      }
+    }
+  ]
+}

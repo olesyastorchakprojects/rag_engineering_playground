@@ -1,0 +1,37 @@
+{
+  "run_id": "f3965d14-3f63-4a22-910d-25c3bc6741a1",
+  "run_type": "experiment",
+  "status": "completed",
+  "started_at": "2026-04-09T16:45:15.659023+00:00",
+  "stages": [
+    "judge_generation",
+    "judge_retrieval",
+    "build_request_summary"
+  ],
+  "postgres_url": "postgres://postgres:postgres@localhost:5432/rag_eval",
+  "chunks_path": "/home/olesia/code/prompt_gen_proj/Evidence/parsing/understanding_distributed_systems/chunks/chunks.jsonl",
+  "tracing_endpoint": "http://localhost:4317",
+  "judge_provider": "together",
+  "judge_base_url": "https://api.together.xyz/v1",
+  "judge_model": "openai/gpt-oss-20b",
+  "generation_suite_versions": {
+    "answer_completeness": "v1",
+    "groundedness": "v1",
+    "answer_relevance": "v1",
+    "correct_refusal": "v1"
+  },
+  "retrieval_suite_versions": {
+    "retrieval_relevance": "v1"
+  },
+  "request_count": 5,
+  "run_scope_request_ids": [
+    "e80ccbe0-6b6f-470e-97a8-15422f15cc99",
+    "337d2d4d-1b5c-4a16-831a-53413d3146b9",
+    "2f650c3e-2dc6-4320-a500-82e35e0c3f9e",
+    "54ac9ab3-5c79-421e-8466-f65b186e5666",
+    "de41036a-893c-4e79-9959-6332ef121150"
+  ],
+  "retriever_kind": "Dense",
+  "reranker_kind": "CrossEncoder",
+  "completed_at": "2026-04-09T16:48:11.880824+00:00"
+}
