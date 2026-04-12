@@ -213,6 +213,8 @@ The required stage algorithm is:
 7. construct per-suite judge inputs only for missing suites;
 8. call the configured judge model only for missing suites;
 9. extract token usage and cost for each successful judge-model response and persist one storage row in `judge_llm_calls`;
+   - the stored factual call row must include the full serialized raw judge-model response payload;
+   - this row must be written even when downstream verdict normalization later fails for that response;
 10. normalize each missing-suite response into one storage row for `judge_generation_results`;
 11. persist only missing suite rows for the request;
 11. verify that all required generation suite rows now exist for the same `(request_id, run_id)`;

@@ -10,6 +10,7 @@ This document defines:
 
 - the table shape for `judge_llm_calls`;
 - row semantics for eval-stage LLM calls;
+- raw response payload storage rules;
 - token and cost storage rules;
 - key, index, and constraint rules.
 
@@ -44,6 +45,7 @@ The `judge_llm_calls` table contains:
 
 - identity and linkage columns;
 - judge provenance columns;
+- raw payload columns;
 - token accounting columns;
 - pricing columns.
 
@@ -64,6 +66,10 @@ The `judge_llm_calls` table contains:
 - `judge_model text not null`
 - `judge_prompt_version text not null`
 - `token_count_source text not null`
+
+### Raw Payload Columns
+
+- `raw_response jsonb null`
 
 ### Token Accounting Columns
 
@@ -108,6 +114,8 @@ and not:
 
 - only successfully normalized judge verdicts
 
+When present, `raw_response` stores the full serialized provider payload for that factual judge-model call.
+
 ## Column Rules
 
 ### Required Text Columns
@@ -147,6 +155,14 @@ If `chunk_id` is present, it must be non-empty after `btrim(...)`.
 - `provider_usage`
 - `ollama_native_usage`
 - `local_estimate`
+
+### Raw Response Rules
+
+- `raw_response` stores the serialized raw judge-model response payload for the factual call;
+- `raw_response` may be null only for backward-compatible pre-migration rows;
+- when present, `raw_response` must be a JSON object;
+- new writes for the current version must populate `raw_response`;
+- this payload is intended for debugging and forensic inspection when downstream parsing fails.
 
 ### Token Count Rules
 

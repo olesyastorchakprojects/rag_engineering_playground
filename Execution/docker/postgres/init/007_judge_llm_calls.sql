@@ -12,6 +12,7 @@ create table if not exists judge_llm_calls (
     judge_model text not null,
     judge_prompt_version text not null,
     token_count_source text not null,
+    raw_response jsonb null,
 
     prompt_tokens integer not null,
     completion_tokens integer not null,
@@ -43,6 +44,8 @@ create table if not exists judge_llm_calls (
         check (length(btrim(judge_prompt_version)) > 0),
     constraint judge_llm_calls_token_count_source_nonempty_check
         check (length(btrim(token_count_source)) > 0),
+    constraint judge_llm_calls_raw_response_object_check
+        check (raw_response is null or jsonb_typeof(raw_response) = 'object'),
     constraint judge_llm_calls_stage_name_check
         check (stage_name in ('judge_generation', 'judge_retrieval')),
     constraint judge_llm_calls_token_count_source_check
@@ -72,3 +75,17 @@ create index if not exists idx_judge_llm_calls_run_stage
 
 create index if not exists idx_judge_llm_calls_created_at
     on judge_llm_calls (created_at);
+
+alter table judge_llm_calls
+    add column if not exists raw_response jsonb;
+
+update judge_llm_calls
+set raw_response = '{}'::jsonb
+where raw_response is null;
+
+alter table judge_llm_calls
+    drop constraint if exists judge_llm_calls_raw_response_object_check;
+
+alter table judge_llm_calls
+    add constraint judge_llm_calls_raw_response_object_check
+        check (raw_response is null or jsonb_typeof(raw_response) = 'object');

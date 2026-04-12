@@ -9,6 +9,7 @@ from functools import lru_cache
 from typing import Any
 
 from psycopg import Connection
+from psycopg.types.json import Json
 
 from .judge_transport import JudgeSettings
 
@@ -33,6 +34,7 @@ class JudgeLlmCallRecord:
     judge_model: str
     judge_prompt_version: str
     token_count_source: str
+    raw_response: dict[str, Any]
     prompt_tokens: int
     completion_tokens: int
     total_tokens: int
@@ -108,6 +110,7 @@ def build_judge_llm_call_record(
         judge_model=judge_settings.model_name,
         judge_prompt_version=judge_prompt_version,
         token_count_source=token_count_source,
+        raw_response=raw_response,
         prompt_tokens=prompt_tokens,
         completion_tokens=completion_tokens,
         total_tokens=total_tokens,
@@ -132,13 +135,14 @@ def insert_judge_llm_call(connection: Connection[Any], record: JudgeLlmCallRecor
             judge_model,
             judge_prompt_version,
             token_count_source,
+            raw_response,
             prompt_tokens,
             completion_tokens,
             total_tokens,
             input_cost_per_million_tokens,
             output_cost_per_million_tokens,
             total_cost_usd
-        ) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        ) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """,
         (
             record.call_id,
@@ -152,6 +156,7 @@ def insert_judge_llm_call(connection: Connection[Any], record: JudgeLlmCallRecor
             record.judge_model,
             record.judge_prompt_version,
             record.token_count_source,
+            Json(record.raw_response),
             record.prompt_tokens,
             record.completion_tokens,
             record.total_tokens,
