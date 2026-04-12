@@ -1,55 +1,119 @@
-# Project Documentation
+# Documentation Index
 
-This folder contains human-oriented project documentation for presentation,
-onboarding, and architecture review.
+This folder contains the human-oriented documentation for the project.
 
-These documents are intentionally narrative.
-They complement the repository contracts and code-generation specs under
-`Specification/`, but they do not replace them.
+These documents explain the repository as an engineering system: what it is for, how it is structured, how it is evaluated, how it is observed, and how its main design decisions fit together.
 
-Recommended reading order:
+They complement the repository’s implementation, contracts, schemas, and generated artifacts, but they do not replace them.
 
-1. `PROJECT_OVERVIEW.md`
-2. `RUN_FROM_ZERO.md`
-3. `ARCHITECTURE_OVERVIEW.md`
-4. `SPECIFICATION_FIRST_APPROACH.md`
-5. `REPOSITORY_MAP.md`
-6. `KEY_TECHNICAL_DECISIONS.md`
-7. `FEATURES_AND_CAPABILITIES.md`
-8. `MCP_SERVERS_AND_TOOLS.md`
-9. `AGENT_WORKFLOW_STORY.md`
-10. `EVALUATION_STORY.md`
-11. `OBSERVABILITY_STORY.md`
+---
 
-Document guide:
+## Recommended reading path
 
-- `PROJECT_OVERVIEW.md`
-  - what the project is, what problem it solves, and why it exists
-- `RUN_FROM_ZERO.md`
-  - the canonical onboarding path for bringing the local system up from a clean machine
-- `ARCHITECTURE_OVERVIEW.md`
-  - the end-to-end system shape and the role of each major subsystem
-- `SPECIFICATION_FIRST_APPROACH.md`
-  - how the project uses contracts, schemas, and specs as the source of truth
-- `REPOSITORY_MAP.md`
-  - how repository areas reflect the implementation/specification/measurement split
-- `KEY_TECHNICAL_DECISIONS.md`
-  - the most important engineering decisions and their rationale
-- `FEATURES_AND_CAPABILITIES.md`
-  - the functionality the project currently supports
-- `MCP_SERVERS_AND_TOOLS.md`
-  - how project-specific MCP servers expose repository-aware capabilities
-- `AGENT_WORKFLOW_STORY.md`
-  - how the repository supports multi-agent execution and workflow control
-- `EVALUATION_STORY.md`
-  - how request capture, eval runs, judge stages, and reports fit together
-- `OBSERVABILITY_STORY.md`
-  - how traces, metrics, dashboards, and local infra support engineering work
+If you want the fastest high-level understanding of the project, read the documents in this order:
 
-For executable contracts and implementation-level source-of-truth material,
-see:
+1. **[Architecture Overview](ARCHITECTURE_OVERVIEW.md)**
+   High-level system shape, repository framing, and the main architectural idea.
 
-- `Specification/`
-- `Execution/`
-- `Measurement/`
-- `Evidence/`
+2. **[Evaluation Story](EVALUATION_STORY.md)**
+   How request capture, evaluation runs, judge stages, and reports fit together.
+
+3. **[Observability Story](OBSERVABILITY_STORY.md)**
+   How traces, metrics, dashboards, and local infrastructure support diagnosis.
+
+4. **[Specification-First Approach](SPECIFICATION_FIRST_APPROACH.md)**
+   Why specs, schemas, and explicit contracts are central in this project.
+
+5. **[Key Technical Decisions](KEY_TECHNICAL_DECISIONS.md)**
+   The main design choices in the repository and the reasoning behind them.
+
+6. **[Run From Zero](RUN_FROM_ZERO.md)**
+   Canonical setup and local execution path from a clean machine.
+
+---
+
+## Core project narrative
+
+These documents form the main narrative of the repository:
+
+### [Architecture Overview](ARCHITECTURE_OVERVIEW.md)
+The end-to-end system shape, the major subsystem boundaries, and the role of request capture in the overall design.
+
+### [Evaluation Story](EVALUATION_STORY.md)
+How the project turns request-level evidence into reusable evaluation runs, comparison artifacts, and engineering conclusions.
+
+### [Golden Datasets](GOLDEN_DATASETS.md)
+How fixed question sets and golden retrieval companions support controlled runtime evaluation and comparable runs.
+
+### [Observability Story](OBSERVABILITY_STORY.md)
+How traces, metrics, dashboards support request-level inspection and aggregate diagnosis.
+
+### [Specification-First Approach](SPECIFICATION_FIRST_APPROACH.md)
+How specifications, schemas, and explicit contracts are used to keep behavior, interfaces, and repository structure clear.
+
+---
+
+## Supporting engineering documents
+
+These documents provide additional detail once the main project shape is clear:
+
+### [Run From Zero](RUN_FROM_ZERO.md)
+The canonical onboarding and local bring-up path.
+
+### [Key Technical Decisions](KEY_TECHNICAL_DECISIONS.md)
+The main design choices in the repository and the reasoning behind them.
+
+### [Repository Map](REPOSITORY_MAP.md)
+How the main repository areas reflect the split between execution, specification, measurement, evidence, and documentation.
+
+---
+
+## Agent and tooling documents
+
+These documents explain the parts of the repository that support agent-driven work and project-aware tooling:
+
+### [MCP Servers and Tools](MCP_SERVERS_AND_TOOLS.md)
+How project-specific MCP servers expose repository-aware capabilities.
+
+### [Agent Workflow Story](AGENT_WORKFLOW_STORY.md)
+How the repository supports structured multi-agent work, control, and coordination.
+
+### [Agent Role In Project](AGENT_ROLE_IN_PROJECT.md)
+How coding agents practically accelerated work in this repository, where MCP mattered, and where human judgment remained essential.
+
+---
+
+## Experiment evidence
+
+For direct experiment outcomes and comparative findings, see:
+
+### [Experiments: 20Q Comparative Report](EXPERIMENTS_20Q_COMPARATIVE_REPORT.md)
+A comparative report across evaluated pipeline variants, including current findings and open questions.
+
+---
+
+## Images and diagrams
+
+### [img/](img/)
+Supporting diagrams and visual assets used by the documentation.
+
+---
+
+## How to use this folder
+
+A practical way to navigate this documentation is:
+
+- start with the project-level story,
+- move to architecture,
+- then read evaluation and observability together,
+- and only after that go deeper into setup, repository layout, and supporting engineering documents.
+
+If you are reviewing the repository from the top-level `README.md`, this index is the next entry point once you want more detail.
+
+---
+
+## Related repository areas
+
+This folder is only one part of the repository model.
+
+For implementation, contracts, measurement assets, and produced evidence, see the top-level repository areas referenced throughout the docs and the main README.

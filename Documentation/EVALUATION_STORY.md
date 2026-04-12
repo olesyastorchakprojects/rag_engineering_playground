@@ -1,201 +1,427 @@
 # Evaluation Story
 
-## Why Evaluation Is A First-Class Part Of The Project
+## What this document covers
 
-This project does not treat evaluation as a one-off notebook or a manually
-assembled benchmark script.
+This document explains how captured request evidence becomes stable eval runs, normalized judge outputs, run reports, and Grafana-facing comparison surfaces.
 
-Evaluation is built as a structured subsystem with its own:
+It builds on `ARCHITECTURE_OVERVIEW.md` and focuses on the evaluation workflow itself: run formation, stage progression, result materialization, and output surfaces for interpretation and comparison.
 
-- input contract
-- workflow state
-- run identity
-- storage tables
-- artifacts
-- dashboards
+For the role of fixed question sets and golden retrieval companions in controlled runtime evaluation, see `GOLDEN_DATASETS.md`.
 
-That design choice makes the project much more than a runtime demo.
-It turns the repository into an experimentation platform.
+---
 
-## The Core Idea
+## Why evaluation is a first-class workflow in this project
 
-The key evaluation idea is simple:
+In this project, evaluation is implemented as a separate workflow rather than as an ad hoc pass over loosely collected outputs.
 
-- every successful runtime request becomes a canonical `RequestCapture`
-- evaluation consumes those captures as stable source data
-- the eval engine processes them through a resumable run-oriented pipeline
-- the run produces durable machine-readable and human-readable artifacts
+It has its own orchestrator, run identity, frozen run scope, stage-local workers, normalized result tables, and run artifacts. This makes pipeline variants easier to compare under a stable and inspectable evaluation flow.
 
-This means evaluation starts from the same concrete request record that the
-runtime actually produced.
+---
 
-![Eval usage overview](img/evaluation/eval-usage-overview.png)
+## Where evaluation starts
 
-_The eval dashboard shows the run campaign as a first-class subsystem: token usage by scope and a run table with `run_id`, chunking, retriever, reranker, runtime model, and status._
+Evaluation begins from persisted request evidence.
 
-## Why `RequestCapture` Matters
+The online runtime stores request-level captures in `request_captures`. Those captures act as the upstream input surface for offline evaluation. An eval run does not replay the live request path. It starts from already captured request evidence.
 
-`RequestCapture` is the bridge between online behavior and offline analysis.
+That separation is important because it allows evaluation to continue even when the runtime evolves, and it makes run membership explicit instead of implicit.
 
-It includes the information needed to judge a request meaningfully:
+---
 
-- the original query
-- the normalized query
-- retriever kind and retriever config snapshot
-- reranker kind and reranker config snapshot
-- retrieval outputs
-- reranked ordering
-- generation token usage
-- retrieval-stage metrics
-- reranking-stage metrics
+## Eval run as a tracked entity
 
-Because the eval engine reads captured requests instead of trying to reconstruct
-them from traces, the project gains:
+Each evaluation run is coordinated by `eval_orchestrator`.
 
-- reproducibility
-- schema validation
-- stable downstream contracts
-- easier debugging of run-to-run differences
+For a new run, the orchestrator:
 
-## Run-Oriented Evaluation
+- creates a new `run_id`
+- records run start metadata
+- creates `run_manifest.json`
+- discovers eligible requests from `request_captures`
+- bootstraps missing rows into `eval_processing_state`
 
-The eval engine is organized around explicit eval runs.
+For a resumed run, the orchestrator reuses the same `run_id`, reloads the previous manifest, and continues from the persisted run state rather than starting over.
 
-Each run has:
+This makes an eval run a real tracked entity rather than a one-off batch script.
 
-- a stable `run_id`
-- a frozen request scope
-- a run manifest
-- a run report
+---
 
-The most important property here is that run scope is frozen at bootstrap time.
+## Frozen run scope
 
-That means:
+One of the central design choices in the evaluation system is the use of a frozen run scope.
 
-- a resumed run does not silently absorb newer requests
-- the run remains semantically stable after a failure
-- comparisons between runs stay meaningful
+For a new run, only request captures whose `request_id` is not already present in `eval_processing_state` are admitted into the run. The resulting `run_scope_request_ids` are written into `run_manifest.json` and treated as immutable for the life of the run.
 
-This is one of the strongest quality decisions in the project because it
-protects experiment integrity.
+When a failed run is resumed, the orchestrator must use the same `run_id` and the same stored run scope. Newly captured requests must not be absorbed into the resumed run.
 
-## Eval Stages
+This keeps comparisons stable and prevents the run from silently changing shape while it is being evaluated.
 
-The current eval engine processes each run through three sequential stages:
+---
+
+## Stage pipeline
+
+The current evaluation pipeline has three stages:
 
 1. `judge_generation`
 2. `judge_retrieval`
 3. `build_request_summary`
 
-These stages are intentionally separated.
+The orchestrator owns stage ordering and promotion.
 
-Why:
+That means workers do not coordinate the full run. Each worker owns only its local stage logic, while the orchestrator controls:
 
-- generation quality and retrieval quality are different evaluation domains
-- summaries should be derived from produced results, not mixed into judge logic
-- stage boundaries make resume behavior much easier to reason about
+- which stage is active
+- when a stage is drained
+- how completed requests are promoted
+- when the run is considered complete
 
-This structure keeps the eval engine closer to a workflow system than to a
-single monolithic scoring script.
+This makes the eval system stateful and explicit rather than opportunistic.
 
-## Judge Outputs And Summaries
+---
 
-The system stores judge outputs in normalized result tables and then derives
-request-level summaries from them.
+## What each stage evaluates and produces
 
-This separation matters because:
+### 1. judge_generation
 
-- raw judge outputs remain inspectable
-- derived summaries can evolve without losing original judging results
-- dashboards and reports can be built from stable aggregate layers
+`judge_generation` evaluates answer quality for one eligible request at a time through four LLM-judge suites.
 
-In practice, the repository supports both:
+For the current version, it runs four generation evals:
 
-- request-level analysis
-- run-level comparison
+- **answer_completeness** — whether the answer fully addresses the user query
+- **groundedness** — whether the answer is supported by the chunks selected for generation
+- **answer_relevance** — whether the answer is relevant to the user query
+- **correct_refusal** — whether a refusal, if present, is appropriate rather than unnecessary or missing
 
-## Run Artifacts
+Its judge inputs are built from the captured request:
 
-Each eval run produces two especially important artifacts:
+- `normalized_query`
+- `final_answer`
+- and, for **groundedness**, the text of all retrieval items where `selected_for_generation = true`
 
-- `run_manifest.json`
-- `run_report.md`
+This stage writes:
 
-`run_manifest.json` is the structured metadata record for the run.
-It tells us:
+- normalized generation-judge rows into `judge_generation_results`
+- factual judge-call usage rows into `judge_llm_calls`
 
-- which requests were included
-- what judge model was used
-- what the run status is
-- how the run was configured
+So this stage answers the question: **How good was the generated answer, and in what way?**
 
-`run_report.md` is the human-readable snapshot of the run.
-It is the artifact most suitable for demos, reviews, and quick engineering
-comparison.
+### 2. judge_retrieval
 
-Together, these artifacts make runs inspectable both by machines and by humans.
+`judge_retrieval` evaluates retrieval quality for one eligible request at a time by judging retrieved chunks in ranked order.
 
-In practice, `run_report.md` is organized as a compact engineering review
-artifact. Its most useful sections are:
+For the current version, it runs one retrieval eval:
 
-- `Run Metadata`: request count, model choices, retriever/reranker settings
-- `Aggregated Metrics`: answer quality, retrieval relevance, and top-level rates
-- `Label Distributions`: how judges classified outputs across the run
-- `Retrieval Quality`: `retrieval@12` and `generation_context@4` quality signals
-- `Conditional Retrieval→Generation Aggregates`: answer quality conditioned on relevant context being present
-- `Worst-Case Preview`: the weakest requests in the run
-- `Token Usage`: runtime and judge token/cost summary
+- **retrieval_relevance** — whether each retrieved chunk is relevant to the user query
 
-Latest example report:
+Its judge inputs are:
 
-- [Latest 20-question run report](../Evidence/evals/runs/2026-04-10T19-42-16.271737+00-00_0d85b984-5f15-4529-a4b2-9ac11f496372/run_report.md)
+- `normalized_query`
+- `chunk_text`
 
-## Why Resume Support Is Important
+This evaluation is performed for each retrieved chunk in rank order, using the captured `retrieval_results` as the source of the expected chunk set.
 
-Evaluation runs can fail for reasons that are unrelated to the meaning of the
-experiment:
+This stage writes:
 
-- transient provider failures
-- local infrastructure issues
-- rate limits
-- temporary network problems
+- normalized chunk-level retrieval rows into `judge_retrieval_results`
+- factual judge-call usage rows into `judge_llm_calls`
 
-If the only recovery path were “start over from scratch,” evaluation would be
-fragile and expensive.
+So this stage answers the question: **Which retrieved chunks were actually relevant, and how did relevance distribute across the ranked set?**
 
-The current design avoids that problem by letting the orchestrator resume the
-same run with the same run scope.
+### 3. build_request_summary
 
-This makes the system much more practical for real engineering iteration.
+`build_request_summary` does not call a judge model.
 
-## Why This Subsystem Makes The Project Stronger
+Instead, it waits until all required upstream eval results exist for the request, then materializes one request-level summary row.
 
-A lot of RAG projects can produce answers.
-Far fewer can answer:
+It combines:
 
-- which run produced this result?
-- what exact request scope was judged?
-- what configuration produced this output?
-- how do two runs compare over the same frozen request set?
+- request metadata from `request_captures`
+- generation eval outputs from `judge_generation_results`
+- retrieval eval outputs from `judge_retrieval_results`
 
-This project can answer those questions because evaluation is part of the
-system architecture, not an afterthought.
+The resulting summary includes, among other things:
 
-## What This Enables
+- per-suite generation scores and labels for:
+  - `answer_completeness`
+  - `groundedness`
+  - `answer_relevance`
+  - `correct_refusal`
+- aggregated retrieval fields such as:
+  - `retrieval_chunk_count`
+  - `retrieval_relevance_mean`
+  - `retrieval_relevance_selected_mean`
+  - `retrieval_relevance_topk_mean`
+  - `retrieval_relevance_weighted_topk`
+  - `retrieval_relevance_relevant_count`
+  - `retrieval_relevance_selected_count`
 
-Because evaluation is structured this way, the project can support:
+This stage writes:
 
-- controlled comparison of retrieval variants
-- controlled comparison of reranker variants
-- request-level drilldown
-- run-level reporting
-- resumable experiment execution
-- cost and token analysis across runs
-- dashboard-backed experiment review
+- one normalized summary row into `request_summaries`
 
-That is one of the clearest reasons the repository already feels like a real
-engineering platform rather than only a prototype application.
+So this stage answers the question: **What is the consolidated evaluation picture for this request?**
 
-![Runtime reliability and latency dashboard](img/evaluation/runtime-reliability-latency.png)
+---
 
-_The runtime dashboard complements the eval artifacts by showing stage-level and dependency-level behavior during live experiment traffic, including retrieval, reranking, generation, and underlying dependency calls._
+
+## State tables and materialized evaluation data
+
+The evaluation pipeline depends on a PostgreSQL eval schema that exists before orchestration begins.
+
+Its main state surfaces are:
+
+- `request_captures`
+- `eval_processing_state`
+- `judge_generation_results`
+- `judge_retrieval_results`
+- `request_summaries`
+- `judge_llm_calls`
+
+Together, these tables make evaluation resumable, stage-aware, and queryable. Evaluation in this project is therefore materialized as structured state, not only as reports, logs, or traces.
+
+---
+
+## Run completion and report building
+
+A run is complete when every request in the frozen run scope reaches:
+
+- `current_stage = build_request_summary`
+- `status = completed`
+
+At that point, the orchestrator finalizes the manifest and builds the canonical `run_report.md`.
+
+The report is run-scoped and built from the run manifest plus database-backed evaluation data, which gives it a stable identity and a clear relationship to the underlying evaluated run.
+
+---
+
+## Two output surfaces: report view and dashboard view
+
+The evaluation system produces two complementary output surfaces:
+
+- **report view** — a human-readable artifact for interpreting one run or a comparison set
+- **dashboard view** — Grafana-backed tabular and aggregate views for browsing runs, comparing them, and inspecting usage / evaluation patterns
+
+These two surfaces are designed for different kinds of work. Reports are better for interpretation and written conclusions. Dashboards are better for navigation, comparison, filtering, and repeated review across many runs.
+
+
+### Report view
+
+
+The report view is the canonical human-readable snapshot artifact for one completed eval run.
+
+In this project, `run_report.md` complements Grafana dashboards with a fixed, run-scoped interpretation surface. It is built from the run manifest plus run-filtered evaluation tables and is intended to stay compact enough for human review rather than becoming a raw export of per-request data.
+
+
+The latest visible run report in the repository is:
+
+- **[run_report.md](../Evidence/evals/runs/2026-04-10T19-42-16.271737+00-00_0d85b984-5f15-4529-a4b2-9ac11f496372/run_report.md)**
+
+Based on the report contract and the current checked-in run artifact, the report view in this project is organized around these sections:
+
+#### 1. Run Metadata
+
+This section identifies the evaluated run and records the configuration context needed to interpret it.
+
+In the contract, this section must include run identity fields such as `run_id`, `run_type`, `status`, `started_at`, `completed_at`, `request_count`, `requests_evaluated`, and enabled suite versions, followed by subsections for **Retriever**, **Reranker**, **Generation**, and **Judge**.
+
+In the latest run report, this section includes:
+
+- eval run identity and timing
+- request counts
+- generation and retrieval suite versions
+- retriever details such as kind, embedding model, collection, corpus version, chunking strategy, `top_k`, and actual returned chunk statistics
+- reranker kind, model, and endpoint
+- generation model, endpoint, temperature, and `max_context_chunks`
+- judge provider, model, and endpoint.
+
+This makes the metadata section the main provenance surface for understanding what exact system configuration produced the run.
+
+#### 2. Aggregated Metrics
+
+This is the main analytical summary section of the report.
+
+The contract requires a compact aggregated metrics table covering generation-quality and retrieval-quality signals such as:
+
+- `answer_completeness_mean`
+- `groundedness_mean`
+- `answer_relevance_mean`
+- `correct_refusal_rate`
+- `retrieval_relevance_mean`
+- `retrieval_relevance_selected_mean`
+- `retrieval_relevance_weighted_topk_mean`
+
+with mean / percentile / contributing-count formatting rules depending on metric type.
+
+In the latest run report, this section appears as a compact metric table with mean-or-rate, p50, p90, and count columns.
+
+This section is the fastest way to understand the overall quality shape of a single run before looking at more diagnostic breakdowns.
+
+#### 3. Label Distributions
+
+This section summarizes categorical outcomes for the current run.
+
+The contract requires breakdowns for:
+
+- `answer_completeness`
+- `groundedness`
+- `answer_relevance`
+- `correct_refusal`
+
+with absolute count and percentage within the run.
+
+In the latest run report, these are rendered as suite / label / count / percent rows, for example `complete / partial / incomplete`, `grounded / partially_grounded / ungrounded`, and so on.
+
+This section is useful because it shows the shape of outcomes, not only their averages.
+
+#### 4. Retrieval Quality
+
+This section summarizes retrieval and reranking quality metrics for the run.
+
+The contract requires a two-row table comparing retrieval-stage and reranking-stage quality over their respective k values, with metrics such as:
+
+- Recall soft / strict
+- MRR soft / strict
+- nDCG
+
+It also requires additional scalar values such as retrieval context loss and average numbers of relevant chunks in retrieval and reranked contexts.
+
+In the latest run report, this section is rendered as a comparison between:
+
+- `retrieval@12`
+- `generation_context@4`
+
+followed by retrieval context loss and average relevant-chunk counts.
+
+This is one place where the current report wording is slightly more concrete than the generic contract language: the second row is framed around the final generation context rather than only the generic reranking label.
+
+#### 5. Conditional Retrieval→Generation Aggregates
+
+This section connects retrieval conditions to downstream answer behavior.
+
+The contract requires a table showing generation-quality aggregates conditioned on whether retrieval supplied relevant context, separately for retrieval-k and reranking-k, and for both soft and strict relevance. Required rows include:
+
+- `groundedness_given_relevant_context`
+- `answer_completeness_given_relevant_context`
+- `answer_relevance_given_relevant_context`
+- `hallucination_rate_when_top1_irrelevant`
+- `success_rate_when_at_least_one_relevant_in_topk`
+
+In the latest run report, this section is rendered with columns:
+
+- `retrieval@12_soft`
+- `retrieval@12_strict`
+- `generation_context@4_soft`
+- `generation_context@4_strict`
+
+plus explicit definitions for `success` and `hallucinated`.
+
+This section is especially important because it moves the report beyond isolated metrics and toward causal interpretation: it helps explain how retrieval sufficiency relates to generation quality.
+
+#### 6. Worst-Case Preview
+
+This section gives a short preview of the lowest-quality requests in the run.
+
+The contract says it should contain small capped lists for the lowest groundedness and lowest answer-completeness requests, including request IDs and optionally trace IDs, while explicitly avoiding a full per-request dump.
+
+The latest run report includes a `Worst-Case Preview` section beginning with `Lowest groundedness requests`.
+
+This section is the bridge from run-level aggregates back to concrete failure examples.
+
+#### 7. Token Usage
+
+The contract requires `Token Usage` as the final top-level section, with separate subsections for:
+
+- **Runtime** token / cost totals across the run scope
+- **Judge** token / cost totals split by `judge_generation`, `judge_retrieval`, and combined total
+
+It also requires explicit formula lines for total run cost.
+
+The visible latest run report excerpt does not reach this section in the fetched preview, so the contract is the main source of truth here.
+
+### What the report is for
+
+Taken together, these sections make `run_report.md` the best surface for answering questions like:
+
+- What exactly was evaluated in this run?
+- What configuration produced the results?
+- What is the aggregate quality state of the run?
+- Where do retrieval and generation appear to reinforce or limit each other?
+- Which requests should be inspected next?
+
+This is different from the dashboard view. The report is optimized for one coherent run-scoped reading, while dashboards are optimized for browsing, filtering, and comparing many runs.
+
+
+### Dashboard view
+
+The dashboard view is the operational and comparative surface of the same evaluation data.
+
+The public repository currently contains two Grafana dashboards for eval reporting:
+
+- **`eval_runs.json`** — the run-oriented dashboard surface
+- **`eval_usage_overview.json`** — the usage-oriented dashboard surface
+
+These dashboards are useful for different reasons.
+
+#### 1. Eval runs dashboard
+
+The eval runs dashboard is the best surface for:
+
+- listing available eval runs
+- comparing runs side by side
+- reviewing run metadata and aggregate outcomes
+- spotting differences in evaluation results without opening each report manually
+
+This is the dashboard view that complements the narrative report most directly.
+
+#### 2. Eval usage overview dashboard
+
+The usage overview dashboard is the best surface for:
+
+- understanding judge-call usage
+- reviewing evaluation cost / volume patterns
+- inspecting how evaluation workload is distributed across runs or stages
+- monitoring the operational side of the eval pipeline
+
+This dashboard complements the report by showing the evaluation system not only as an interpretation workflow, but also as a measurable operational process.
+
+### Dashboard time range note
+
+Grafana dashboard views are filtered by the currently selected time range. Visible runs, comparisons, and aggregate values should therefore always be interpreted in the context of the active time picker.
+
+### How the two surfaces work together
+
+A practical reading pattern is:
+
+1. use the **runs dashboard** to locate relevant runs or compare candidate runs
+2. open the **report artifact** for the run you want to interpret in depth
+3. use the **usage dashboard** when you want to inspect judge-call volume, usage patterns, or operational cost signals
+4. return to request-level summaries or traces if a specific result needs diagnosis
+
+In short:
+
+- **reports** provide a coherent run-scoped interpretation
+- **dashboards** support navigation, comparison, and operational review across runs
+
+### Dashboards screenshots
+
+![Eval runs dashboard](img/evaluation/eval_runs.png)
+
+![Eval usage dashboard](img/evaluation/eval-usage-overview.png)
+
+---
+
+## How this document relates to the rest of the docs
+
+- `ARCHITECTURE_OVERVIEW.md` explains where offline analysis sits in the system.
+- `OBSERVABILITY_STORY.md` explains how traces, metrics, and dashboards are used for engineering diagnosis.
+- `SPECIFICATION_FIRST_APPROACH.md` explains why the eval pipeline is driven by explicit contracts, schemas, and generated artifacts.
+
+This document focuses specifically on the evaluation workflow and its outputs.
+
+---
+
+## Summary
+
+In this project, evaluation is a staged workflow built on persisted request captures rather than a loose scoring pass over generated outputs.
+
+It forms stable eval runs, executes judge stages under a frozen run scope, materializes normalized result tables and request summaries, and exposes those results through both run reports and Grafana dashboards.

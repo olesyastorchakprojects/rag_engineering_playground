@@ -1,191 +1,213 @@
 # Specification-First Approach
 
-## What Specification-First Means In This Project
+## What this document covers
 
-In this repository, specification-first does not mean “we wrote some docs before
-we wrote code.”
+This document explains the specification-first workflow used in the repository to design and generate implementation code and tests.
 
-It means that the system is intentionally built so that:
+The core separation is simple:
 
-- contracts are explicit
-- schemas are versioned
-- ownership boundaries are written down
-- runtime shapes are defined before implementation details spread
-- downstream components read from stable structured artifacts instead of
-  informal assumptions
+- I write the specification
+- the model generates code and tests from it
+- the specification, not the generated code, is treated as the source of truth
 
-The implementation is expected to follow those contracts rather than inventing
-behavior ad hoc.
+---
 
-## Why This Approach Was Chosen
+## Core idea
 
-The project contains several subsystems that evolve together:
+The project is designed so that the main design work happens before implementation generation.
 
-- parsing and chunking
+Instead of starting from code and documenting it afterward, I first make the system explicit through:
+
+- contracts
+- types
+- rules
+- interfaces
+- ownership boundaries
+- expected artifacts
+- validation behavior
+
+Only after that does the model generate code or tests.
+
+This keeps design intent outside the model and makes generation more constrained and reproducible.
+
+---
+
+## Why this approach is used here
+
+This repository contains multiple interacting layers:
+
+- knowledge preparation
 - ingest
-- runtime execution
+- retrieval
+- reranking
+- generation
 - request capture
-- evaluation
-- dashboards and observability
+- offline evals
+- observability
+- dashboard-facing outputs
 
-Without explicit contracts, these layers drift very easily.
+Without explicit specifications, generated code can easily:
 
-A small shape change in one place can silently break:
+- invent implicit behavior
+- blur stage boundaries
+- couple modules that should stay separate
+- generate tests that merely mirror implementation
+- drift across runtime, eval, and observability surfaces
 
-- runtime config loading
-- request capture serialization
-- eval ingestion
-- dashboard queries
-- dataset compatibility
+The specification-first approach is used to reduce that ambiguity.
 
-The specification-first approach was chosen to make that drift visible and
-manageable.
+---
 
-## What Counts As A Specification Here
+## What counts as a specification in this project
 
-In this repository, specifications are not one single thing.
-They include several layers:
+In this repository, a specification is not a vague feature description.
 
-- architecture docs
-- code-generation specs
-- storage contracts
-- runtime contracts
-- JSON schemas
-- dataset companion contracts
-- test matrices
+It defines the system in operational terms, including:
 
-Together they define how the system is supposed to behave and what shapes its
-artifacts must have.
+- input and output types
+- required fields and schema rules
+- invariants
+- stage responsibilities
+- allowed configuration variants
+- artifact formats
+- naming rules
+- error behavior
+- observability requirements
+- report and dashboard output expectations
 
-## How The Approach Shows Up In Practice
+A useful spec therefore describes not only what a component is for, but also what it may accept, produce, assume, and expose.
 
-### 1. Typed Runtime Shapes
+---
 
-Major runtime concepts are defined semantically before or alongside
-implementation changes.
+## What is specified before generation
 
-Examples include:
+Before code generation, the project tries to make four things explicit.
 
-- `RequestCapture`
-- reranker settings
-- retriever settings
-- eval run manifest fields
-- golden retrieval companion files
+### Contracts
+Contracts define the boundaries between stages and modules.
 
-This reduces ambiguity when implementation evolves.
+Examples include page and chunk artifacts, request capture, eval result tables, reports, and observability outputs.
 
-### 2. Schema-Validated Artifacts
+### Types
+Types define the shapes passed between stages so that pipeline behavior does not depend on hidden shared state or informal conventions.
 
-Important repository artifacts are not treated as “just JSON.”
+### Rules
+Rules define behavior that should not be left to interpretation, such as validation, retries, duplicate handling, stage promotion, metric emission, or semantic payload restrictions.
 
-They are backed by explicit contracts and machine-readable schemas.
+### Interfaces
+Interfaces define how one subsystem may interact with another so the model does not invent extra couplings that were never intended.
 
-That applies to things like:
+---
 
-- runtime config
-- request capture storage payloads
-- eval run manifests
-- golden retrieval companion bundles
+## Why the specification is the source of truth
 
-This gives the project a reliable way to catch drift early.
+Generated code is useful, but it is not treated as the design authority.
 
-### 3. Written Ownership Boundaries
+The specification remains the source of truth because:
 
-The project repeatedly defines who owns what.
+- generated code can vary more easily than design intent
+- different generations should still implement the same rules
+- tests should validate the contract, not only the current implementation
+- documentation, telemetry, and dashboards should stay aligned with the same definitions
 
-Examples:
+Without that separation, the project would drift back into implementation-first behavior.
 
-- orchestration owns pipeline sequencing
-- transport layers own provider-specific batching and retry behavior
-- request capture owns canonical request-level source data for evals
-- dashboards consume measured data rather than producing it
+---
 
-This matters because large systems become confusing quickly when ownership is
-implicit.
+## What the model is expected to do
 
-### 4. Specs Before Refactors
+In this workflow, the model is not asked to invent system behavior.
 
-One of the strongest uses of the approach is during refactoring.
+It is asked to implement already-declared behavior.
 
-Before major changes, the repository tends to clarify:
+Its role is to:
 
-- the target type shape
-- the module boundary
-- the contract between components
-- the exact fields that should be captured, emitted, or validated
+- generate code from explicit contracts
+- generate tests from explicit rules and expected outputs
+- preserve stage boundaries
+- preserve naming and schema conventions
+- avoid introducing behavior that is not grounded in the specification
 
-That makes implementation much safer and reduces accidental semantic changes.
+The model acts here as an implementation accelerator, not as the primary designer of the system.
 
-## Why This Helped On This Project
+---
 
-This approach made several difficult parts of the repository tractable:
+## What this improves
 
-- evolving reranker configuration without collapsing provider logic into one
-  blob
-- keeping request capture, SQL validation, schemas, and eval code aligned
-- supporting resumable eval runs with clear run contracts
-- maintaining observability expectations while runtime internals changed
-- catching dataset and artifact drift when companion formats changed
+This approach improves four things.
 
-In other words, the specifications were not decoration.
-They were part of how the system stayed coherent.
+### 1. Less ambiguity in generation
+The more explicit the contracts and rules are, the less room there is for model improvisation.
 
-## The Relationship Between Specs And Code
+### 2. Easier review
+Review becomes simpler because the main question is: **Does this implementation satisfy the spec?**
 
-The project is not documentation-driven in the weak sense.
-It is contract-driven.
+### 3. More meaningful tests
+Tests generated from explicit contracts can validate schema conformance, stage outputs, invariants, deterministic behavior, and failure paths.
 
-That means:
+### 4. Less cross-layer drift
+The same specification mindset is used not only for code modules, but also for observability, eval artifacts, and dashboard-facing outputs.
 
-- specs define intended shapes and semantics
-- code implements those semantics
-- tests verify the implementation against the expected contract
-- dashboards and run artifacts consume outputs that are already contract-shaped
+---
 
-This does not remove iteration.
-It gives iteration a safer frame.
+## What this does not mean
 
-## Why This Is Especially Important For RAG Systems
+Specification-first does not mean that the project is fixed forever or that the first spec is perfect.
 
-RAG systems often fail through cross-layer mismatch:
+It does not remove iteration, and it does not eliminate the need for code review.
 
-- retrieval outputs change shape
-- reranker metadata is added inconsistently
-- runtime captures become incompatible with eval ingestion
-- dashboard SQL lags behind implementation changes
-- datasets and golden companions drift from actual corpora
+It changes where iteration happens:
 
-Specification-first engineering helps because it treats those integration points
-as first-class design surfaces rather than accidental glue.
+- refine the specification
+- regenerate or adjust implementation against it
 
-## Tradeoffs
+That is different from repeatedly patching generated code while keeping the contract implicit.
 
-This approach is not free.
+---
 
-It adds:
+## How this shapes the repository
 
-- more up-front thinking
-- more documents to keep aligned
-- a stronger expectation of deliberate design
+This approach is one reason the repository is split across several engineering surfaces:
 
-But for a project with runtime execution, evaluation, observability, and stored
-artifacts, the tradeoff is worth it.
-
-The project becomes slower to improvise, but much safer to grow.
-
-## Why It Is One Of The Defining Qualities Of The Repository
-
-Many repositories have code plus some docs.
-
-This repository is different because the structure of the project itself shows a
-belief that:
-
-- implementation
+- execution
 - specification
 - measurement
 - evidence
+- documentation
 
-should remain distinct and explicit.
+That split reflects a deliberate separation between:
 
-That is one of the clearest signs that the project is not just a prototype, but
-an engineered system.
+- what the system is supposed to do
+- how it is implemented
+- how it is measured
+- what evidence it produces
+- how it is explained
+
+The specification layer exists to keep those surfaces aligned.
+
+---
+
+## Why this matters in this project
+
+This workflow is especially important in parts of the repository where silent drift would be costly:
+
+- runtime stage boundaries
+- request capture shape
+- eval stage sequencing
+- result-table structure
+- report contracts
+- observability spans and metrics
+- Grafana-facing outputs
+
+In these areas, implementation convenience is not a good substitute for explicit design.
+
+---
+
+## Summary
+
+In this project, specification-first means that the primary design work happens in contracts, types, rules, and interfaces before code generation begins.
+
+I write the specification.
+The model generates code and tests from it.
+
+This separation is used to make generation more explicit, less ambiguous, more reproducible, and easier to review.

@@ -25,7 +25,13 @@
 - Refactor the structural chunker to use the new metadata split.
   At minimum it should stop depending on document-level fields embedded inside `book_content_metadata.json` and instead read `book_metadata.json` for document-level payload fields while continuing to use `book_content_metadata.json` for structure and annotation. This follow-up should preserve current structural-chunker behavior where required, but align its inputs with the new metadata contracts introduced for the fixed chunker.
 
+- Add a chunker that splits structural chunks into fixed-size chunks.
+  This should preserve the structural chunker as the upstream structure-aware stage, then introduce a follow-up chunking step that breaks those structural chunks into fixed-size segments. The goal is to support experiments where structure-aware boundaries are preserved first, but final retrieval units are normalized to a fixed size.
+
 ## Ingest
 
 - Sync dense ingest parser with the ingest config contract.
   `dense_ingest_config.schema.json` and `rag_runtime` expect `pipeline.corpus_version`, but the current Python dense-ingest parser rejects that field as unexpected. The parser should accept the full contract so one ingest config can be used consistently by both ingest and `rag_runtime`.
+
+- Add vector reindexing support for embedding-relevant ingest changes.
+  The current ingest path detects embedding-relevant fingerprint changes but logs and skips rather than rebuilding affected points. Add an explicit reindexing path so collection state can be updated when embedding model, vector settings, or other index-relevant inputs change.

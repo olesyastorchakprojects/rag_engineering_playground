@@ -1,5 +1,0 @@
-Why is TCP considered a layer that creates a reliable channel on top of unreliable IP, and what mechanisms does it use to compensate for packet loss, duplicates, and out-of-order delivery?
-Why can retransmitting a POST request after a timeout lead to an incorrect system state, and how do idempotency keys together with transactional atomicity solve this problem?
-Why does a short DNS TTL both help propagate changes faster and increase a system’s vulnerability to DNS infrastructure failures?
-What is the difference between flow control and congestion control in TCP, and what type of overload does each of these mechanisms protect against?
-Why is the partially synchronous model considered more realistic for practical distributed systems than either the strictly synchronous or fully asynchronous model?

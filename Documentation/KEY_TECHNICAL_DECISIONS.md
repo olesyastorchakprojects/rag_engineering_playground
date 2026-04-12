@@ -1,154 +1,274 @@
 # Key Technical Decisions
 
-## Why There Is A Separate Documentation Layer
+## What this document covers
 
-The repository already contains detailed contracts and code-generation specs.
-This document captures the engineering rationale behind the most important
-choices so that the project can be explained clearly to humans.
+This document summarizes the main engineering decisions that shape the repository.
 
-## 1. Rust For The Runtime, Python For The Pipelines
+It is not a full architecture description and not a replacement for the specifications. Its role is narrower: to explain why several important design choices were made and what problems they solve.
 
-The project uses Rust for `rag_runtime` and Python for parsing, ingest, and
-evaluation workflows.
+For full system shape, see `ARCHITECTURE_OVERVIEW.md`.
+For evaluation workflow, see `EVALUATION_STORY.md`.
+For observability design, see `OBSERVABILITY_STORY.md`.
+For the generation workflow behind contracts and code, see `SPECIFICATION_FIRST_APPROACH.md`.
 
-Why this split was chosen:
+---
 
-- the online request path benefits from strong typing, explicit error handling,
-  and controlled module boundaries
-- pipeline tooling and orchestration benefit from Python's speed of iteration
-  and good ecosystem support
-- the repository can combine runtime rigor with experimental flexibility
+## 1. Rust for runtime, Python for preparation workflows
 
-This is a conscious hybrid architecture rather than an accident of incremental
-growth.
+The repository uses two implementation environments on purpose.
 
-## 2. Request Capture As The Canonical Eval Input
+- **Python** is used for extraction, chunking, ingest, and related preparation workflows.
+- **Rust** is used for the runtime pipeline, orchestration, and stricter stage boundaries.
 
-The system does not treat traces as the only source of truth for evaluation.
-Instead, successful runtime requests are persisted as `RequestCapture` records
-in PostgreSQL.
+This split reflects different engineering needs rather than language preference alone. Preparation workflows benefit from flexible document-processing iteration. Runtime and orchestration benefit from stronger typed boundaries, explicit stage I/O, and tighter control over contracts.
 
-Why this matters:
+The decision keeps each side of the system in the environment where it is easiest to make the important constraints explicit.
 
-- evaluation becomes schema-driven and reproducible
-- downstream workers do not need to reconstruct runtime state from traces
-- request-level provenance is stable across dashboards, summaries, and reports
+---
 
-This decision turns evaluation into a data pipeline rather than an observability
-afterthought.
+## 2. Parsing is split into extractor and chunker
 
-## 3. Separate Retrieval, Reranking, And Generation Boundaries
+Knowledge preparation is not treated as one opaque preprocessing step.
 
-The runtime deliberately models:
+Instead, it is split into:
 
-- retrieval
-- reranking
-- generation
+- **extractor** — produces page-level artifacts
+- **chunker** — produces chunk-level artifacts from prepared pages
+- **ingest** — turns chunk artifacts into retrieval-ready storage
 
-as separate stages with separate contracts.
+This separation matters because page extraction and chunk construction have different inputs, different contracts, and different failure modes. It also makes the preparation pipeline easier to validate, easier to test, and easier to change without collapsing all document preparation behavior into one monolithic component.
 
-Why this matters:
+---
 
-- each stage can be measured independently
-- metrics and failure modes stay attributable
-- experimentation is easier because components can be swapped without changing
-  the whole pipeline model
+## 3. Intermediate artifacts are explicit, schema-bound data products
 
-This is especially important for comparing pass-through, heuristic, and
-cross-encoder reranking.
+Page-level and chunk-level outputs are not treated as hidden internal state.
 
-## 4. Transport Abstraction For Cross-Encoder Reranking
+They exist as explicit artifacts with paired schemas and validation rules. The same general pattern also appears in request capture, eval tables, report contracts, and observability surfaces.
 
-Cross-encoder reranking is implemented through a transport interface instead of
-binding provider-specific logic directly into the reranker.
+This decision serves two purposes:
 
-Why this was chosen:
+- it makes pipeline boundaries explicit and machine-checkable
+- it reduces ambiguity when code and tests are generated from specifications
 
-- batching and retry behavior belong near provider transport logic
-- token counting can be handled per provider
-- provider-specific request and response mapping stays isolated
-- the orchestration layer can construct concrete transports without leaking
-  provider details into the reranker core
+The repository prefers stable intermediate artifacts over implicit handoffs between stages.
 
-This makes the cross-encoder path extensible and operationally cleaner.
+---
 
-## 5. Dense And Hybrid Retrieval As First-Class Variants
+## 4. Dense and hybrid retrieval are first-class indexed variants
 
-Dense retrieval and hybrid retrieval are not hidden behind vague configuration.
-They are modeled explicitly in ingest, runtime, and eval artifacts.
+The project supports both dense and hybrid retrieval as explicit retrieval families rather than as one-off experiments around a single baseline.
 
-Why this matters:
+Hybrid indexing currently supports two sparse retrieval strategies:
 
-- retrieval strategy is an experimental variable that should be visible
-- storage compatibility and collection semantics differ between strategies
-- downstream reporting is more meaningful when retrieval family is explicit
+- **bag-of-words**
+- **BM25-like**
 
-The system is designed to compare retrieval strategies, not just run one.
+Treating these as first-class indexed variants makes retrieval comparison part of the system design rather than an ad hoc extension. It allows chunking, ingest, retrieval, reranking, and evaluation to be compared across different retrieval substrates under a stable workflow.
 
-## 6. Frozen Run Scope And Resume Semantics In Eval Runs
+---
 
-Eval runs use a fixed `run_id` and a frozen `run_scope_request_ids`.
+## 5. Retrieval uses ingest-derived settings to prevent runtime/index drift
 
-Why this matters:
+Runtime retrieval does not define its view of the index independently from ingest.
 
-- a resumed run does not silently absorb new requests
-- run artifacts remain semantically stable
-- cross-run comparison becomes trustworthy
-- failed runs can be resumed without corrupting the experiment boundary
+Instead, retrieval receives ingest-derived configuration so that query-time retrieval uses the same retrieval-relevant fields that were used during indexing. This includes collection and vector naming, embedding-related settings, and hybrid sparse-side settings.
 
-This is one of the most important evaluation integrity decisions in the project.
+This decision reduces the risk that indexed data and runtime retrieval silently diverge. It keeps retrieval aligned with the shape of the built index rather than relying on duplicated configuration logic.
 
-## 7. Observability Is A Required Contract, Not Optional Instrumentation
+---
 
-The runtime and eval system are built with mandatory traces and metrics.
+## 6. Request capture is the canonical bridge into offline evaluation
 
-Why this matters:
+Request capture is not a debug log and not just a convenience persistence step.
 
-- latency, dependency behavior, retries, and token usage are inspectable
-- regressions are easier to detect
-- engineering review can rely on real signals rather than guesswork
-- dashboards become part of the operating model
+It is a contract-bound handoff artifact between online runtime and offline analysis. The runtime assembles `RequestCapture`, validates it, and persists it so that eval runs start from captured request evidence rather than from live replay.
 
-The repository is intentionally built so that “it works” is not enough unless it
-is also observable.
+This decision is central to the project because it separates:
 
-## 8. Schema-Driven Artifacts And Companion Files
+- serving the request now
+- studying that request later
 
-The project uses explicit schemas and contracts for runtime configs, request
-captures, eval manifests, and golden retrieval datasets.
+Without that separation, evaluation would depend too heavily on the live state of the system at analysis time.
 
-Why this matters:
+---
 
-- invalid artifacts can be rejected early
-- tooling can evolve without relying on undocumented conventions
-- runtime, eval engine, and dashboards can share stable assumptions
+## 7. Retrieval, reranking, and generation stay as separate stage boundaries
 
-This reduces drift between components.
+The runtime pipeline intentionally keeps retrieval, reranking, and generation as distinct stages.
 
-## 9. Evidence Is Separate From Execution
+This allows the system to ask better engineering questions:
 
-The repository keeps produced outputs under `Evidence/` instead of mixing them
-into implementation directories.
+- Did retrieval improve?
+- Did reranking change ordering meaningfully?
+- Did answer quality improve, or did generation merely compensate?
+- What reached the final generation context?
 
-Why this matters:
+If these stages were collapsed into one implementation unit, many of the comparisons that matter in RAG work would become much harder to observe and evaluate.
 
-- real run artifacts remain inspectable without polluting code paths
-- datasets, manifests, reports, and experiments become part of the engineering
-  record
-- the project preserves the distinction between code, contracts, measurement,
-  and evidence
+---
 
-That separation is one of the strongest structural choices in the repository.
+## 8. Pass-through reranking is still represented as an explicit stage
 
-## 10. Local Docker Stack As The Reproducible Operating Environment
+Even when no actual reranking model is used, pass-through remains an explicit reranking stage rather than a pipeline bypass.
 
-The project treats the local Docker stack as part of the system, not just a
-developer convenience.
+This decision keeps the runtime pipeline structurally comparable across variants. It means “no reranking” is still represented inside the same pipeline shape and can be reasoned about as one member of the reranking design space, not as a special-case execution mode.
 
-Why this matters:
+That consistency simplifies evaluation, observability, and comparison.
 
-- observability and storage backends can be reproduced reliably
-- demos and debugging sessions run against the same local environment
-- project behavior can be validated end to end
+---
 
-This supports both engineering iteration and presentation readiness.
+## 9. Evaluation runs use frozen scope and resumable state
+
+Offline evaluation is implemented as a stateful workflow coordinated by `eval_orchestrator`.
+
+A run has:
+
+- its own `run_id`
+- a frozen request scope
+- stage-local progress
+- resumable state
+- run artifacts such as `run_manifest.json` and `run_report.md`
+
+The frozen run scope is especially important: once a run begins, new captured requests must not silently enter that run. Resume must continue the same run, not mutate its membership.
+
+This decision makes runs stable enough to compare and review as real units of analysis.
+
+---
+
+## 10. Evaluation materializes normalized tables, not only reports
+
+The eval pipeline does not stop at judge calls or markdown reporting.
+
+It materializes normalized result tables and request summaries that can be queried, aggregated, reused, and fed into Grafana dashboards. That means evaluation outputs exist in two complementary forms:
+
+- **report artifacts** for human interpretation
+- **dashboard-ready tabular data** for browsing, comparison, and operational review across runs
+
+This decision makes eval results more useful than a one-off textual artifact.
+
+---
+
+## 11. Observability is contract-driven, not implementation-defined
+
+Observability is specified through separate contracts for:
+
+- OTEL spans
+- metrics
+- OpenInference semantic spans
+- Grafana-facing dashboard artifacts
+
+This is a deliberate design choice. The project does not want observability behavior to emerge implicitly from scattered instrumentation. It wants telemetry structure to be stable enough that emitted data, trace interpretation, and dashboards stay aligned.
+
+This also makes observability generation less ambiguous when code and provisioning artifacts are generated from specs.
+
+---
+
+## 12. Phoenix gets a semantic OpenInference slice inside the same trace
+
+The project supports a Phoenix-facing OpenInference view, but it does not emit a second parallel trace.
+
+Instead, a fixed subset of spans inside the same OTEL trace is annotated semantically for Phoenix. This keeps:
+
+- the full engineering trace for detailed runtime diagnosis
+- the compact semantic chain / retriever / reranker / LLM view for model-oriented inspection
+
+This decision avoids duplicating trace systems while still giving Phoenix a clean semantic surface.
+
+---
+
+## 13. Telemetry flows through an OpenTelemetry Collector layer
+
+The application does not export telemetry directly to every observability backend.
+
+Instead, telemetry is sent to an OpenTelemetry Collector, which sits between the app and downstream backends. This gives the system an intermediate routing layer and keeps runtime telemetry export less tightly coupled to any one backend.
+
+That decision matters because the project needs multiple observability surfaces without turning each backend into a direct runtime integration concern.
+
+---
+
+## 14. Launcher layer controls variability without exploding config files
+
+The launcher layer in `Execution/bin` is not only a convenience wrapper.
+
+It is an execution control layer that helps materialize one concrete experiment scenario from a larger supported capability space. Instead of keeping a dedicated static config file for every combination of:
+
+- chunking strategy
+- retrieval variant
+- reranker
+- generation backend
+- new run vs resumed run
+
+the launcher guides the user through selecting a valid combination and assembles a temporary config from those choices.
+
+This prevents configuration sprawl and keeps the system’s variability manageable.
+
+---
+
+## 15. The launcher also supports resuming unfinished eval runs
+
+The launcher is also used to resume failed or unfinished eval runs.
+
+This is important because evals are stateful and run-scoped. Restarting such a run should not require manually reconstructing the right configuration and run identity.
+
+By surfacing resumable runs and materializing the correct restart configuration, the launcher acts as part of the operational control surface of the eval system.
+
+---
+
+## 16. Specification is the source of truth for code and test generation
+
+One of the most important decisions in the repository is that generated code is not treated as the design authority.
+
+The source of truth is the specification.
+
+In practice, that means:
+
+- I define the contracts, types, rules, interfaces, and boundaries first
+- the model generates code and tests from those specs
+- generated code is reviewed against the specification, not treated as the place where design intent originates
+
+This decision exists to reduce ambiguity, improve reproducibility, and make model-assisted generation easier to direct and easier to audit.
+
+---
+
+## 17. Evidence stays separate from execution
+
+The repository keeps execution, evidence, measurement, specification, and documentation as distinct surfaces.
+
+That separation is intentional. It allows the project to preserve:
+
+- runnable implementation
+- explicit design contracts
+- telemetry and dashboards
+- captured request and eval artifacts
+- human-readable documentation
+
+as related but different engineering layers.
+
+This prevents the project from collapsing everything into “the codebase” and makes it easier to inspect and compare what the system does, what it was designed to do, and what evidence it produced.
+
+---
+
+## 18. Local Dockerized infrastructure is treated as part of reproducibility
+
+The local stack is not treated as a disposable dev-only convenience.
+
+It is part of how the project preserves reproducible operating conditions across runtime, eval, and observability work. Local Qdrant, PostgreSQL, Grafana, Tempo, Phoenix, model-serving backends, and collector-layer infrastructure make the system testable as a composed environment rather than only as isolated components.
+
+This decision helps keep architecture, evaluation, and observability work grounded in a repeatable local setup.
+
+---
+
+## Summary
+
+The project’s key technical decisions are mostly decisions about **clarity under variability**.
+
+They aim to keep:
+
+- stage boundaries explicit
+- artifacts contract-bound
+- runtime and eval paths comparable
+- observability aligned with emitted telemetry
+- model-assisted generation grounded in specifications rather than improvisation
+
+Together, these decisions make the repository easier to evolve as an engineering system rather than only as a collection of experiments.

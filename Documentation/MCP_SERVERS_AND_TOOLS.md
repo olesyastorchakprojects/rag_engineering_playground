@@ -188,17 +188,3 @@ how a human teammate would work in this repository:
 - route workflow steps through an explicit orchestration layer
 
 That makes the project not only specification-first, but also tool-aware.
-
-## Why This Is Worth Showing In A Presentation
-
-The MCP layer demonstrates that the project is designed not only to run, but to
-support disciplined engineering workflows on top of itself.
-
-It shows that:
-
-- repository knowledge is encoded
-- critical operational surfaces are queryable
-- agent work can be structured instead of improvised
-
-That is a strong differentiator compared with repositories that only contain
-runtime code and some dashboards.

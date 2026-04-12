@@ -1,122 +1,252 @@
-# Fully Instrumented RAG Engineering Playground
+# RAG Engineering Playground
 
-This repository is a specification-first RAG engineering playground for local experimentation, evaluation, and observability.
+A specification-first RAG engineering playground focused on controlled experimentation, evaluation, and observability.
 
-It is not just a question-answering runtime.
-It also includes:
+This repository is designed for building, inspecting, and comparing retrieval pipelines end to end. It emphasizes request-level evidence capture, offline evaluation, comparative reporting, and observability-driven diagnosis.
 
-- parsing and chunking pipelines
-- dense and hybrid ingest pipelines
-- a modular RAG runtime
-- reranking variants
-- request capture and evaluation storage
-- resumable eval runs with run artifacts
-- traces, metrics, and local dashboards
-- repository-aware MCP servers and agent-oriented workflow support
+The project focuses on making RAG systems easier to inspect, compare, and improve.
 
-The project was built to answer a practical engineering question:
-how do you make a RAG system inspectable enough to compare retrieval, reranking, generation, costs, and evaluation behavior with confidence?
+---
 
-## What This Project Already Proves
+## Why this project exists
 
-The repository already demonstrates that the system can be:
+In RAG systems answer quality depends on multiple upstream decisions: document preparation, chunking, retrieval, reranking, and generation.
 
-- specified through explicit contracts and schemas
-- run locally end to end
-- evaluated reproducibly on a fixed benchmark
-- inspected at the request, run, and trace level
-- compared across retrieval, chunking, and reranking strategies
+This project exists to make those layers easier to study as a system.
 
-The strongest evidence block in the repository is the 20-question comparative evaluation report:
+It is built around four engineering goals:
 
-- [20-question comparative report](Documentation/EXPERIMENTS_20Q_COMPARATIVE_REPORT.md)
+- **Inspectability** — each request can be examined across retrieval, reranking, generation, and evaluation.
+- **Comparability** — different pipeline variants can be evaluated on the same request set.
+- **Reproducibility** — evaluation runs operate on persisted request evidence and produce stable artifacts.
+- **Specification-first design** — interfaces, schemas, and boundaries are treated as core engineering assets.
 
-That document is the best place to answer the question:
-"What did this project actually prove?"
+---
 
-## Main Capabilities
+## Project focus
 
-- chunking: `fixed`, `structural`
-- retrieval: `dense`, `hybrid` with `bag_of_words` and `bm25_like`
-- reranking: `pass_through`, `heuristic`, `cross_encoder`
-- generation: local Ollama models and OpenAI-compatible providers
-- evaluation: request capture into PostgreSQL, judge-based eval stages, resumable runs, manifests, and reports
-- observability: OpenTelemetry traces, Prometheus metrics, Grafana dashboards, Phoenix, and Tempo
+This repository is focused on:
 
-## Start Here
+- controlled RAG experiments,
+- request-level evidence capture,
+- offline evaluation workflows,
+- comparative analysis of pipeline variants,
+- observability for diagnosis and iteration.
 
-If you are new to the repository, use this reading order:
+It is intended as an engineering playground for understanding system behavior, not only for producing answers.
 
-1. [Project Overview](Documentation/PROJECT_OVERVIEW.md)
-2. [Run From Zero](Documentation/RUN_FROM_ZERO.md)
-3. [Architecture Overview](Documentation/ARCHITECTURE_OVERVIEW.md)
-4. [20-question Comparative Report](Documentation/EXPERIMENTS_20Q_COMPARATIVE_REPORT.md)
-5. [Evaluation Story](Documentation/EVALUATION_STORY.md)
-6. [Observability Story](Documentation/OBSERVABILITY_STORY.md)
-7. [MCP Servers And Tools](Documentation/MCP_SERVERS_AND_TOOLS.md)
-8. [Agent Workflow Story](Documentation/AGENT_WORKFLOW_STORY.md)
+---
 
-For a fuller document index, see [Documentation/README.md](Documentation/README.md).
+## What is implemented
 
-## Repository Shape
+### Data preparation
+- Structural chunking
+- Fixed-size chunking
+- Dense ingest
+- Hybrid ingest (bag-of-words and bm25)
 
-The repository is organized into four operational layers:
+### Retrieval and ranking
+- Dense retrieval
+- Hybrid retrieval (bag-of-words and bm25)
+- Heuristic reranker
+- Cross-encoder reranker
+
+### Evaluation
+- Request capture for later offline evaluation
+- Persisted evaluation runs
+- Comparative reports across pipeline variants
+- Retrieval and answer-level metrics
+
+### Observability
+- Traces for request-level inspection
+- Metrics and dashboards for aggregate behavior
+
+
+---
+
+## What this project demonstrates
+
+This repository is designed to support engineering questions such as:
+
+- How does chunking strategy affect retrieval and downstream generation?
+- Do retrieval gains translate into answer-quality gains?
+- How much does reranking change final system behavior?
+- Which metrics expose useful differences between pipeline variants?
+- How can request-level evidence be preserved for later comparison and analysis?
+
+The purpose of the project is to make those questions easier to answer with artifacts, runs, and system evidence.
+
+### Current findings
+
+Based on the current experiment reports, several patterns already stand out:
+
+- chunking strategy changes retrieval behavior in meaningful ways;
+- retrieval gains do not always propagate to answer-level gains;
+- reranking effects are often easier to observe at ranking level than at final-answer level;
+- comparative evaluation is necessary because intuition alone is not a reliable guide.
+
+These are working findings rather than final claims, but they already make the project useful as an engineering learning and diagnosis environment.
+
+---
+
+## Core architectural idea
+
+A central design choice in this repository is treating **request capture** as a first-class architectural boundary.
+
+Instead of relying only on live pipeline replay, the system preserves request-level evidence that can later be reused for offline evaluation and comparison. This makes experiment runs easier to inspect, compare, and reason about over time.
+
+That boundary helps separate:
+
+- online execution,
+- persisted evidence,
+- offline evaluation,
+- and aggregate reporting.
+
+---
+
+## Architecture at a glance
+
+![alt text](Documentation/img/Architecture.svg)
+### Language split
+
+- **Python** is used for parsing, chunking, and ingest workflows.
+- **Rust** is used for runtime structure, orchestration, and stronger system boundaries.
+
+This split reflects the different engineering needs of document-processing workflows and runtime pipeline components.
+
+---
+
+## Engineering principles
+
+The repository is organized around a small set of principles:
+
+- **Explicit boundaries** over implicit coupling
+- **Evidence preservation** over one-off inspection
+- **Comparative evaluation** over isolated results
+- **Observability as a system layer**
+- **Specifications and schemas** as tools for keeping behavior explicit
+
+---
+
+## Current scope
+
+This project is currently optimized for:
+
+- local experimentation,
+- pipeline diagnosis,
+- retrieval and answer-quality comparison,
+- evaluation workflow design,
+- observability-driven analysis.
+
+It is not currently positioned as a production-ready multi-tenant RAG platform.
+
+---
+
+## Why this repository may be useful
+
+This repository may be useful if you are interested in:
+
+- RAG system design beyond the happy path,
+- evaluation-first AI engineering,
+- observability-first pipeline iteration,
+- comparing chunking, retrieval, and reranking strategies,
+- building systems that are easier to diagnose and reason about.
+
+---
+
+## Repository reading path
+
+If you are reviewing this repository, start here:
+
+1. **[Architecture Overview](Documentation/ARCHITECTURE_OVERVIEW.md)**
+   Pipeline shape, subsystem boundaries, and main architectural ideas.
+
+2. **[Evaluation Story](Documentation/EVALUATION_STORY.md)**
+   How request capture, evaluation runs, judge stages, and reports fit together.
+
+3. **[Observability Story](Documentation/OBSERVABILITY_STORY.md)**
+   How traces, metrics, dashboards, and local infrastructure support diagnosis.
+
+4. **[Specification-First Approach](Documentation/SPECIFICATION_FIRST_APPROACH.md)**
+   Why specs, schemas, and explicit contracts are central in this project.
+
+5. **[Documentation README](Documentation/README.md)**
+   Full documentation map and recommended reading order.
+
+---
+
+## Evidence surfaces
+
+This repository includes several places where the system’s behavior and experiment outcomes can be inspected directly:
+
+- **[Comparative experiment report](Documentation/EXPERIMENTS_20Q_COMPARATIVE_REPORT.md)** — side-by-side findings across evaluated pipeline variants
+- **[Evaluation flow](Documentation/EVALUATION_STORY.md)** — request capture, run boundaries, judge stages, and reporting flow
+- **[Observability documentation](Documentation/OBSERVABILITY_STORY.md)** — traces, dashboards, metrics, and diagnostic surfaces
+- **[Architecture overview](Documentation/ARCHITECTURE_OVERVIEW.md)** — end-to-end system shape and subsystem boundaries
+- **[Key technical decisions](Documentation/KEY_TECHNICAL_DECISIONS.md)** — the main engineering choices and their rationale
+
+The repository is structured to support inspection, comparison, and iteration through evidence.
+
+---
+
+## Tech stack
+
+- **Rust** — runtime and orchestration components
+- **Python** — parsing, chunking, ingest, and experiment-support workflows
+- **Qdrant** — vector search
+- **Postgres** — request capture store
+- **Grafana / Tempo / Phoenix / OTEL-based tooling** — observability and analysis
+
+---
+
+## Repository structure
+
+The repository is organized around six top-level areas:
 
 - `Execution/`: runnable code, configs, tests, launcher entrypoints, and local stack definitions
 - `Specification/`: contracts, schemas, architecture docs, and codegen-oriented source of truth
 - `Measurement/`: dashboards, observability assets, and evaluation measurement surfaces
 - `Evidence/`: datasets, run artifacts, manifests, reports, and produced outputs
-
-This split is deliberate.
-The project treats runtime logic, specifications, measurement, and evidence as separate engineering concerns.
-
-Two additional top-level areas are also first-class parts of the repository model:
-
 - `Documentation/`: human-oriented narrative docs for onboarding, architecture review, evaluation interpretation, observability, and project presentation
 - `AgentContext/`: agent-operating rules, multi-agent workflow conventions, and repository-specific guidance for agent-driven work
 
-These are not incidental supporting folders.
-They document how humans and agents are expected to understand, navigate, and operate the system.
+This split is deliberate.
+The project treats execution, specification, measurement, evidence, documentation, and agent context as separate engineering concerns.
 
-## Local Reproduction
+---
 
-The canonical repository-native onboarding path is [Run From Zero](Documentation/RUN_FROM_ZERO.md).
+## Running the project
 
-That guide is designed for local engineering reproduction.
-It is not a polished deployment surface and does not claim to guarantee a frictionless bring-up on every clean machine.
-Instead, it gives a concrete path, real commands, real configs, and expected system surfaces so the project can be brought up and debugged locally.
+See **[Run From Zero](Documentation/RUN_FROM_ZERO.md)** for environment setup and local execution.
 
-## Evaluation And Evidence
+---
 
-The repository keeps the evidence used to support its conclusions:
+## Future directions
 
-- benchmark datasets under `Evidence/evals/datasets/`
-- recorded eval runs under `Evidence/evals/runs/`
-- the synthesized comparative report in [Documentation/EXPERIMENTS_20Q_COMPARATIVE_REPORT.md](Documentation/EXPERIMENTS_20Q_COMPARATIVE_REPORT.md)
+Natural next directions for this repository include:
 
-The main current findings are:
+- stronger answer-level validation metrics,
+- broader experiment matrices,
+- richer comparison dashboards,
+- larger evaluation sets,
+- deeper reranker benchmarking,
+- stronger citation and grounding validation.
 
-- structural chunking is promising but not universally dominant
-- hybrid BM25 is the stronger sparse default
-- pass-through is a stronger baseline than expected
-- dense retrieval remains competitive
-- retrieval quality and answer quality do not move together linearly
+---
 
-## Agent And MCP Story
+## Documentation
 
-This project also documents how repository-aware agents were used during development:
-[MCP Servers And Tools](Documentation/MCP_SERVERS_AND_TOOLS.md) and
-[Agent Workflow Story](Documentation/AGENT_WORKFLOW_STORY.md).
+See **[Documentation README](Documentation/README.md)** for the current documentation map and recommended reading path.
 
-These documents explain how project-specific MCP servers, specifications, and workflow structure were used to support implementation and analysis work.
+---
 
-## Current Boundaries
+## Summary
 
-This repository is already a mature experimental RAG platform, but it is intentionally not everything.
+This repository is an engineering playground for treating RAG as a system that can be:
 
-Notable boundaries:
+- inspected,
+- compared,
+- evaluated,
+- and improved with evidence.
 
-- the local engineering path is stronger than the deployment story
-- some future hardening work is intentionally deferred into backlog instead of being stretched into the current scope
-
-See [BACKLOG.md](BACKLOG.md) for consciously deferred work.
+Its purpose is not only to produce answers, but to make pipeline behavior easier to understand.

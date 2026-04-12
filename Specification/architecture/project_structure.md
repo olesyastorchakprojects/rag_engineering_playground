@@ -215,7 +215,7 @@ Inside each book folder use:
 Current example:
 
 - `Execution/parsing/books/understanding_distributed_systems/source/book_content_metadata.json`
-- `Execution/parsing/books/understanding_distributed_systems/source/Understanding-Distributed-Systems-2nd-Edition.pdf`
+- `Execution/parsing/books/understanding_distributed_systems/source/book_metadata.json`
 - `Execution/parsing/books/understanding_distributed_systems/cleanup/rules_metadata.json`
 - `Execution/parsing/books/understanding_distributed_systems/cleanup/terms_dictionary.json`
 - `Execution/parsing/books/understanding_distributed_systems/cleanup/clean_text_overrides_metadata.json`
