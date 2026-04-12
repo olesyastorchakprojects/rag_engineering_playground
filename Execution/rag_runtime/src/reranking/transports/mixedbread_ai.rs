@@ -34,6 +34,12 @@ struct MixedbreadHealthResponse {
     model_id: Option<String>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum MixedbreadHealthStatus {
+    Ready,
+    Warming,
+}
+
 #[derive(Debug, Deserialize)]
 struct MixedbreadResponse {
     model_id: String,
@@ -85,7 +91,9 @@ impl RerankingTransport for MixedbreadAiRerankingTransport {
                 settings.backoff.clone(),
                 "rerank",
                 || async {
-                    self.probe_mixedbread_health(&client, settings).await?;
+                    match self.probe_mixedbread_health(&client, settings).await? {
+                        MixedbreadHealthStatus::Ready | MixedbreadHealthStatus::Warming => {}
+                    }
                     self.call_mixedbread_batch(&client, &batch_request, settings)
                         .await
                 },
@@ -134,7 +142,7 @@ impl MixedbreadAiRerankingTransport {
         &self,
         client: &Client,
         settings: &MixedbreadAiCrossEncoderTransportSettings,
-    ) -> Result<(), RerankingError> {
+    ) -> Result<MixedbreadHealthStatus, RerankingError> {
         let url = format!("{}/health", settings.url.trim_end_matches('/'));
         let response =
             client
@@ -159,10 +167,8 @@ impl MixedbreadAiRerankingTransport {
             }
         })?;
         match parsed.status.as_str() {
-            "ready" => Ok(()),
-            "warming" => Err(RerankingError::Warmup {
-                message: "mixedbread service is warming".to_string(),
-            }),
+            "ready" => Ok(MixedbreadHealthStatus::Ready),
+            "warming" => Ok(MixedbreadHealthStatus::Warming),
             other => Err(RerankingError::ServiceResponseValidation {
                 message: format!("unexpected mixedbread health status {other}"),
             }),

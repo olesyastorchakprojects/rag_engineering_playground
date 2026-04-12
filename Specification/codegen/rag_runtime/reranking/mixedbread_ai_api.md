@@ -39,7 +39,8 @@ Permitted health statuses for the current version:
 - `ready`
 
 Rules:
-- `warming` is a not-ready state;
+- `warming` means the service process is reachable but the model is not yet loaded into memory;
+- `warming` is not a terminal failure state;
 - `ready` means the service is ready for rerank inference;
 - any non-2xx response is a readiness failure.
 
@@ -50,8 +51,10 @@ The service must expose:
 
 Required execution rules:
 - it may probe `GET /health` before sending rerank requests, but that is not required when the service is already reachable;
-- if the service reports `warming`, the transport must treat that state according to the provider-specific retry semantics defined in `transport_integration.md`;
-- after a `warming` readiness signal, the transport must not treat the service as ready until a subsequent readiness or rerank attempt succeeds.
+- if the service reports `warming`, the transport must treat that response as a retryable warmup signal rather than as a terminal readiness failure;
+- after a `warming` readiness signal, the transport must still be allowed to send `POST /rerank` because the first successful rerank call may perform the actual lazy model load;
+- the transport must not claim the service is `ready` solely from a `warming` response;
+- after a `warming` readiness signal, the transport may treat a subsequent successful `POST /rerank` as sufficient proof that the service is operational for the current request.
 
 ### 3.1) Request Shape
 

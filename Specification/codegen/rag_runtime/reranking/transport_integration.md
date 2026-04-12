@@ -177,6 +177,12 @@ Retryable failures:
 - HTTP `429`;
 - HTTP `5xx`.
 
+Provider-specific readiness handling:
+- provider-specific retryable readiness semantics, such as Mixedbread `warming`, are defined by the corresponding provider API contract and executed by the transport;
+- a retryable readiness signal must not be treated as a terminal failure when the provider contract allows inference requests to complete the warmup;
+- for Mixedbread specifically, a `warming` health response means the service is reachable but the model may still be lazily loading, so the transport may continue to the rerank call for the same attempt;
+- if the subsequent rerank call still fails with a retryable error, the retry loop must handle that failure according to the active retry policy.
+
 Non-retryable failures:
 - HTTP `4xx`, except `429`;
 - invalid request construction;
