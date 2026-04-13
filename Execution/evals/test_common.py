@@ -82,6 +82,42 @@ class ExtractTextFromOpenAiCompatibleResponseTests(unittest.TestCase):
 
         self.assertEqual(content, '{"label":"relevant","explanation":"ok"}')
 
+    def test_extracts_nested_text_value_from_message_content_array(self) -> None:
+        raw_response = {
+            "choices": [
+                {
+                    "message": {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": {"value": '{"label":"grounded","explanation":"ok"}'},
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
+        content = extract_text_from_openai_compatible_response(raw_response)
+
+        self.assertEqual(content, '{"label":"grounded","explanation":"ok"}')
+
+    def test_extracts_message_output_text_when_content_is_empty(self) -> None:
+        raw_response = {
+            "choices": [
+                {
+                    "message": {
+                        "content": None,
+                        "output_text": '{"label":"grounded","explanation":"ok"}',
+                    }
+                }
+            ]
+        }
+
+        content = extract_text_from_openai_compatible_response(raw_response)
+
+        self.assertEqual(content, '{"label":"grounded","explanation":"ok"}')
+
 
 if __name__ == "__main__":
     unittest.main()

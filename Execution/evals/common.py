@@ -102,20 +102,29 @@ def extract_text_from_openai_compatible_response(raw_response: dict[str, Any]) -
         first_choice = ensure_json_object(choices[0])
         message = first_choice.get("message")
         if isinstance(message, dict):
-            content_text = _extract_text_from_content_field(message.get("content"))
-            if content_text:
-                return content_text
-            refusal = message.get("refusal")
-            if isinstance(refusal, str) and refusal.strip():
-                return refusal.strip()
+            for field_name in (
+                "content",
+                "output_text",
+                "text",
+                "reasoning_content",
+                "refusal",
+            ):
+                content_text = _extract_text_from_content_field(message.get(field_name))
+                if content_text:
+                    return content_text
         text = first_choice.get("text")
         if isinstance(text, str) and text.strip():
             return text.strip()
-        delta = first_choice.get("delta")
-        if isinstance(delta, dict):
-            content_text = _extract_text_from_content_field(delta.get("content"))
+        for field_name in ("content", "output_text"):
+            content_text = _extract_text_from_content_field(first_choice.get(field_name))
             if content_text:
                 return content_text
+        delta = first_choice.get("delta")
+        if isinstance(delta, dict):
+            for field_name in ("content", "text"):
+                content_text = _extract_text_from_content_field(delta.get(field_name))
+                if content_text:
+                    return content_text
 
     output_text = raw_response.get("output_text")
     if isinstance(output_text, str) and output_text.strip():
@@ -185,21 +194,19 @@ def _extract_text_from_content_field(content: Any) -> str:
         for item in content:
             if not isinstance(item, dict):
                 continue
-            text = item.get("text")
-            if isinstance(text, str) and text.strip():
-                text_parts.append(text.strip())
-                continue
-            if item.get("type") == "output_text":
-                output_text = item.get("text")
-                if isinstance(output_text, str) and output_text.strip():
-                    text_parts.append(output_text.strip())
+            for field_name in ("text", "content", "output_text"):
+                text = _extract_text_from_content_field(item.get(field_name))
+                if text:
+                    text_parts.append(text)
+                    break
         joined = "\n".join(text_parts).strip()
         if joined:
             return joined
     if isinstance(content, dict):
-        text = content.get("text")
-        if isinstance(text, str) and text.strip():
-            return text.strip()
+        for field_name in ("text", "value", "content", "output_text"):
+            text = _extract_text_from_content_field(content.get(field_name))
+            if text:
+                return text
     return ""
 
 
