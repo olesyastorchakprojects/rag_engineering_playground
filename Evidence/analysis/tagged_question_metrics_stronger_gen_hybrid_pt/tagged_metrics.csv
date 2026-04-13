@@ -1,0 +1,5 @@
+run_id,tag,question_count_expected,question_count_observed,request_count_observed,answer_completeness_mean,groundedness_mean,answer_relevance_mean,generation_context_strict_recall_at_4_mean,generation_context_ndcg_at_4_mean,missing_question_ids,is_partial_coverage
+4890ab41-d02c-4bd2-86f9-4fdf5b6729dc,causal,7,7,7,0.7143,0.7143,0.7143,1.0000,0.8492,,false
+4890ab41-d02c-4bd2-86f9-4fdf5b6729dc,contrast,9,9,9,1.0000,1.0000,1.0000,1.0000,0.7866,,false
+4890ab41-d02c-4bd2-86f9-4fdf5b6729dc,failure,11,11,11,0.9091,0.9091,0.9091,1.0000,0.8082,,false
+4890ab41-d02c-4bd2-86f9-4fdf5b6729dc,tradeoff,8,8,8,0.8750,0.8750,0.8750,1.0000,0.8418,,false

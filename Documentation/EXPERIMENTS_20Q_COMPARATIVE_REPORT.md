@@ -4,6 +4,8 @@
 
 This report summarizes a set of evaluation runs for a RAG pipeline tested on 20 questions across multiple configuration combinations. The runs vary by retrieval strategy, chunking strategy, and reranking strategy.
 
+For a follow-up analysis that recomputes selected metrics by question type, see [Tagged Question Metrics Report](TAGGED_QUESTION_METRICS_REPORT.md).
+
 The 20-question set is not a random grab bag. It mixes four dominant reasoning patterns: causal explanation, contrast, trade-off analysis, and failure-oriented reasoning. Many questions intentionally combine two of these patterns, for example contrast plus trade-off, or failure analysis plus mitigation. This matters because the benchmark is designed to test explanation quality and evidence use, not only fact lookup.
 
 The goal of this document is to answer three practical questions:

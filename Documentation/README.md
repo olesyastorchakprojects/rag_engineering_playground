@@ -90,6 +90,9 @@ For direct experiment outcomes and comparative findings, see:
 ### [Experiments: 20Q Comparative Report](EXPERIMENTS_20Q_COMPARATIVE_REPORT.md)
 A comparative report across evaluated pipeline variants, including current findings and open questions.
 
+### [Tagged Question Metrics Report](TAGGED_QUESTION_METRICS_REPORT.md)
+A follow-up analysis that recomputes key metrics by question type to separate retrieval-sensitive slices from generation-limited slices.
+
 ---
 
 ## Images and diagrams

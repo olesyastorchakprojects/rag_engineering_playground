@@ -1,0 +1,5 @@
+run_id,tag,question_count_expected,question_count_observed,request_count_observed,answer_completeness_mean,groundedness_mean,answer_relevance_mean,generation_context_strict_recall_at_4_mean,generation_context_ndcg_at_4_mean,missing_question_ids,is_partial_coverage
+a2ecf5fd-3264-4570-8b4d-fee01d3e928b,causal,7,7,7,0.8571,0.8571,0.8571,0.9286,0.8477,,false
+a2ecf5fd-3264-4570-8b4d-fee01d3e928b,contrast,9,9,9,1.0000,1.0000,1.0000,0.9444,0.7694,,false
+a2ecf5fd-3264-4570-8b4d-fee01d3e928b,failure,11,11,11,0.7273,0.9091,0.8182,1.0000,0.8035,,false
+a2ecf5fd-3264-4570-8b4d-fee01d3e928b,tradeoff,8,8,8,0.6250,0.8750,0.6250,0.9375,0.8192,,false

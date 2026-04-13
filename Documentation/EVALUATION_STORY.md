@@ -216,6 +216,10 @@ The latest visible run report in the repository is:
 
 - **[run_report.md](../Evidence/evals/runs/2026-04-10T19-42-16.271737+00-00_0d85b984-5f15-4529-a4b2-9ac11f496372/run_report.md)**
 
+An example of a higher-level follow-up analysis built on top of run-scoped request summaries is:
+
+- **[Tagged Question Metrics Report](TAGGED_QUESTION_METRICS_REPORT.md)**
+
 Based on the report contract and the current checked-in run artifact, the report view in this project is organized around these sections:
 
 #### 1. Run Metadata
