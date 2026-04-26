@@ -20,13 +20,22 @@ exporters:
 
 processors:
   batch:
+  filter/phoenix_openinference_only:
+    error_mode: ignore
+    traces:
+      span:
+        - attributes["openinference.span.kind"] == nil
 
 service:
   pipelines:
-    traces:
+    traces/tempo:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/tempo, otlp/phoenix]
+      exporters: [otlp/tempo]
+    traces/phoenix:
+      receivers: [otlp]
+      processors: [filter/phoenix_openinference_only, batch]
+      exporters: [otlp/phoenix]
     metrics:
       receivers: [otlp]
       processors: [batch]
