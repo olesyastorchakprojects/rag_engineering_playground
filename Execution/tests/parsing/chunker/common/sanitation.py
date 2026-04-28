@@ -6,7 +6,7 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = Path(__file__).resolve().parents[5]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -133,6 +133,11 @@ def metrics(
     for r in rows:
         parts = path_parts(r.get("section_path", []))
         if not parts:
+            continue
+        # Single-element paths are either Part names (in metadata, always match) or
+        # virtual root nodes like "Introduction" (not in metadata, preamble content).
+        # Neither case should be flagged as a mismatch — skip the check.
+        if len(parts) == 1:
             continue
         tail = parts[-1]
         page = int(r.get("page_start", 0) or 0)

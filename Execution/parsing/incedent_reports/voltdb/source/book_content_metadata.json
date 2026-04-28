@@ -1,0 +1,142 @@
+{
+  "dataset": "voltdb_6_3_pages",
+  "source_pdf": "voltdb-6-3.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "VoltDB 6.3",
+    "edition": "First Edition",
+    "version": "6.3",
+    "author": "Kyle Kingsbury",
+    "date": "2016-07-12"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in voltdb_6_3_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 1
+        },
+        "pdf": {
+          "start": 1,
+          "end": 1
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Consistency",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Stale reads",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 4
+        },
+        "pdf": {
+          "start": 2,
+          "end": 4
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Dirty reads",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 7
+        },
+        "pdf": {
+          "start": 4,
+          "end": 7
+        }
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Multi-key transactions",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 8
+        },
+        "pdf": {
+          "start": 7,
+          "end": 8
+        }
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 8,
+          "end": 9
+        },
+        "pdf": {
+          "start": 8,
+          "end": 9
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "4.1",
+      "title": "Lost updates",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 7
+        },
+        "pdf": {
+          "start": 6,
+          "end": 7
+        }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 6,
+    "sections": 1,
+    "subsections": 0
+  }
+}

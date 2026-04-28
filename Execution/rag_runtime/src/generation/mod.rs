@@ -106,7 +106,8 @@ impl Generator {
                     }
                     .into())
                 } else {
-                    let (llm_system, llm_provider) = transport_otel_identity(&self.settings.transport);
+                    let (llm_system, llm_provider) =
+                        transport_otel_identity(&self.settings.transport);
                     let model_name = self.settings.transport_model_name();
                     record_generation_input_chunk_count(request.chunks.len());
                     record_generation_prompt_tokens(prompt_token_count, llm_provider, model_name);
@@ -161,16 +162,19 @@ impl Generator {
                             .unwrap_or(self.tokenizer.count_tokens(&answer.content)?);
                         let prompt_tokens = answer.prompt_tokens.unwrap_or(prompt_token_count);
                         let total_tokens = prompt_tokens + completion_tokens;
-                        let (prompt_cost_usd, completion_cost_usd, total_cost_usd) = generation_costs_usd(
-                            &self.settings.transport,
-                            prompt_tokens,
-                            completion_tokens,
-                        );
+                        let (prompt_cost_usd, completion_cost_usd, total_cost_usd) =
+                            generation_costs_usd(
+                                &self.settings.transport,
+                                prompt_tokens,
+                                completion_tokens,
+                            );
 
-                        tracing::Span::current().record("output.value", field::display(&answer.content));
+                        tracing::Span::current()
+                            .record("output.value", field::display(&answer.content));
                         tracing::Span::current()
                             .record("llm.token_count.completion", completion_tokens as i64);
-                        tracing::Span::current().record("llm.token_count.total", total_tokens as i64);
+                        tracing::Span::current()
+                            .record("llm.token_count.total", total_tokens as i64);
                         tracing::Span::current().record("llm.cost.prompt", prompt_cost_usd);
                         tracing::Span::current().record("llm.cost.completion", completion_cost_usd);
                         tracing::Span::current().record("llm.cost.total", total_cost_usd);
@@ -217,7 +221,8 @@ impl Generator {
                             if error.error_type() != "generation.response_validation" {
                                 chat_span.record("status", "error");
                                 chat_span.record("error.type", error.error_type());
-                                chat_span.record("error.message", field::display(error.to_string()));
+                                chat_span
+                                    .record("error.message", field::display(error.to_string()));
                             }
                             tracing::info!(
                                 model_name = %model_name,

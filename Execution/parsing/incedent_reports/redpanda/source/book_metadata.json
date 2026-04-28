@@ -1,0 +1,21 @@
+{
+  "document_title": "Redpanda 21.10.1 - Jepsen Report",
+  "source_pdf": "redpanda-21.10.1.pdf",
+  "url": "local://redpanda-21.10.1.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "kafka",
+    "redpanda",
+    "consistency",
+    "transactions"
+  ],
+  "book": {
+    "title": "Redpanda 21.10.1",
+    "edition": "First Edition",
+    "version": "21.10.1",
+    "author": "Kyle Kingsbury",
+    "date": "2022-04-29"
+  }
+}

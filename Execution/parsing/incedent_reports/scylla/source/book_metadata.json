@@ -1,0 +1,22 @@
+{
+  "document_title": "Scylla 4.2-rc3 - Jepsen Report",
+  "source_pdf": "scylla-4.2-rc3.pdf",
+  "url": "local://scylla-4.2-rc3.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "scylla",
+    "cassandra",
+    "lwt",
+    "split-brain"
+  ],
+  "book": {
+    "title": "Scylla 4.2-rc3",
+    "edition": "First Edition",
+    "version": "4.2-rc3",
+    "author": "Kyle Kingsbury",
+    "date": "2020-12-23"
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "two_column_left_before_right",
+    "words": [
+      {"text": "Alpha", "top": 100.0, "x0":  72.0, "size": 10.0, "bottom": 110.0},
+      {"text": "Beta",  "top": 100.0, "x0": 120.0, "size": 10.0, "bottom": 110.0},
+      {"text": "Gamma", "top": 100.0, "x0": 310.0, "size": 10.0, "bottom": 110.0},
+      {"text": "Delta", "top": 100.0, "x0": 360.0, "size": 10.0, "bottom": 110.0}
+    ],
+    "page_height": 1000.0,
+    "expected_clean_text": "Alpha Beta Gamma Delta"
+  },
+  {
+    "name": "two_column_line_rule_per_column",
+    "words": [
+      {"text": "LeftBody",  "top": 100.0, "x0":  72.0, "size": 10.0, "bottom": 110.0},
+      {"text": "8",         "top": 920.0, "x0":  72.0, "size": 10.0, "bottom": 930.0},
+      {"text": "RightBody", "top": 100.0, "x0": 310.0, "size": 10.0, "bottom": 110.0},
+      {"text": "8",         "top": 920.0, "x0": 310.0, "size": 10.0, "bottom": 930.0}
+    ],
+    "page_height": 1000.0,
+    "expected_clean_text": "LeftBody RightBody"
+  },
+  {
+    "name": "two_column_footnote_removed_in_left_preserved_in_right",
+    "words": [
+      {"text": "BodyLeft",  "top": 200.0, "x0":  72.0, "size": 10.0, "bottom": 210.0},
+      {"text": "Footnote",  "top": 730.0, "x0":  72.0, "size":  7.5, "bottom": 737.5},
+      {"text": "BodyRight", "top": 200.0, "x0": 310.0, "size": 10.0, "bottom": 210.0},
+      {"text": "BodyBelow", "top": 730.0, "x0": 310.0, "size": 10.0, "bottom": 740.0}
+    ],
+    "page_height": 1000.0,
+    "page_lines": [
+      {"top": 720.0, "x0": 72.0, "x1": 132.0, "linewidth": 0.5}
+    ],
+    "expected_clean_text": "BodyLeft BodyRight BodyBelow"
+  },
+  {
+    "name": "two_column_text_split_at_column_boundary",
+    "words": [
+      {"text": "result",  "top": 500.0, "x0":  72.0, "size": 10.0, "bottom": 510.0},
+      {"text": "=",       "top": 500.0, "x0": 120.0, "size": 10.0, "bottom": 510.0},
+      {"text": "{",       "top": 500.0, "x0": 136.0, "size": 10.0, "bottom": 510.0},
+      {"text": "value:",  "top": 100.0, "x0": 310.0, "size": 10.0, "bottom": 110.0},
+      {"text": "42}",     "top": 100.0, "x0": 368.0, "size": 10.0, "bottom": 110.0}
+    ],
+    "page_height": 1000.0,
+    "expected_clean_text": "result = { value: 42}"
+  }
+]

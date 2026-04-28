@@ -1,0 +1,21 @@
+{
+  "document_title": "RavenDB 6.0.2 - Jepsen Report",
+  "source_pdf": "ravendb-6.0.2.pdf",
+  "url": "local://ravendb-6.0.2.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "ravendb",
+    "snapshot-isolation",
+    "transactions"
+  ],
+  "book": {
+    "title": "RavenDB 6.0.2",
+    "edition": "First Edition",
+    "version": "6.0.2",
+    "author": "Kyle Kingsbury",
+    "date": "2024-01-31"
+  }
+}

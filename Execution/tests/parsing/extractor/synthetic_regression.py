@@ -201,6 +201,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     parser.add_argument("--content-metadata", type=Path, default=DEFAULT_CONTENT_METADATA)
+    parser.add_argument("--rules-metadata", type=Path, default=DEFAULT_RULES_METADATA)
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--show-diff", action="store_true")
     parser.add_argument("--max-diff-tokens", type=int, default=30)
@@ -208,7 +209,7 @@ def main() -> None:
 
     cases = load_cases(args.cases)
     content_metadata = load_json_file(args.content_metadata, "content-metadata")
-    rules_metadata = validate_rules_metadata(load_json_file(DEFAULT_RULES_METADATA, "rules-metadata"))
+    rules_metadata = validate_rules_metadata(load_json_file(args.rules_metadata, "rules-metadata"))
     content_dict = content_metadata if isinstance(content_metadata, dict) else {}
 
     failed = 0

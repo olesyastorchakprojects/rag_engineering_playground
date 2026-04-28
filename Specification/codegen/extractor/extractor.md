@@ -65,7 +65,18 @@ Other top-level keys are forbidden.
 profile_version must be 1.
 
 params required keys:
-- y_tol, top_band_pct, bottom_band_pct, superscript, captions, footnotes
+- y_tol, top_band_pct, bottom_band_pct, superscript, captions, footnotes, layout
+
+params.layout required keys:
+- mode: "single_column" | "two_column"
+- column_split_x: number — required if and only if mode == "two_column"; forbidden otherwise
+
+Validation:
+- Unknown key in layout -> ERROR
+- mode not in {"single_column", "two_column"} -> ERROR
+- mode == "two_column" and column_split_x absent -> ERROR
+- mode == "single_column" and column_split_x present -> ERROR
+- column_split_x must be a number (int or float)
 
 rules allowed keys:
 - context?, line?, block?, text?
@@ -179,6 +190,12 @@ Supported condition kinds:
   {kind, reference:<ref_name>, value:number, ignore_first_word_if_matches:str}
 
 ## 6. Formal Definitions (Deterministic)
+Column word split (two_column mode only):
+- left_words  = {w ∈ words | w.x0 <  layout.column_split_x}
+- right_words = {w ∈ words | w.x0 >= layout.column_split_x}
+- Reading order: left column first, then right column.
+- page_lines (horizontal lines) are passed to both column passes unchanged.
+
 Line building:
 - group words into lines if abs(top_i - top_j) <= y_tol
 - sort lines by line_top ascending
@@ -232,6 +249,21 @@ After all cleanup steps, the extractor must:
 ## 10. Pipeline Order (Contract)
 For each page:
 1) extract words + page.lines
+
+If layout.mode == "single_column":
+  1a) word set = all extracted words
+  Run steps 2–9 once on word set → text.
+
+If layout.mode == "two_column":
+  1a) split words by column_split_x:
+        left_words  = {w | w.x0 <  column_split_x}
+        right_words = {w | w.x0 >= column_split_x}
+  1b) run steps 2–9 on left_words  → left_text
+  1c) run steps 2–9 on right_words → right_text
+  1d) text = left_text + "\n" + right_text
+  page_lines are passed unchanged to both 1b and 1c.
+
+Steps 2–9 (applied per word set, as above):
 2) superscript token filter (if enabled)
 3) build lines + compute median_gap
 4) apply block rules stage="pre_line_rules" in array order; after each deletion rebuild lines+median_gap
@@ -243,6 +275,7 @@ For each page:
    - CRLF->LF
    - remove NUL
    - collapse multiple spaces inside each line
+
 10) if --terms-metadata exists, normalize known terms in the current clean_text, not including pages whose clean_text came from --clean-text-metadata overrides
 11) final clean_text canonicalization:
    - replace any whitespace sequence (including \n, \r, \t) with one space

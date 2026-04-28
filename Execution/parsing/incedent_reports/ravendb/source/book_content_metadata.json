@@ -1,0 +1,224 @@
+{
+  "dataset": "ravendb_6_0_2_pages",
+  "source_pdf": "ravendb-6.0.2.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "RavenDB 6.0.2",
+    "edition": "First Edition",
+    "version": "6.0.2",
+    "author": "Kyle Kingsbury",
+    "date": "2024-01-31"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in ravendb_6_0_2_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 3
+        },
+        "pdf": {
+          "start": 1,
+          "end": 3
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Test Design",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Results",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 5
+        },
+        "pdf": {
+          "start": 3,
+          "end": 5
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 7
+        },
+        "pdf": {
+          "start": 5,
+          "end": 7
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "1.1",
+      "title": "Replication",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "1.2",
+      "title": "ACID",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 3
+        },
+        "pdf": {
+          "start": 2,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.1",
+      "title": "Lost Update with Single-Node Transactions (#17927)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 4
+        },
+        "pdf": {
+          "start": 3,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "3.2",
+      "title": "Fractured Reads with Optimistic Concurrency (#17929)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 4
+        },
+        "pdf": {
+          "start": 4,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "3.3",
+      "title": "Fractured Read with Cluster-Wide Transactions (#17928)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 5
+        },
+        "pdf": {
+          "start": 4,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "4.1",
+      "title": "Does RavenDB Even Have Transactions?",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 6
+        },
+        "pdf": {
+          "start": 5,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "4.2",
+      "title": "Recommendations",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 7
+        },
+        "pdf": {
+          "start": 6,
+          "end": 7
+        }
+      }
+    },
+    {
+      "section": "4.3",
+      "title": "Future Work",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 7
+        },
+        "pdf": {
+          "start": 7,
+          "end": 7
+        }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 4,
+    "sections": 8,
+    "subsections": 0
+  }
+}

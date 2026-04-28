@@ -38,7 +38,7 @@ def stable_projection(rows):
     return out
 
 
-def run_once(pages: Path, metadata: Path, out_jsonl: Path):
+def run_once(pages: Path, metadata: Path, book_metadata: Path, out_jsonl: Path):
     subprocess.run(
         [
             "python3",
@@ -47,6 +47,8 @@ def run_once(pages: Path, metadata: Path, out_jsonl: Path):
             str(pages),
             "--metadata",
             str(metadata),
+            "--book-metadata",
+            str(book_metadata),
             "--out",
             str(out_jsonl),
         ],
@@ -60,6 +62,7 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Chunker determinism test (stable fields across repeated runs)")
     p.add_argument("--pages", type=Path, required=True)
     p.add_argument("--metadata", type=Path, required=True)
+    p.add_argument("--book-metadata", type=Path, required=True)
     p.add_argument("--report-only", action="store_true")
     p.add_argument("--max-errors", type=int, default=10)
     args = p.parse_args()
@@ -70,14 +73,17 @@ def main() -> None:
     if not args.metadata.exists():
         print(f"FAIL: metadata file not found: {args.metadata}")
         sys.exit(1)
+    if not args.book_metadata.exists():
+        print(f"FAIL: book-metadata file not found: {args.book_metadata}")
+        sys.exit(1)
 
     with tempfile.TemporaryDirectory(prefix="chunk_determinism_") as td:
         root = Path(td)
         out1 = root / "chunks_run1.jsonl"
         out2 = root / "chunks_run2.jsonl"
 
-        run_once(args.pages, args.metadata, out1)
-        run_once(args.pages, args.metadata, out2)
+        run_once(args.pages, args.metadata, args.book_metadata, out1)
+        run_once(args.pages, args.metadata, args.book_metadata, out2)
 
         a = stable_projection(load_jsonl(out1))
         b = stable_projection(load_jsonl(out2))

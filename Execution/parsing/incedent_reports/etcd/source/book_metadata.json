@@ -1,0 +1,21 @@
+{
+  "document_title": "etcd 3.4.3 - Jepsen Report",
+  "source_pdf": "etcd-3.4.3.pdf",
+  "url": "local://etcd-3.4.3.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "etcd",
+    "raft",
+    "key-value"
+  ],
+  "book": {
+    "title": "etcd 3.4.3",
+    "edition": "First Edition",
+    "version": "3.4.3",
+    "author": "Kyle Kingsbury",
+    "date": "2020-01-30"
+  }
+}

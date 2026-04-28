@@ -27,6 +27,9 @@
         "^\\d+[\\.)]\\s+",
         "^\\[\\d+\\]\\s+"
       ]
+    },
+    "layout": {
+      "mode": "single_column"
     }
   },
   "rules": {

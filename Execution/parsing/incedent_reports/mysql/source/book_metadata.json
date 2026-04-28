@@ -1,0 +1,21 @@
+{
+  "document_title": "MySQL 8.0.34 - Jepsen Report",
+  "source_pdf": "mysql-8.0.34.pdf",
+  "url": "local://mysql-8.0.34.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "mysql",
+    "repeatable-read",
+    "isolation"
+  ],
+  "book": {
+    "title": "MySQL 8.0.34",
+    "edition": "First Edition",
+    "version": "8.0.34",
+    "author": "Peter Alvaro & Kyle Kingsbury",
+    "date": "2023-12-19"
+  }
+}

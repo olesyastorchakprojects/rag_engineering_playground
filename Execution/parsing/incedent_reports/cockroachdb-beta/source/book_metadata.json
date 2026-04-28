@@ -1,0 +1,20 @@
+{
+  "document_title": "CockroachDB beta-20160829 - Jepsen Report",
+  "source_pdf": "cockroachdb-beta-20160829.pdf",
+  "url": "local://cockroachdb-beta-20160829.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "cockroachdb",
+    "serializability"
+  ],
+  "book": {
+    "title": "CockroachDB beta-20160829",
+    "edition": "First Edition",
+    "version": "beta-20160829",
+    "author": "Kyle Kingsbury",
+    "date": "2017-02-16"
+  }
+}

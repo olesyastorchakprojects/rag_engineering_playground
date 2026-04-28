@@ -7,7 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+REPO_ROOT = Path(__file__).resolve().parents[5]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
@@ -211,7 +211,7 @@ def main() -> None:
         chapter_title = chapter_titles.get(chapter_no, "")
         part_title = part_titles.get(str(part_id), "") if part_id is not None else "Introduction"
         if part_title and chapter_title:
-            path = canonical_path(f"{part_title}/{chapter_title}")
+            path = canonical_path([part_title, chapter_title])
             metadata_path_set.add(path)
             metadata_parent_paths.add(path)
     for entry in metadata_sections:
@@ -225,7 +225,7 @@ def main() -> None:
             part_title = part_titles.get(str(part_id), "") if part_id is not None else "Introduction"
             section_title = normalize_text(entry.get("title", ""))
             if part_title and chapter_title and section_title:
-                path = canonical_path(f"{part_title}/{chapter_title}/{section_title}")
+                path = canonical_path([part_title, chapter_title, section_title])
                 metadata_path_set.add(path)
                 metadata_parent_paths.add(path)
         else:
@@ -235,7 +235,7 @@ def main() -> None:
             part_title = part_titles.get(str(part_id), "") if part_id is not None else "Introduction"
             section_title = normalize_text(entry.get("title", ""))
             if part_title and chapter_title and section_title:
-                metadata_path_set.add(canonical_path(f"{part_title}/{chapter_title}/{section_title}"))
+                metadata_path_set.add(canonical_path([part_title, chapter_title, section_title]))
     for entry in metadata_subsections:
         subsection_id = str(entry.get("subsection", "")).strip()
         if not subsection_id:
@@ -250,7 +250,7 @@ def main() -> None:
         ))
         subsection_title = normalize_text(entry.get("title", ""))
         if part_title and chapter_title and section_title and subsection_title:
-            metadata_path_set.add(canonical_path(f"{part_title}/{chapter_title}/{section_title}/{subsection_title}"))
+            metadata_path_set.add(canonical_path([part_title, chapter_title, section_title, subsection_title]))
 
     chunk_headings: List[Tuple[int, str, str, str]] = []
     for r in chunks:

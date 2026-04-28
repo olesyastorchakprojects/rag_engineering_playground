@@ -1,0 +1,21 @@
+{
+  "document_title": "Redis-Raft 1b3fbf6 - Jepsen Report",
+  "source_pdf": "redis-raft-1b3fbf6.pdf",
+  "url": "local://redis-raft-1b3fbf6.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "redis",
+    "raft",
+    "split-brain"
+  ],
+  "book": {
+    "title": "Redis-Raft 1b3fbf6",
+    "edition": "First Edition",
+    "version": "1b3fbf6",
+    "author": "Kyle Kingsbury",
+    "date": "2020-06-23"
+  }
+}

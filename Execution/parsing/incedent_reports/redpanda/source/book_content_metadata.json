@@ -1,0 +1,302 @@
+{
+  "dataset": "redpanda_21_10_1_pages",
+  "source_pdf": "redpanda-21.10.1.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-14",
+  "book": {
+    "title": "Redpanda 21.10.1",
+    "edition": "First Edition",
+    "version": "21.10.1",
+    "author": "Kyle Kingsbury",
+    "date": "2022-04-29"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report with no separate book pagination — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in redpanda_21_10_1_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": { "start": 1, "end": 5 },
+        "pdf":  { "start": 1, "end": 5 }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Test Design",
+      "part": null,
+      "ranges": {
+        "book": { "start": 5, "end": 6 },
+        "pdf":  { "start": 5, "end": 6 }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Results",
+      "part": null,
+      "ranges": {
+        "book": { "start": 6, "end": 15 },
+        "pdf":  { "start": 6, "end": 15 }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": { "start": 15, "end": 18 },
+        "pdf":  { "start": 15, "end": 18 }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "1.1",
+      "title": "Safety",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": { "start": 1, "end": 2 },
+        "pdf":  { "start": 1, "end": 2 }
+      }
+    },
+    {
+      "section": "1.2",
+      "title": "Transactions",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": { "start": 2, "end": 3 },
+        "pdf":  { "start": 2, "end": 3 }
+      }
+    },
+    {
+      "section": "1.3",
+      "title": "Transactional IDs",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": { "start": 3, "end": 5 },
+        "pdf":  { "start": 3, "end": 5 }
+      }
+    },
+    {
+      "section": "2.1",
+      "title": "List-Append",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": { "start": 5, "end": 5 },
+        "pdf":  { "start": 5, "end": 5 }
+      }
+    },
+    {
+      "section": "2.2",
+      "title": "Queue",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": { "start": 5, "end": 6 },
+        "pdf":  { "start": 5, "end": 6 }
+      }
+    },
+    {
+      "section": "3.1",
+      "title": "Duplicate Writes by Default (#1)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 7, "end": 7 },
+        "pdf":  { "start": 7, "end": 7 }
+      }
+    },
+    {
+      "section": "3.2",
+      "title": "Duplicate Writes with Idempotence Explicitly Enabled (#3039)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 7, "end": 7 },
+        "pdf":  { "start": 7, "end": 7 }
+      }
+    },
+    {
+      "section": "3.3",
+      "title": "Assert Failure Deallocating Partitions (#3335)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 8, "end": 8 },
+        "pdf":  { "start": 8, "end": 8 }
+      }
+    },
+    {
+      "section": "3.4",
+      "title": "Assert Failure in response.partition_index (#3336)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 8, "end": 8 },
+        "pdf":  { "start": 8, "end": 8 }
+      }
+    },
+    {
+      "section": "3.5",
+      "title": "Inconsistent Offsets (#3003)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 8, "end": 10 },
+        "pdf":  { "start": 8, "end": 10 }
+      }
+    },
+    {
+      "section": "3.6",
+      "title": "Lost/Stale Messages (#6)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 10, "end": 11 },
+        "pdf":  { "start": 10, "end": 11 }
+      }
+    },
+    {
+      "section": "3.7",
+      "title": "Aborted Read With NotLeaderOrFollower (KAFKA-13574)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 11, "end": 11 },
+        "pdf":  { "start": 11, "end": 11 }
+      }
+    },
+    {
+      "section": "3.8",
+      "title": "Write Cycles (#8)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 11, "end": 12 },
+        "pdf":  { "start": 11, "end": 12 }
+      }
+    },
+    {
+      "section": "3.9",
+      "title": "Aborted Reads & Circular Information Flow (#3036)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 12, "end": 13 },
+        "pdf":  { "start": 12, "end": 13 }
+      }
+    },
+    {
+      "section": "3.10",
+      "title": "Internal Non-Monotonic Polls (#10)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 13, "end": 14 },
+        "pdf":  { "start": 13, "end": 14 }
+      }
+    },
+    {
+      "section": "3.11",
+      "title": "Aborted Read With InvalidTxnState (#3616-a)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 14, "end": 15 },
+        "pdf":  { "start": 14, "end": 15 }
+      }
+    },
+    {
+      "section": "3.12",
+      "title": "Lost Transactional Writes (#3616-b)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": { "start": 15, "end": 15 },
+        "pdf":  { "start": 15, "end": 15 }
+      }
+    },
+    {
+      "section": "4.1",
+      "title": "Mild Surprises",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": { "start": 16, "end": 16 },
+        "pdf":  { "start": 16, "end": 16 }
+      }
+    },
+    {
+      "section": "4.2",
+      "title": "Non Fault-Tolerant Defaults",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": { "start": 16, "end": 16 },
+        "pdf":  { "start": 16, "end": 16 }
+      }
+    },
+    {
+      "section": "4.3",
+      "title": "Transaction Isolation",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": { "start": 16, "end": 17 },
+        "pdf":  { "start": 16, "end": 17 }
+      }
+    },
+    {
+      "section": "4.4",
+      "title": "Exactly-Once Semantics",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": { "start": 17, "end": 17 },
+        "pdf":  { "start": 17, "end": 17 }
+      }
+    },
+    {
+      "section": "4.5",
+      "title": "Membership Changes",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": { "start": 17, "end": 18 },
+        "pdf":  { "start": 17, "end": 18 }
+      }
+    },
+    {
+      "section": "4.6",
+      "title": "Future Work",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": { "start": 18, "end": 18 },
+        "pdf":  { "start": 18, "end": 18 }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 4,
+    "sections": 23,
+    "subsections": 0
+  }
+}

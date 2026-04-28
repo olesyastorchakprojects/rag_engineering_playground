@@ -1,0 +1,480 @@
+{
+  "dataset": "redis_raft_1b3fbf6_pages",
+  "source_pdf": "redis-raft-1b3fbf6.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "Redis-Raft 1b3fbf6",
+    "edition": "First Edition",
+    "version": "1b3fbf6",
+    "author": "Kyle Kingsbury",
+    "date": "2020-06-23"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in redis_raft_1b3fbf6_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Test Design",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Results",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 7
+        },
+        "pdf": {
+          "start": 2,
+          "end": 7
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 8
+        },
+        "pdf": {
+          "start": 7,
+          "end": 8
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "1.1",
+      "title": "Existing Replication Mechanisms",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "1.2",
+      "title": "Redis-Raft",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "3.1",
+      "title": "Infinite Loops",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "3.2",
+      "title": "Total Data Loss on Failover",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 3
+        },
+        "pdf": {
+          "start": 2,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.3",
+      "title": "Split-Brain & Lost Updates",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.4",
+      "title": "Transient Empty Reads on Startup",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.5",
+      "title": "Stale Reads in Healthy Clusters",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.6",
+      "title": "Spurious NOLEADER in Healthy Clusters",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.7",
+      "title": "Aborted Reads With NOLEADER",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 4
+        },
+        "pdf": {
+          "start": 3,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "3.8",
+      "title": "DISCARD Doesn't Always Discard",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 4
+        },
+        "pdf": {
+          "start": 4,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "3.9",
+      "title": "Crossed Wires",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 4
+        },
+        "pdf": {
+          "start": 4,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "3.10",
+      "title": "Split-Brain & Lost Update Redux",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "3.11",
+      "title": "Yet More Transient Empty Reads",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "3.12",
+      "title": "Spontaneous Snapshot Crash",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "3.13",
+      "title": "Panic! At The Raft Log",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "3.14",
+      "title": "Split-Brain, Take III",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "3.15",
+      "title": "Crash With raft_node_is_voting(me_)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "3.16",
+      "title": "Crash With !uv__is_closing(handle)",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "3.17",
+      "title": "Mysterious Segfault",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "3.18",
+      "title": "Crash in EntryCacheAppend",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "3.19",
+      "title": "Rewriting History",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "3.20",
+      "title": "AppendEntries Term Mismatch",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "3.21",
+      "title": "Another Snapshot Crash",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 7
+        },
+        "pdf": {
+          "start": 6,
+          "end": 7
+        }
+      }
+    },
+    {
+      "section": "4.1",
+      "title": "Future Work",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 8
+        },
+        "pdf": {
+          "start": 7,
+          "end": 8
+        }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 4,
+    "sections": 24,
+    "subsections": 0
+  }
+}
