@@ -301,7 +301,7 @@ def validate_rules_metadata(payload: Any) -> Dict[str, Any]:
     rules = payload["rules"]
     require(isinstance(params, dict), "params")
     require(isinstance(rules, dict), "rules")
-    ensure_only_keys(params, ["y_tol", "top_band_pct", "bottom_band_pct", "superscript", "captions", "footnotes"], "params")
+    ensure_only_keys(params, ["y_tol", "top_band_pct", "bottom_band_pct", "superscript", "captions", "footnotes", "layout"], "params")
     ensure_optional_keys(rules, ["context", "line", "block", "text"], [], "rules")
     for key in ("y_tol", "top_band_pct", "bottom_band_pct"):
         require(isinstance(params[key], (int, float)), f"params.{key}")
@@ -333,6 +333,16 @@ def validate_rules_metadata(payload: Any) -> Dict[str, Any]:
     require(isinstance(footnotes["marker_patterns"], list), "params.footnotes.marker_patterns")
     for index, pattern in enumerate(footnotes["marker_patterns"]):
         validate_pattern(pattern, f"params.footnotes.marker_patterns[{index}]")
+
+    layout = params["layout"]
+    require(isinstance(layout, dict), "params.layout")
+    mode = layout.get("mode")
+    require(mode in {"single_column", "two_column"}, "params.layout.mode")
+    if mode == "two_column":
+        ensure_only_keys(layout, ["mode", "column_split_x"], "params.layout")
+        require(isinstance(layout.get("column_split_x"), (int, float)), "params.layout.column_split_x")
+    else:
+        ensure_only_keys(layout, ["mode"], "params.layout")
 
     context = rules.get("context", {})
     require(isinstance(context, dict), "rules.context")
@@ -721,6 +731,24 @@ def apply_terms_metadata(text: str, terms_metadata: Optional[Mapping[str, Any]])
     return current
 
 
+def apply_cleanup_pipeline(
+    words: Sequence[Mapping[str, Any]],
+    page_height: float,
+    page_num: int,
+    rules_metadata: Mapping[str, Any],
+    page_lines: Sequence[Mapping[str, Any]],
+) -> str:
+    """Steps 2–9: superscript filter, block rules, line rules, assemble text, text rules, safe cleanup."""
+    current_words = filter_superscripts(make_words(words), rules_metadata)
+    current_words = apply_block_rules_stage(current_words, page_lines, page_height, page_num, rules_metadata, "pre_line_rules")
+    current_words = apply_line_rules(current_words, page_height, rules_metadata)
+    current_words = apply_block_rules_stage(current_words, page_lines, page_height, page_num, rules_metadata, "post_line_rules")
+    lines = group_words_into_lines(current_words, float(rules_metadata["params"]["y_tol"]))
+    text = "\n".join(line.line_text for line in lines)
+    text = apply_text_rules(text, rules_metadata)
+    return safe_cleanup(text)
+
+
 def clean_page_text(
     words: Sequence[Mapping[str, Any]],
     page_height: float,
@@ -729,14 +757,16 @@ def clean_page_text(
     page_lines: Sequence[Mapping[str, Any]],
     terms_metadata: Optional[Mapping[str, Any]] = None,
 ) -> str:
-    current_words = filter_superscripts(make_words(words), rules_metadata)
-    current_words = apply_block_rules_stage(current_words, page_lines, page_height, page_num, rules_metadata, "pre_line_rules")
-    current_words = apply_line_rules(current_words, page_height, rules_metadata)
-    current_words = apply_block_rules_stage(current_words, page_lines, page_height, page_num, rules_metadata, "post_line_rules")
-    lines = group_words_into_lines(current_words, float(rules_metadata["params"]["y_tol"]))
-    text = "\n".join(line.line_text for line in lines)
-    text = apply_text_rules(text, rules_metadata)
-    text = safe_cleanup(text)
+    layout = rules_metadata["params"]["layout"]
+    if layout["mode"] == "two_column":
+        split_x = float(layout["column_split_x"])
+        left_words = [w for w in words if float(w.get("x0", 0)) < split_x]
+        right_words = [w for w in words if float(w.get("x0", 0)) >= split_x]
+        left_text = apply_cleanup_pipeline(left_words, page_height, page_num, rules_metadata, page_lines)
+        right_text = apply_cleanup_pipeline(right_words, page_height, page_num, rules_metadata, page_lines)
+        text = "\n".join(t for t in [left_text, right_text] if t)
+    else:
+        text = apply_cleanup_pipeline(words, page_height, page_num, rules_metadata, page_lines)
     text = apply_terms_metadata(text, terms_metadata)
     return final_canonicalize(text)
 

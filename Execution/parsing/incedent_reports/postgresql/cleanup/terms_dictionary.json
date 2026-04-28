@@ -1,0 +1,10 @@
+{
+  "dictionary_name": "terms_dictionary",
+  "version": 1,
+  "description": "Split-variant terms observed in extractor output.",
+  "entry_description": {
+    "word": "Canonical term.",
+    "split_variants": "Observed split variants."
+  },
+  "entries": []
+}

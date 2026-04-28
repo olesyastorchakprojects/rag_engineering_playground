@@ -1,0 +1,19 @@
+{
+  "dictionary_name": "terms_dictionary",
+  "version": 1,
+  "description": "Dictionary of canonical terms that were observed in split form in extractor output and must be normalized back to their unsplit form.",
+  "entry_description": {
+    "word": "Canonical term that should appear in clean_text without internal spaces.",
+    "split_variants": "Observed split variants that must be normalized to the canonical term."
+  },
+  "entries": [
+    {
+      "word": "KafkaProducer",
+      "split_variants": ["Kafka Producer"]
+    },
+    {
+      "word": "TransactionalId",
+      "split_variants": ["Transactional Id"]
+    }
+  ]
+}

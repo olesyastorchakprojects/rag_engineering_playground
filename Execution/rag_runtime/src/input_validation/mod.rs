@@ -3,16 +3,16 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
 use std::time::Instant;
 
-use backon::{ExponentialBuilder, Retryable};
-use reqwest::StatusCode;
-use serde_json::Value;
-use tokenizers::Tokenizer;
 use crate::config::InputValidationSettings;
 use crate::errors::{InputValidationError, RagRuntimeError};
 use crate::models::{UserRequest, ValidatedUserRequest};
 use crate::observability::{
     StatusLabel, record_query_token_count, record_retry_attempts, record_stage_close,
 };
+use backon::{ExponentialBuilder, Retryable};
+use reqwest::StatusCode;
+use serde_json::Value;
+use tokenizers::Tokenizer;
 
 const TOKENIZER_DOWNLOAD_TIMEOUT_SEC: u64 = 10;
 const TOKENIZER_DOWNLOAD_MAX_ATTEMPTS: usize = 3;
@@ -85,7 +85,9 @@ impl InputValidationEngine {
                         query,
                         input_token_count: token_count,
                         trim_whitespace_applied: self.settings.trim_whitespace,
-                        collapse_internal_whitespace_applied: self.settings.collapse_internal_whitespace,
+                        collapse_internal_whitespace_applied: self
+                            .settings
+                            .collapse_internal_whitespace,
                         normalized_query_length,
                         tokenizer_source: self.settings.tokenizer_source.clone(),
                     })

@@ -1,0 +1,110 @@
+{
+  "dataset": "amazon_rds_for_postgresql_17_4_pages",
+  "source_pdf": "amazon-rds-for-postgresql-17.4.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "Amazon RDS for PostgreSQL 17.4",
+    "edition": "First Edition",
+    "version": "17.4",
+    "author": "Kyle Kingsbury",
+    "date": "2025-04-29"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in amazon_rds_for_postgresql_17_4_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Update",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 1
+        },
+        "pdf": {
+          "start": 1,
+          "end": 1
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 1
+        },
+        "pdf": {
+          "start": 1,
+          "end": 1
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Test Design",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 1
+        },
+        "pdf": {
+          "start": 1,
+          "end": 1
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Results",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    }
+  ],
+  "sections": [],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 5,
+    "sections": 0,
+    "subsections": 0
+  }
+}

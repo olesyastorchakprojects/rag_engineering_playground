@@ -1,0 +1,193 @@
+{
+  "dataset": "cockroachdb_beta_20160829_pages",
+  "source_pdf": "cockroachdb-beta-20160829.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "CockroachDB beta-20160829",
+    "edition": "First Edition",
+    "version": "beta-20160829",
+    "author": "Kyle Kingsbury",
+    "date": "2017-02-16"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in cockroachdb_beta_20160829_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Tests",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 7
+        },
+        "pdf": {
+          "start": 2,
+          "end": 7
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 8,
+          "end": 9
+        },
+        "pdf": {
+          "start": 8,
+          "end": 9
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "2.1",
+      "title": "Register",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "2.2",
+      "title": "Bank",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "2.3",
+      "title": "Sequential",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "2.4",
+      "title": "G2",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 4
+        },
+        "pdf": {
+          "start": 3,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "2.5",
+      "title": "Comments",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 5
+        },
+        "pdf": {
+          "start": 4,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "2.6",
+      "title": "Monotonic test",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 6
+        },
+        "pdf": {
+          "start": 5,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "2.7",
+      "title": "Sets",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 7
+        },
+        "pdf": {
+          "start": 6,
+          "end": 7
+        }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 3,
+    "sections": 7,
+    "subsections": 0
+  }
+}

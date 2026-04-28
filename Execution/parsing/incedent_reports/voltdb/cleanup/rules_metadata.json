@@ -1,0 +1,95 @@
+{
+  "profile_version": 1,
+  "profile_name": "voltdb-jepsen",
+  "params": {
+    "y_tol": 2.0,
+    "top_band_pct": 0.12,
+    "bottom_band_pct": 0.94,
+    "layout": {
+      "mode": "two_column",
+      "column_split_x": 295.0
+    },
+    "superscript": {
+      "enabled": true,
+      "max_digits": 2,
+      "size_ratio": 0.75
+    },
+    "captions": {
+      "enabled": false,
+      "start_pattern": "^(Figure|Table)\\s+\\d+",
+      "flags": "i",
+      "chapter_aware": false,
+      "max_cont_lines": 2,
+      "max_line_len": 150,
+      "empty_lines_required": 1
+    },
+    "footnotes": {
+      "enabled": false,
+      "start_y_pct": 0.84,
+      "size_ratio": 0.85,
+      "marker_patterns": [
+        "^\\d{1,2}$"
+      ]
+    }
+  },
+  "rules": {
+    "line": [
+      {
+        "name": "footer_page_number",
+        "type": "line_regex",
+        "enabled": true,
+        "scope": {
+          "band": "bottom"
+        },
+        "pattern": "^\\d{1,2}$",
+        "flags": ""
+      }
+    ],
+    "block": [
+      {
+        "name": "bottom_footnotes_after_separator_hrule",
+        "type": "region_rule",
+        "enabled": true,
+        "stage": "post_line_rules",
+        "target": "words",
+        "references": [
+          {
+            "name": "body_median_font",
+            "kind": "median_word_font_size_above_anchor",
+            "fallback": 0.0
+          }
+        ],
+        "anchor": {
+          "kind": "horizontal_line",
+          "source": "page.lines",
+          "where": {
+            "top_gte_pct": 0.72,
+            "x0_lte": 90.0,
+            "width_gte": 80.0,
+            "width_lte": 100.0,
+            "linewidth_lte": 1.0
+          },
+          "select": "lowest"
+        },
+        "candidate_region": {
+          "kind": "region_below_anchor_to_page_bottom",
+          "offset": 2.0
+        },
+        "when": {
+          "all": [
+            {
+              "kind": "all_words_below_anchor_size_ratio_lte",
+              "reference": "body_median_font",
+              "value": 0.87,
+              "ignore_first_word_if_matches": "^\\d{1,2}$"
+            }
+          ]
+        },
+        "action": {
+          "type": "drop_region"
+        }
+      }
+    ],
+    "text": []
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "dataset": "etcd_3_4_3_pages",
+  "source_pdf": "etcd-3.4.3.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "etcd 3.4.3",
+    "edition": "First Edition",
+    "version": "3.4.3",
+    "author": "Kyle Kingsbury",
+    "date": "2020-01-30"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in etcd_3_4_3_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Test Design",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 3
+        },
+        "pdf": {
+          "start": 2,
+          "end": 3
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Results",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 4
+        },
+        "pdf": {
+          "start": 3,
+          "end": 4
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 6
+        },
+        "pdf": {
+          "start": 5,
+          "end": 6
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "1.1",
+      "title": "Consistency Documentation",
+      "chapter": 1,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "2.1",
+      "title": "Registers",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "2.2",
+      "title": "Sets",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "2.3",
+      "title": "Append",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "2.4",
+      "title": "Locks",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 3
+        },
+        "pdf": {
+          "start": 2,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "2.5",
+      "title": "Watches",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.1",
+      "title": "Watching With Revision 0",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 3
+        },
+        "pdf": {
+          "start": 3,
+          "end": 3
+        }
+      }
+    },
+    {
+      "section": "3.2",
+      "title": "Locks Aren't Real",
+      "chapter": 3,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 3,
+          "end": 4
+        },
+        "pdf": {
+          "start": 3,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "4.1",
+      "title": "Recommendations",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "4.2",
+      "title": "Future Work",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 6
+        },
+        "pdf": {
+          "start": 5,
+          "end": 6
+        }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 4,
+    "sections": 10,
+    "subsections": 0
+  }
+}

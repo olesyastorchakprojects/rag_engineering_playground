@@ -1,0 +1,21 @@
+{
+  "document_title": "PostgreSQL 12.3 - Jepsen Report",
+  "source_pdf": "postgresql-12.3.pdf",
+  "url": "local://postgresql-12.3.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "postgresql",
+    "serializable",
+    "repeatable-read"
+  ],
+  "book": {
+    "title": "PostgreSQL 12.3",
+    "edition": "First Edition",
+    "version": "12.3",
+    "author": "Kyle Kingsbury",
+    "date": "2020-06-12"
+  }
+}

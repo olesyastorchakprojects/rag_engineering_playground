@@ -16,12 +16,34 @@ if str(REPO_ROOT) not in sys.path:
 from Execution.parsing.common.book_metadata_validation import load_and_validate_book_content_metadata
 
 DOC_ID = str(uuid.uuid4())
-TITLE = "Understanding Distributed Systems (2nd Edition)"
-URL = "local://Understanding-Distributed-Systems-2nd-Edition.pdf"
-TAGS = ["distributed-systems", "book", "architecture", "qdrant-learning"]
-START_TS = datetime(2026, 2, 17, 9, 0, 0, tzinfo=timezone.utc)
+START_TS = datetime.now(timezone.utc)
 CHUNKING_VERSION = "v1"
 SCHEMA_VERSION = 1
+
+# Populated at startup from --book-metadata
+TITLE: str = ""
+URL: str = ""
+TAGS: List[str] = []
+
+
+def load_book_metadata(path: Path) -> None:
+    global TITLE, URL, TAGS
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        raise SystemExit(f"ERROR: book-metadata not found: {path}")
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ERROR: invalid JSON in book-metadata: {exc}")
+    if not isinstance(data.get("document_title"), str):
+        raise SystemExit("ERROR: book-metadata missing or invalid field: document_title")
+    if not isinstance(data.get("url"), str):
+        raise SystemExit("ERROR: book-metadata missing or invalid field: url")
+    if not isinstance(data.get("tags"), list) or not all(isinstance(t, str) for t in data["tags"]):
+        raise SystemExit("ERROR: book-metadata missing or invalid field: tags")
+    TITLE = data["document_title"]
+    URL = data["url"]
+    TAGS = data["tags"]
 
 
 def normalize_line(s: str) -> str:
@@ -73,23 +95,32 @@ def section_id_pattern(section_id: str) -> str:
 
 def anchor_patterns(node: Dict) -> List[re.Pattern]:
     title = clean_title(node["title"])
-    title_pat = re.escape(title).replace(r"\ ", r"\s+")
+    title_pat = re.escape(title)
+    # Allow optional mid-word line-break hyphens, e.g. "Transac- tions" matches "Transactions"
+    title_pat = re.sub(r"([A-Za-z0-9])", lambda m: m.group(1) + r"(?:-\s+)?", title_pat)
+    # Allow optional ellipsis / en-dash / em-dash before whitespace between words
+    title_pat = title_pat.replace(r"\ ", "[\u2026\u2013\u2014]?\\s+")
+    # Allow typographic apostrophes (U+2019) alongside straight apostrophe (U+0027)
+    title_pat = title_pat.replace("'", "[\u2019']")
+    # Use (?=\s|$) instead of \b at the end so titles ending with non-word
+    # characters like ')' are matched correctly.
+    end = r"(?=\s|$)"
     patterns: List[str] = []
     if node["level"] == "part":
         part_id = re.escape(str(node["part_id"]))
-        patterns.append(rf"\bPart\s+{part_id}(?:\s+{title_pat})?\b")
-        patterns.append(rf"\b{title_pat}\b")
+        patterns.append(rf"\bPart\s+{part_id}(?:\s+{title_pat})?{end}")
+        patterns.append(rf"\b{title_pat}{end}")
     elif node["level"] == "chapter":
-        patterns.append(rf"\bChapter\s+{node['chapter_num']}(?:\.)?\s+{title_pat}\b")
-        patterns.append(rf"\b{title_pat}\b")
+        patterns.append(rf"\bChapter\s+{node['chapter_num']}(?:\.)?\s+{title_pat}{end}")
+        patterns.append(rf"\b{title_pat}{end}")
     elif node["level"] == "section":
         sid = section_id_pattern(node["section_id"])
-        patterns.append(rf"\b{sid}\s+{title_pat}\b")
-        patterns.append(rf"\b{title_pat}\b")
+        patterns.append(rf"\b{sid}\s+{title_pat}{end}")
+        patterns.append(rf"\b{title_pat}{end}")
     elif node["level"] == "subsection":
         sid = section_id_pattern(node["subsection_id"])
-        patterns.append(rf"\b{sid}\s+{title_pat}\b")
-        patterns.append(rf"\b{title_pat}\b")
+        patterns.append(rf"\b{sid}\s+{title_pat}{end}")
+        patterns.append(rf"\b{title_pat}{end}")
     return [re.compile(pattern, flags=re.I) for pattern in patterns]
 
 
@@ -451,9 +482,22 @@ def emit_node(
         first_child_start = child_intervals[0][0]
         if node_interval[0] < first_child_start:
             leading = (node_interval[0], first_child_start)
-            chunk = make_chunk(node, leading, source, page_offsets)
-            if chunk:
-                chunks.append((leading[0], chunk))
+            if node.get("virtual") and child_results and child_results[0][1]:
+                # For virtual parts (e.g. "Introduction"), prepend the leading
+                # text to the first child's first chunk rather than emitting a
+                # standalone chunk whose section_path tail would be the synthetic
+                # virtual-part name (which has no counterpart in metadata).
+                leading_text = interval_text(source, leading)
+                if leading_text:
+                    first_chunk_pos, first_chunk = child_results[0][1][0]
+                    first_chunk["text"] = normalize_line(f"{leading_text} {first_chunk['text']}")
+                    lead_start, _lead_end = interval_page_span(leading, page_offsets)
+                    if lead_start is not None:
+                        first_chunk["page_start"] = min(int(first_chunk["page_start"]), lead_start)
+            else:
+                chunk = make_chunk(node, leading, source, page_offsets)
+                if chunk:
+                    chunks.append((leading[0], chunk))
 
         for idx in range(len(child_intervals) - 1):
             gap = (child_intervals[idx][1], child_intervals[idx + 1][0])
@@ -543,12 +587,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build metadata-driven chunks from page JSONL")
     parser.add_argument("--pages", type=Path, required=True, help="Input page-level JSONL")
     parser.add_argument("--metadata", type=Path, required=True, help="Book content metadata JSON")
+    parser.add_argument("--book-metadata", type=Path, required=True, help="Document-level metadata JSON (document_title, url, tags)")
     parser.add_argument("--out", type=Path, required=True, help="Output chunks JSONL path")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    load_book_metadata(args.book_metadata)
     chunks = build_structured_chunks(args.pages, args.metadata)
     materialize_jsonl(chunks, args.out)
     print(f"Wrote {len(chunks)} chunks to {args.out}")

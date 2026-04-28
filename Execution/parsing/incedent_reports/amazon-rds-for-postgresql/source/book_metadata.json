@@ -1,0 +1,21 @@
+{
+  "document_title": "Amazon RDS for PostgreSQL 17.4 - Jepsen Report",
+  "source_pdf": "amazon-rds-for-postgresql-17.4.pdf",
+  "url": "local://amazon-rds-for-postgresql-17.4.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "postgresql",
+    "aws",
+    "snapshot-isolation"
+  ],
+  "book": {
+    "title": "Amazon RDS for PostgreSQL 17.4",
+    "edition": "First Edition",
+    "version": "17.4",
+    "author": "Kyle Kingsbury",
+    "date": "2025-04-29"
+  }
+}

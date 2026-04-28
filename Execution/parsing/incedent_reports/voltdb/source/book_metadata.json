@@ -1,0 +1,21 @@
+{
+  "document_title": "VoltDB 6.3 - Jepsen Report",
+  "source_pdf": "voltdb-6-3.pdf",
+  "url": "local://voltdb-6-3.pdf",
+  "tags": [
+    "distributed-systems",
+    "incident-report",
+    "jepsen",
+    "consistency",
+    "voltdb",
+    "serializability",
+    "dirty-reads"
+  ],
+  "book": {
+    "title": "VoltDB 6.3",
+    "edition": "First Edition",
+    "version": "6.3",
+    "author": "Kyle Kingsbury",
+    "date": "2016-07-12"
+  }
+}

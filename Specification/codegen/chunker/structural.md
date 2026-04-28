@@ -29,6 +29,7 @@ The chunker must not:
 Required arguments:
 - `--pages` (`Path`)
 - `--metadata` (`Path`)
+- `--book-metadata` (`Path`)
 - `--out` (`Path`)
 
 There must be no default paths.
@@ -36,6 +37,7 @@ There must be no default paths.
 Argument descriptions:
 - `--pages`: input page-level JSONL
 - `--metadata`: validated content metadata JSON
+- `--book-metadata`: document-level metadata JSON (document_title, url, tags)
 - `--out`: output chunks JSONL
 
 ## 3. Inputs
@@ -60,14 +62,19 @@ If metadata is missing or does not pass validation:
 - metadata is required; there must be no alternative structure source.
 
 ## 4. Output Constants
-Use the following constants:
-- `TITLE = "Understanding Distributed Systems (2nd Edition)"`
-- `URL = "local://Understanding-Distributed-Systems-2nd-Edition.pdf"`
-- `TAGS = ["distributed-systems", "book", "architecture", "qdrant-learning"]`
-- `START_TS = datetime(2026, 2, 17, 9, 0, 0, tzinfo=timezone.utc)`
+The following values must be loaded from `--book-metadata` JSON at startup:
+- `TITLE` — from field `document_title` (`str`, required)
+- `URL` — from field `url` (`str`, required)
+- `TAGS` — from field `tags` (`list[str]`, required)
+
+If any of these fields is missing or has the wrong type, the chunker must fail with a clear error message.
+
+The following remain as fixed constants:
 - `CHUNKING_VERSION = "v1"`
 
-`DOC_ID = str(uuid.uuid4())` must be created once per run.
+The following must be created once per run:
+- `DOC_ID = str(uuid.uuid4())`
+- `START_TS = datetime.now(timezone.utc)` — captured once at startup; used as base for `chunk_created_at`
 
 ## 5. Normalization
 The following helper functions are required:

@@ -1,0 +1,271 @@
+{
+  "dataset": "mongodb_4_2_6_pages",
+  "source_pdf": "mongodb-4.2.6.pdf",
+  "generated_from": "manual PDF analysis",
+  "generated_on": "2026-04-15",
+  "book": {
+    "title": "MongoDB 4.2.6",
+    "edition": "First Edition",
+    "version": "4.2.6",
+    "author": "Kyle Kingsbury",
+    "date": "2020-05-15"
+  },
+  "page_numbering": {
+    "book_page_to_pdf_page_offset": 0,
+    "book_to_pdf_formula": "pdf_page = book_page",
+    "pdf_to_book_formula": "book_page = pdf_page",
+    "notes": [
+      "technical report — pdf_page and book_page are identical",
+      "pdf_page matches extracted page ids in mongodb_4_2_6_pages.jsonl"
+    ]
+  },
+  "front_matter": [],
+  "parts": [],
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "Updates",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 1
+        },
+        "pdf": {
+          "start": 1,
+          "end": 1
+        }
+      }
+    },
+    {
+      "chapter": 2,
+      "title": "Background",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 1,
+          "end": 2
+        },
+        "pdf": {
+          "start": 1,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 3,
+      "title": "Test Design",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "chapter": 4,
+      "title": "Results",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 7
+        },
+        "pdf": {
+          "start": 2,
+          "end": 7
+        }
+      }
+    },
+    {
+      "chapter": 5,
+      "title": "Discussion",
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 8
+        },
+        "pdf": {
+          "start": 7,
+          "end": 8
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "section": "2.1",
+      "title": "Transactional Consistency",
+      "chapter": 2,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 2
+        },
+        "pdf": {
+          "start": 2,
+          "end": 2
+        }
+      }
+    },
+    {
+      "section": "4.1",
+      "title": "Sometimes, Programs That Use Transactions Are Worse",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 2,
+          "end": 4
+        },
+        "pdf": {
+          "start": 2,
+          "end": 4
+        }
+      }
+    },
+    {
+      "section": "4.2",
+      "title": "How ACID is Snapshot Isolation, Anyway",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 4,
+          "end": 5
+        },
+        "pdf": {
+          "start": 4,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "4.3",
+      "title": "Indeterminate Errors",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 5
+        },
+        "pdf": {
+          "start": 5,
+          "end": 5
+        }
+      }
+    },
+    {
+      "section": "4.4",
+      "title": "Duplicate Effects",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 5,
+          "end": 6
+        },
+        "pdf": {
+          "start": 5,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "4.5",
+      "title": "Read Skew",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "4.6",
+      "title": "Cyclic Information Flow",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 6
+        },
+        "pdf": {
+          "start": 6,
+          "end": 6
+        }
+      }
+    },
+    {
+      "section": "4.7",
+      "title": "Read Your (Future) Writes",
+      "chapter": 4,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 6,
+          "end": 7
+        },
+        "pdf": {
+          "start": 6,
+          "end": 7
+        }
+      }
+    },
+    {
+      "section": "5.1",
+      "title": "Recommendations",
+      "chapter": 5,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 7,
+          "end": 8
+        },
+        "pdf": {
+          "start": 7,
+          "end": 8
+        }
+      }
+    },
+    {
+      "section": "5.2",
+      "title": "Future Work",
+      "chapter": 5,
+      "part": null,
+      "ranges": {
+        "book": {
+          "start": 8,
+          "end": 8
+        },
+        "pdf": {
+          "start": 8,
+          "end": 8
+        }
+      }
+    }
+  ],
+  "subsections": [],
+  "counts": {
+    "front_matter": 0,
+    "parts": 0,
+    "chapters": 5,
+    "sections": 10,
+    "subsections": 0
+  }
+}
