@@ -5,6 +5,7 @@ This directory is organized by chunker variant scope:
 - `common/`
 - `fixed/`
 - `structural/`
+- `fixed_in_structural/`
 
 ## What Goes In `common/`
 
@@ -50,6 +51,21 @@ Associated fixtures should live under:
 
 - `Execution/tests/fixtures/parsing/chunker/structural/`
 
+## What Goes In `fixed_in_structural/`
+
+Place a test in `fixed_in_structural/` when it depends on sentence-based fixed
+repacking over structural chunk input.
+
+Examples:
+
+- child chunk inheritance from parent structural chunks;
+- no cross-parent chunk merging;
+- fixed-size splitting behavior over chunk input rather than page input.
+
+Associated fixtures should live under:
+
+- `Execution/tests/fixtures/parsing/chunker/fixed_in_structural/`
+
 ## Current Repository Rule
 
 The current executable layout is:
@@ -59,6 +75,9 @@ The current executable layout is:
 - `common/schema_validation.py`
 - `fixed/page_mapping.py`
 - `fixed/synthetic_regression.py`
+- `fixed_in_structural/inheritance.py`
+- `fixed_in_structural/overlap.py`
+- `fixed_in_structural/synthetic_regression.py`
 - `structural/span_quality.py`
 - `structural/structure.py`
 - `structural/synthetic_regression.py`

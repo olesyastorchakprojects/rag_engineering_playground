@@ -1,0 +1,179 @@
+[
+  {
+    "name": "split_per_sentence_and_preserve_parent_metadata",
+    "config": {
+      "chunking": {
+        "target_tokens": 1,
+        "overlap_ratio": 0.0,
+        "chunking_version": "fixed_in_structural_test_v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "chunks": [
+      {
+        "schema_version": 1,
+        "doc_id": "doc-a",
+        "chunk_id": "parent-a",
+        "url": "local://doc-a",
+        "document_title": "Doc A",
+        "section_title": "Section A",
+        "section_path": ["Part A", "Section A"],
+        "chunk_index": 0,
+        "page_start": 5,
+        "page_end": 7,
+        "tags": ["alpha"],
+        "content_hash": "sha256:parent-a",
+        "chunking_version": "structural_v1",
+        "chunk_created_at": "2026-02-17T09:00:00Z",
+        "text": "Alpha one. Alpha two."
+      },
+      {
+        "schema_version": 1,
+        "doc_id": "doc-b",
+        "chunk_id": "parent-b",
+        "url": "local://doc-b",
+        "document_title": "Doc B",
+        "section_title": "Section B",
+        "section_path": ["Part B"],
+        "chunk_index": 1,
+        "page_start": 20,
+        "page_end": 21,
+        "tags": ["beta"],
+        "content_hash": "sha256:parent-b",
+        "chunking_version": "structural_v1",
+        "chunk_created_at": "2026-02-17T09:01:00Z",
+        "text": "Beta one. Beta two."
+      }
+    ],
+    "expected_chunk_count": 4,
+    "expected_doc_ids": ["doc-a", "doc-a", "doc-b", "doc-b"],
+    "expected_page_ranges": [[5, 7], [5, 7], [20, 21], [20, 21]],
+    "expected_section_paths": [
+      ["Part A", "Section A"],
+      ["Part A", "Section A"],
+      ["Part B"],
+      ["Part B"]
+    ],
+    "expected_text_contains": [
+      "Alpha one.",
+      "Alpha two.",
+      "Beta one.",
+      "Beta two."
+    ],
+    "forbid_cross_parent_text_pairs": [
+      {
+        "left_anchor": "Alpha two.",
+        "right_anchor": "Beta one."
+      }
+    ]
+  },
+  {
+    "name": "empty_parent_is_skipped_and_single_sentence_stays_whole",
+    "config": {
+      "chunking": {
+        "target_tokens": 1,
+        "overlap_ratio": 0.0,
+        "chunking_version": "fixed_in_structural_test_v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "chunks": [
+      {
+        "schema_version": 1,
+        "doc_id": "doc-empty",
+        "chunk_id": "parent-empty",
+        "url": "local://empty",
+        "document_title": "Doc Empty",
+        "section_title": "Empty",
+        "section_path": ["Empty"],
+        "chunk_index": 0,
+        "page_start": 1,
+        "page_end": 1,
+        "tags": ["empty"],
+        "content_hash": "sha256:empty",
+        "chunking_version": "structural_v1",
+        "chunk_created_at": "2026-02-17T09:00:00Z",
+        "text": "   "
+      },
+      {
+        "schema_version": 1,
+        "doc_id": "doc-c",
+        "chunk_id": "parent-c",
+        "url": "local://doc-c",
+        "document_title": "Doc C",
+        "section_title": "Leaf",
+        "section_path": ["Leaf"],
+        "chunk_index": 1,
+        "page_start": 30,
+        "page_end": 34,
+        "tags": ["gamma"],
+        "content_hash": "sha256:parent-c",
+        "chunking_version": "structural_v1",
+        "chunk_created_at": "2026-02-17T09:01:00Z",
+        "text": "A single long sentence stays whole even when the target token budget is tiny because splitting inside a sentence is forbidden."
+      }
+    ],
+    "expected_chunk_count": 1,
+    "expected_doc_ids": ["doc-c"],
+    "expected_page_ranges": [[30, 34]],
+    "expected_section_paths": [["Leaf"]],
+    "expected_text_contains": [
+      "A single long sentence stays whole",
+      "splitting inside a sentence is forbidden"
+    ]
+  },
+  {
+    "name": "expected_fail_on_invalid_input_chunk",
+    "config": {
+      "chunking": {
+        "target_tokens": 1,
+        "overlap_ratio": 0.0,
+        "chunking_version": "fixed_in_structural_test_v1"
+      },
+      "sentence_segmentation": {
+        "library": "spacy",
+        "library_version": "3.8.7",
+        "language": "en"
+      },
+      "tokenizer": {
+        "library": "tokenizers",
+        "source": "Qwen/Qwen3-Embedding-0.6B"
+      }
+    },
+    "chunks": [
+      {
+        "schema_version": 1,
+        "chunk_id": "broken-parent",
+        "url": "local://broken",
+        "document_title": "Broken Doc",
+        "section_title": "Broken",
+        "section_path": ["Broken"],
+        "chunk_index": 0,
+        "page_start": 1,
+        "page_end": 1,
+        "tags": ["broken"],
+        "content_hash": "sha256:broken",
+        "chunking_version": "structural_v1",
+        "chunk_created_at": "2026-02-17T09:00:00Z",
+        "text": "Broken input should fail."
+      }
+    ],
+    "expected_fail": true
+  }
+]
