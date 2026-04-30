@@ -1,0 +1,44 @@
+{
+  "artifacts": {
+    "manifest_path": "/home/olesia/code/prompt_gen_proj/Execution/ingest/hybrid/artifacts/manifests/2026-04-30T00-00-00Z_22222222-2222-2222-2222-222222222222/run_manifest.json",
+    "term_stats_path": "/home/olesia/code/prompt_gen_proj/Execution/ingest/hybrid/artifacts/term_stats/chunks_hybrid_fixed_in_structural_qwen3_bm25__term_stats.json",
+    "vocabulary_path": "/home/olesia/code/prompt_gen_proj/Execution/ingest/hybrid/artifacts/vocabularies/chunks_hybrid_fixed_in_structural_qwen3__sparse_vocabulary.json"
+  },
+  "completed_at": "2026-04-30T14:22:08Z",
+  "counts": {
+    "chunks_failed": 0,
+    "chunks_processed": 319,
+    "chunks_skipped": 0,
+    "chunks_total": 319
+  },
+  "embedding": {
+    "dimension": 1024,
+    "model_name": "qwen3-embedding:0.6b"
+  },
+  "pipeline": {
+    "corpus_version": "v3",
+    "ingest_config_version": "v3",
+    "name": "hybrid_ingest"
+  },
+  "qdrant": {
+    "collection_name": "chunks_hybrid_fixed_in_structural_qwen3_bm25",
+    "dense_vector_name": "dense",
+    "distance": "Cosine",
+    "sparse_vector_name": "sparse"
+  },
+  "run_id": "22222222-2222-2222-2222-222222222222",
+  "sparse": {
+    "lowercase": true,
+    "min_token_length": 2,
+    "out_of_vocabulary_token_count": 0,
+    "preprocessing_kind": "basic_word_v1",
+    "strategy_kind": "bm25_like",
+    "strategy_version": "v1",
+    "tokenizer_library": "tokenizers",
+    "tokenizer_source": "Qwen/Qwen3-Embedding-0.6B",
+    "vocabulary_created_in_this_run": true,
+    "vocabulary_name": "chunks_hybrid_fixed_in_structural_qwen3__sparse_vocabulary"
+  },
+  "started_at": "2026-04-30T00:00:00Z",
+  "status": "completed"
+}

@@ -501,8 +501,10 @@ def validate_config(config_data: Dict[str, Any]) -> AppConfig:
     if re.fullmatch(r"v[1-9][0-9]*", corpus_version) is None:
         raise ConfigError("CONFIG_PATH.pipeline.corpus_version must match ^v[1-9][0-9]*$")
     chunking_strategy = require_string(pipeline["chunking_strategy"], "CONFIG_PATH.pipeline.chunking_strategy")
-    if chunking_strategy not in ("structural", "fixed"):
-        raise ConfigError("CONFIG_PATH.pipeline.chunking_strategy must be structural or fixed")
+    if chunking_strategy not in ("structural", "fixed", "fixed_in_structural"):
+        raise ConfigError(
+            "CONFIG_PATH.pipeline.chunking_strategy must be structural, fixed, or fixed_in_structural"
+        )
 
     embedding_model_name = require_string(embedding_model["name"], "CONFIG_PATH.embedding.model.name")
     embedding_model_dimension = require_int(embedding_model["dimension"], "CONFIG_PATH.embedding.model.dimension", 1)

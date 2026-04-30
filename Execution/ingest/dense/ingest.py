@@ -289,8 +289,10 @@ def validate_config(config_data: Dict[str, Any]) -> AppConfig:
     chunk_schema_version = require_int(pipeline["chunk_schema_version"], "CONFIG_PATH.pipeline.chunk_schema_version", 1)
     ingest_config_version = require_string(pipeline["ingest_config_version"], "CONFIG_PATH.pipeline.ingest_config_version")
     chunking_strategy = require_string(pipeline["chunking_strategy"], "CONFIG_PATH.pipeline.chunking_strategy")
-    if chunking_strategy not in ("structural", "fixed"):
-        raise ConfigError("CONFIG_PATH.pipeline.chunking_strategy must be structural or fixed")
+    if chunking_strategy not in ("structural", "fixed", "fixed_in_structural"):
+        raise ConfigError(
+            "CONFIG_PATH.pipeline.chunking_strategy must be structural, fixed, or fixed_in_structural"
+        )
 
     embedding_model_name = require_string(embedding_model["name"], "CONFIG_PATH.embedding.model.name")
     embedding_model_dimension = require_int(embedding_model["dimension"], "CONFIG_PATH.embedding.model.dimension", 1)

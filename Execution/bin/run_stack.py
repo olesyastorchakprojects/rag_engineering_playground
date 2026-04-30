@@ -14,6 +14,8 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 ROOT_ENV_PATH = REPO_ROOT / ".env"
 DEFAULT_RUNTIME_CONFIG = REPO_ROOT / "Execution" / "rag_runtime" / "rag_runtime.toml"
 DEFAULT_EVAL_CONFIG = REPO_ROOT / "Execution" / "evals" / "eval_engine.toml"
@@ -23,58 +25,9 @@ DEFAULT_QUESTION_SET_ID = "default"
 DEFAULT_QUERIES_FILE = QUERY_DATASETS_ROOT / DEFAULT_QUESTION_SET_ID / "questions.txt"
 RAG_RUNTIME_MANIFEST = REPO_ROOT / "Execution" / "rag_runtime" / "Cargo.toml"
 VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
-
-DENSE_INGEST_PROFILE_PATHS = {
-    "fixed": REPO_ROOT / "Execution" / "ingest" / "dense" / "profiles" / "fixed.toml",
-    "structural": REPO_ROOT / "Execution" / "ingest" / "dense" / "profiles" / "structural.toml",
-}
-
-HYBRID_INGEST_PROFILE_PATHS = {
-    ("fixed", "bag_of_words"): REPO_ROOT
-    / "Execution"
-    / "ingest"
-    / "hybrid"
-    / "configs"
-    / "fixed_bow.toml",
-    ("fixed", "bm25_like"): REPO_ROOT
-    / "Execution"
-    / "ingest"
-    / "hybrid"
-    / "configs"
-    / "fixed_bm25.toml",
-    ("structural", "bag_of_words"): REPO_ROOT
-    / "Execution"
-    / "ingest"
-    / "hybrid"
-    / "configs"
-    / "structural_bow.toml",
-    ("structural", "bm25_like"): REPO_ROOT
-    / "Execution"
-    / "ingest"
-    / "hybrid"
-    / "configs"
-    / "structural_bm25.toml",
-}
-
-EVAL_CHUNKS_PATHS = {
-    "fixed": REPO_ROOT
-    / "Evidence"
-    / "parsing"
-    / "understanding_distributed_systems"
-    / "chunks"
-    / "fixed_chunks.jsonl",
-    "structural": REPO_ROOT
-    / "Evidence"
-    / "parsing"
-    / "understanding_distributed_systems"
-    / "chunks"
-    / "chunks.jsonl",
-}
-
-GOLDEN_RETRIEVALS_PATHS = {
-    "fixed": QUERY_DATASETS_ROOT / DEFAULT_QUESTION_SET_ID / "fixed_golden_retrievals.json",
-    "structural": QUERY_DATASETS_ROOT / DEFAULT_QUESTION_SET_ID / "structural_golden_retrievals.json",
-}
+UNDERSTANDING_CHUNKS_DIR = (
+    REPO_ROOT / "Evidence" / "parsing" / "understanding_distributed_systems" / "chunks"
+)
 
 LAUNCHER_RUNTIME_MODEL_OPTIONS = (
     {
@@ -191,12 +144,115 @@ EVAL_ENGINE_SCENARIOS = {
 }
 
 
+def canonical_launcher_profile_name(name: str) -> str:
+    if name.endswith("_theory"):
+        return name[: -len("_theory")]
+    return name
+
+
+def discover_dense_ingest_profile_paths() -> dict[str, Path]:
+    profiles_dir = REPO_ROOT / "Execution" / "ingest" / "dense" / "profiles"
+    discovered: dict[str, Path] = {}
+    for path in sorted(profiles_dir.glob("*.toml")):
+        discovered[canonical_launcher_profile_name(path.stem)] = path
+    return discovered
+
+
+def discover_hybrid_ingest_profile_paths() -> dict[tuple[str, str], Path]:
+    configs_dir = REPO_ROOT / "Execution" / "ingest" / "hybrid" / "configs"
+    discovered: dict[tuple[str, str], Path] = {}
+    suffix_map = {
+        "_bow": "bag_of_words",
+        "_bm25": "bm25_like",
+    }
+    for path in sorted(configs_dir.glob("*.toml")):
+        stem = path.stem
+        for suffix, strategy in suffix_map.items():
+            if stem.endswith(suffix):
+                profile_name = canonical_launcher_profile_name(stem[: -len(suffix)])
+                discovered[(profile_name, strategy)] = path
+                break
+    return discovered
+
+
+def profile_name_from_chunks_filename(filename: str) -> str | None:
+    if filename == "chunks.jsonl":
+        return "structural"
+    if filename == "fixed_chunks.jsonl":
+        return "fixed"
+    if not filename.endswith("_chunks.jsonl"):
+        return None
+    return filename[: -len("_chunks.jsonl")]
+
+
+def discover_eval_chunks_paths() -> dict[str, Path]:
+    discovered: dict[str, Path] = {}
+    for path in sorted(UNDERSTANDING_CHUNKS_DIR.glob("*.jsonl")):
+        profile_name = profile_name_from_chunks_filename(path.name)
+        if profile_name is not None:
+            discovered[canonical_launcher_profile_name(profile_name)] = path
+    return discovered
+
+
+def golden_profile_name_from_file(path: Path) -> str | None:
+    stem = path.stem
+    if stem == "structural_golden_retrievals":
+        return "structural"
+    if stem == "fixed_golden_retrievals":
+        return "fixed"
+    if stem.endswith("_golden_retrievals"):
+        return canonical_launcher_profile_name(stem[: -len("_golden_retrievals")])
+    return None
+
+
+def discover_golden_retrievals_paths() -> dict[str, Path]:
+    dataset_dir = QUERY_DATASETS_ROOT / DEFAULT_QUESTION_SET_ID
+    discovered: dict[str, Path] = {}
+    for path in sorted(dataset_dir.glob("*_golden_retrievals.json")):
+        profile_name = golden_profile_name_from_file(path)
+        if profile_name is not None:
+            discovered[profile_name] = path
+    return discovered
+
+
+DENSE_INGEST_PROFILE_PATHS = discover_dense_ingest_profile_paths()
+HYBRID_INGEST_PROFILE_PATHS = discover_hybrid_ingest_profile_paths()
+EVAL_CHUNKS_PATHS = discover_eval_chunks_paths()
+GOLDEN_RETRIEVALS_PATHS = discover_golden_retrievals_paths()
+LAUNCHER_CHUNK_PROFILES = sorted(
+    set(DENSE_INGEST_PROFILE_PATHS.keys()).intersection(EVAL_CHUNKS_PATHS.keys())
+)
+
+
 class LauncherError(RuntimeError):
     pass
 
 
 class DatasetBundle(dict[str, Any]):
     pass
+
+
+def resolve_golden_retrievals_path_for_profile(profile_name: str) -> Path:
+    direct = GOLDEN_RETRIEVALS_PATHS.get(profile_name)
+    if direct is not None:
+        return direct
+    matches = sorted(QUERY_DATASETS_ROOT.glob(f"*/{profile_name}_golden_retrievals.json"))
+    if len(matches) == 1:
+        return matches[0]
+    raise LauncherError(
+        f"no default golden retrievals file registered for chunk profile {profile_name!r}"
+    )
+
+
+def infer_dataset_id_from_questions_path(questions_path: Path) -> str | None:
+    try:
+        relative = questions_path.resolve().relative_to(QUERY_DATASETS_ROOT.resolve())
+    except ValueError:
+        return None
+    parts = relative.parts
+    if len(parts) == 2 and parts[1] == "questions.txt":
+        return parts[0]
+    return None
 
 
 def parse_args() -> argparse.Namespace:
@@ -225,7 +281,7 @@ def parse_args() -> argparse.Namespace:
 
     rag = subparsers.add_parser("rag-runtime", help="Launch rag_runtime with resolved inputs.")
     rag.add_argument("--scenario", choices=sorted(RAG_RUNTIME_SCENARIOS))
-    rag.add_argument("--chunk-profile", choices=sorted(DENSE_INGEST_PROFILE_PATHS), default="structural")
+    rag.add_argument("--chunk-profile", choices=LAUNCHER_CHUNK_PROFILES, default="structural")
     rag.add_argument("--runtime-config", type=Path, default=DEFAULT_RUNTIME_CONFIG)
     rag.add_argument(
         "--ingest-config",
@@ -328,8 +384,14 @@ def run_rag_runtime(args: argparse.Namespace) -> int:
         args.questions_file or DEFAULT_QUERIES_FILE,
         "questions file",
     )
+    inferred_dataset_id = infer_dataset_id_from_questions_path(questions_path)
+    default_golden_retrievals_path = (
+        dataset_golden_retrievals_path(inferred_dataset_id, effective_chunk_profile)
+        if inferred_dataset_id is not None
+        else resolve_golden_retrievals_path_for_profile(effective_chunk_profile)
+    )
     golden_retrievals_path = resolve_existing_path(
-        args.golden_retrievals_file or GOLDEN_RETRIEVALS_PATHS[effective_chunk_profile],
+        args.golden_retrievals_file or default_golden_retrievals_path,
         "golden retrievals file",
     )
     reranker_raw = args.reranker or scenario.get("reranker")
@@ -391,7 +453,7 @@ def run_interactive_launch(args: argparse.Namespace) -> int:
     run_mode_label, run_mode = prompt_choice_pairs("Run mode", LAUNCHER_RUN_MODES)
     chunk_profile = prompt_choice(
         "Chunking strategy",
-        ["structural", "fixed"],
+        LAUNCHER_CHUNK_PROFILES,
     )
     retriever_kind: str | None = None
     sparse_strategy: str | None = None
@@ -443,6 +505,11 @@ def run_interactive_launch(args: argparse.Namespace) -> int:
         ingest_config = resolve_existing_path(DENSE_INGEST_PROFILE_PATHS[chunk_profile], "ingest config")
     elif retriever_kind == "hybrid":
         assert sparse_strategy is not None
+        if (chunk_profile, sparse_strategy) not in HYBRID_INGEST_PROFILE_PATHS:
+            raise LauncherError(
+                f"no hybrid ingest config registered for chunk_profile={chunk_profile!r} "
+                f"and sparse_strategy={sparse_strategy!r}"
+            )
         ingest_config = resolve_existing_path(
             HYBRID_INGEST_PROFILE_PATHS[(chunk_profile, sparse_strategy)],
             "ingest config",
@@ -461,7 +528,7 @@ def run_interactive_launch(args: argparse.Namespace) -> int:
         )
     else:
         golden_retrievals_path = resolve_existing_path(
-            GOLDEN_RETRIEVALS_PATHS[chunk_profile],
+            resolve_golden_retrievals_path_for_profile(chunk_profile),
             "golden retrievals file",
         )
     questions_path: Path | None = None
@@ -956,7 +1023,10 @@ def dataset_questions_path(dataset_id: str) -> Path:
 
 
 def dataset_golden_retrievals_path(dataset_id: str, chunk_profile: str) -> Path:
-    return QUERY_DATASETS_ROOT / dataset_id / f"{chunk_profile}_golden_retrievals.json"
+    direct = QUERY_DATASETS_ROOT / dataset_id / f"{chunk_profile}_golden_retrievals.json"
+    if direct.exists():
+        return direct
+    return direct
 
 
 def list_failed_eval_runs() -> list[dict[str, Any]]:
