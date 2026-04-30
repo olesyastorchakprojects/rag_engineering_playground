@@ -34,7 +34,7 @@
         },
         "chunking_strategy": {
           "type": "string",
-          "enum": ["structural", "fixed"]
+          "enum": ["structural", "fixed", "fixed_in_structural"]
         }
       }
     },

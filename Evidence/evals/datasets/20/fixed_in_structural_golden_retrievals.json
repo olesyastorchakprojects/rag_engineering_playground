@@ -1,0 +1,1188 @@
+{
+  "version": "v1",
+  "scenario": "fixed_in_structural",
+  "questions": [
+    {
+      "question_id": "q01_tcp_reliable_over_ip",
+      "question": "Why is TCP considered a transport layer that creates a reliable channel on top of unreliable IP, and what mechanisms does it use to compensate for packet loss, duplication, corruption, and out-of-order delivery?",
+      "soft_positive_chunk_ids": [
+        "72c01736-4bbf-40fb-a970-90773ebf00a0",
+        "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+        "33127494-c742-48f0-898e-53fbc88de8e5",
+        "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+        "21eb2e27-af7d-48d9-b5fb-de012d40853a",
+        "d3cf9d74-745b-4a7d-82a2-16e1fe92c9ca",
+        "bdc4d529-9cce-4490-bb11-a2770e9e1c25"
+      ],
+      "strict_positive_chunk_ids": [
+        "72c01736-4bbf-40fb-a970-90773ebf00a0",
+        "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+        "33127494-c742-48f0-898e-53fbc88de8e5"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "72c01736-4bbf-40fb-a970-90773ebf00a0",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "33127494-c742-48f0-898e-53fbc88de8e5",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "21eb2e27-af7d-48d9-b5fb-de012d40853a",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d3cf9d74-745b-4a7d-82a2-16e1fe92c9ca",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "bdc4d529-9cce-4490-bb11-a2770e9e1c25",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "5d8ed56a-44a9-488e-af22-0032f0062c41",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q02_connection_setup_reuse_cost",
+      "question": "Why are opening new network connections expensive, why does geographic proximity reduce this penalty, and why do systems try to reuse connections instead of recreating them repeatedly?",
+      "soft_positive_chunk_ids": [
+        "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+        "59817537-6cb8-4f34-b97d-522d0fda4e79",
+        "33127494-c742-48f0-898e-53fbc88de8e5",
+        "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+        "0b8f9e79-fcab-4be2-b695-a63bd8a116b4",
+        "72c01736-4bbf-40fb-a970-90773ebf00a0",
+        "a4970a57-c3b6-474e-9e2b-608802c75fdc"
+      ],
+      "strict_positive_chunk_ids": [
+        "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+        "59817537-6cb8-4f34-b97d-522d0fda4e79"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "59817537-6cb8-4f34-b97d-522d0fda4e79",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "0b8f9e79-fcab-4be2-b695-a63bd8a116b4",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "72c01736-4bbf-40fb-a970-90773ebf00a0",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "33127494-c742-48f0-898e-53fbc88de8e5",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "a4970a57-c3b6-474e-9e2b-608802c75fdc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "5d8ed56a-44a9-488e-af22-0032f0062c41",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "bdc4d529-9cce-4490-bb11-a2770e9e1c25",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q03_flow_vs_congestion_control",
+      "question": "What is the difference between flow control and congestion control in TCP, and what type of overload is each mechanism designed to prevent?",
+      "soft_positive_chunk_ids": [
+        "bdc4d529-9cce-4490-bb11-a2770e9e1c25",
+        "a4970a57-c3b6-474e-9e2b-608802c75fdc",
+        "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+        "5d8ed56a-44a9-488e-af22-0032f0062c41",
+        "33127494-c742-48f0-898e-53fbc88de8e5"
+      ],
+      "strict_positive_chunk_ids": [
+        "bdc4d529-9cce-4490-bb11-a2770e9e1c25",
+        "a4970a57-c3b6-474e-9e2b-608802c75fdc"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "a4970a57-c3b6-474e-9e2b-608802c75fdc",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "bdc4d529-9cce-4490-bb11-a2770e9e1c25",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "5d8ed56a-44a9-488e-af22-0032f0062c41",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "33127494-c742-48f0-898e-53fbc88de8e5",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "51922e3f-c8c1-42b2-820d-15bdbd03cd35",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "72c01736-4bbf-40fb-a970-90773ebf00a0",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "17675506-c380-46fa-89e0-15f93da686fb",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q04_udp_for_realtime_protocols",
+      "question": "Why can UDP be a better foundation than TCP for real-time protocols such as multiplayer games, even though UDP does not provide reliability, ordering, or congestion-control guarantees?",
+      "soft_positive_chunk_ids": [
+        "5d8ed56a-44a9-488e-af22-0032f0062c41",
+        "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+        "a4970a57-c3b6-474e-9e2b-608802c75fdc"
+      ],
+      "strict_positive_chunk_ids": [
+        "5d8ed56a-44a9-488e-af22-0032f0062c41"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "5d8ed56a-44a9-488e-af22-0032f0062c41",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "a4970a57-c3b6-474e-9e2b-608802c75fdc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "0b8f9e79-fcab-4be2-b695-a63bd8a116b4",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "33127494-c742-48f0-898e-53fbc88de8e5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "3000d973-c3b3-4203-9b4b-0e9c324a61ae",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "bdc4d529-9cce-4490-bb11-a2770e9e1c25",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "17675506-c380-46fa-89e0-15f93da686fb",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q05_tls_authentication_certificate_chain",
+      "question": "How does TLS authenticate a server, what role does the certificate chain play, and why can an expired certificate bring an application down?",
+      "soft_positive_chunk_ids": [
+        "8f008c58-332d-4831-8731-d31fd671138b",
+        "ba93712a-f8a1-4b93-b432-908294d07d89",
+        "59817537-6cb8-4f34-b97d-522d0fda4e79",
+        "9ea27974-3249-4922-a044-b203a2a71bbf",
+        "17675506-c380-46fa-89e0-15f93da686fb"
+      ],
+      "strict_positive_chunk_ids": [
+        "8f008c58-332d-4831-8731-d31fd671138b",
+        "ba93712a-f8a1-4b93-b432-908294d07d89",
+        "59817537-6cb8-4f34-b97d-522d0fda4e79"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "ba93712a-f8a1-4b93-b432-908294d07d89",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "8f008c58-332d-4831-8731-d31fd671138b",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "59817537-6cb8-4f34-b97d-522d0fda4e79",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "17675506-c380-46fa-89e0-15f93da686fb",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "c1eb6d0b-84fc-42c2-8b44-5705c1e20ad5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "f9c00c5d-6883-4416-b1bc-cbb59973de4b",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "2ce17de7-b66b-4149-bf1e-034cf2197438",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "36ff4090-8627-44cd-989c-747db9af0546",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d14b1080-fc8d-4268-83b0-4486b20ffa15",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q06_tls_integrity_hmac_vs_tcp_checksum",
+      "question": "Why does TLS still verify message integrity with an HMAC even though TCP already includes a checksum, and what kinds of problems does this extra protection address?",
+      "soft_positive_chunk_ids": [
+        "9ea27974-3249-4922-a044-b203a2a71bbf",
+        "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+        "59817537-6cb8-4f34-b97d-522d0fda4e79",
+        "8f008c58-332d-4831-8731-d31fd671138b",
+        "ba93712a-f8a1-4b93-b432-908294d07d89"
+      ],
+      "strict_positive_chunk_ids": [
+        "9ea27974-3249-4922-a044-b203a2a71bbf",
+        "93171631-ff8d-43aa-bdc0-9adefd6dfd2e"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "93171631-ff8d-43aa-bdc0-9adefd6dfd2e",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "59817537-6cb8-4f34-b97d-522d0fda4e79",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "8f008c58-332d-4831-8731-d31fd671138b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ba93712a-f8a1-4b93-b432-908294d07d89",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "5d8ed56a-44a9-488e-af22-0032f0062c41",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d14b1080-fc8d-4268-83b0-4486b20ffa15",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "17675506-c380-46fa-89e0-15f93da686fb",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "33127494-c742-48f0-898e-53fbc88de8e5",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q07_dns_ttl_tradeoff_and_stale_entries",
+      "question": "How does DNS resolution work, why does the TTL create a trade-off between fast propagation and lower lookup load, and why can serving stale records be more robust than serving no records at all?",
+      "soft_positive_chunk_ids": [
+        "2ce17de7-b66b-4149-bf1e-034cf2197438",
+        "6a29e297-6129-4c64-a603-3c504b7417f8",
+        "f9c00c5d-6883-4416-b1bc-cbb59973de4b",
+        "c1eb6d0b-84fc-42c2-8b44-5705c1e20ad5"
+      ],
+      "strict_positive_chunk_ids": [
+        "2ce17de7-b66b-4149-bf1e-034cf2197438",
+        "6a29e297-6129-4c64-a603-3c504b7417f8"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "2ce17de7-b66b-4149-bf1e-034cf2197438",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "6a29e297-6129-4c64-a603-3c504b7417f8",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "f9c00c5d-6883-4416-b1bc-cbb59973de4b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "c1eb6d0b-84fc-42c2-8b44-5705c1e20ad5",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "85edc7ed-3ae0-40a4-a0f3-559c6f0c568b",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "1d9d02af-87ca-4db8-9712-4ce5cd64f6d4",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "9ea27974-3249-4922-a044-b203a2a71bbf",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "90e22942-31c5-4e92-9e97-27384dd9d226",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "4b523b39-b9e6-4259-afbf-a3e74a2d4d43",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q08_http_versions_head_of_line_blocking",
+      "question": "Why does HTTP 1.1 suffer from head-of-line blocking, and how do HTTP 2 and HTTP 3 improve throughput and reduce the impact of packet loss?",
+      "soft_positive_chunk_ids": [
+        "0b8f9e79-fcab-4be2-b695-a63bd8a116b4",
+        "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+        "73fa0b5f-9625-4e63-b97e-3e96642d1e94"
+      ],
+      "strict_positive_chunk_ids": [
+        "0b8f9e79-fcab-4be2-b695-a63bd8a116b4",
+        "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "0b8f9e79-fcab-4be2-b695-a63bd8a116b4",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "8c4ed6e1-66ea-4cd5-8cad-a79b949c9be8",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "73fa0b5f-9625-4e63-b97e-3e96642d1e94",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "51922e3f-c8c1-42b2-820d-15bdbd03cd35",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "72c01736-4bbf-40fb-a970-90773ebf00a0",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "59817537-6cb8-4f34-b97d-522d0fda4e79",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "33127494-c742-48f0-898e-53fbc88de8e5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "4c090f57-bafa-47b3-b741-f75938df6850",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "5d8ed56a-44a9-488e-af22-0032f0062c41",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "83c80d57-cf32-4761-8d57-233b12f25175",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q09_idempotency_keys_and_atomicity",
+      "question": "Why can retrying a POST request after a timeout create an inconsistent system state, and how do idempotency keys together with transactional atomicity solve this problem?",
+      "soft_positive_chunk_ids": [
+        "d14b1080-fc8d-4268-83b0-4486b20ffa15",
+        "d1527000-9a3c-44f0-b7e6-db53905c56b5",
+        "ea6b88da-2a76-433a-b9dc-8ab71903a435",
+        "ad56cb84-cb9f-4143-babd-9d913357a32b",
+        "53ed6dc8-dc04-434b-ae78-de2f8eaebe19",
+        "1cb13961-a6c2-49de-92f7-2e7207a911bc",
+        "29421fca-e997-4bf8-bf19-0196776353fd",
+        "ec5ffca6-39be-4fec-8de9-106fc517fb49"
+      ],
+      "strict_positive_chunk_ids": [
+        "d14b1080-fc8d-4268-83b0-4486b20ffa15",
+        "d1527000-9a3c-44f0-b7e6-db53905c56b5",
+        "ea6b88da-2a76-433a-b9dc-8ab71903a435"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "d1527000-9a3c-44f0-b7e6-db53905c56b5",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "d14b1080-fc8d-4268-83b0-4486b20ffa15",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "ea6b88da-2a76-433a-b9dc-8ab71903a435",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "53ed6dc8-dc04-434b-ae78-de2f8eaebe19",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ad56cb84-cb9f-4143-babd-9d913357a32b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ec5ffca6-39be-4fec-8de9-106fc517fb49",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1cb13961-a6c2-49de-92f7-2e7207a911bc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "29421fca-e997-4bf8-bf19-0196776353fd",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ffbff304-181e-4f6d-8ff2-a1b4aef99eb4",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "5d10c3e2-baf2-4030-a011-9e7ae9d2a00b",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q10_partial_synchrony_realism",
+      "question": "Why is the partially synchronous model usually a better fit for real distributed systems than either the strictly synchronous model or the fully asynchronous one?",
+      "soft_positive_chunk_ids": [
+        "97342fb1-c9eb-4f22-8919-6e517a2a7a2d",
+        "a43bdf5a-2714-456d-8563-17a4a92382cb",
+        "885b51d0-8712-46c8-ac3f-d6d4f06cfdae",
+        "88962ec5-4705-443e-a79a-9f5ab040c4ec",
+        "1c5f7d5f-d196-4c20-990f-a916095707c1",
+        "684bcec6-3c0b-4b7b-85be-f26b51768392"
+      ],
+      "strict_positive_chunk_ids": [
+        "97342fb1-c9eb-4f22-8919-6e517a2a7a2d",
+        "a43bdf5a-2714-456d-8563-17a4a92382cb"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "97342fb1-c9eb-4f22-8919-6e517a2a7a2d",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "a43bdf5a-2714-456d-8563-17a4a92382cb",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "684bcec6-3c0b-4b7b-85be-f26b51768392",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "88962ec5-4705-443e-a79a-9f5ab040c4ec",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "885b51d0-8712-46c8-ac3f-d6d4f06cfdae",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1c5f7d5f-d196-4c20-990f-a916095707c1",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "f2a3c595-e4cd-4dd7-81d2-3445ae2babc8",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "5da6cdc8-0605-4dc7-9d6f-a602b13c659e",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "b2b086aa-f7a8-4069-8dab-45f8a1be3282",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "be2b22d2-c012-4a78-bfd5-14289f13407a",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q11_lamport_vs_vector_clocks",
+      "question": "Why are Lamport logical clocks not sufficient to capture causality precisely, and how do vector clocks improve on them?",
+      "soft_positive_chunk_ids": [
+        "5da6cdc8-0605-4dc7-9d6f-a602b13c659e",
+        "a3ea0060-2409-43f0-852c-75b486a2faf6",
+        "b2b086aa-f7a8-4069-8dab-45f8a1be3282",
+        "f2a3c595-e4cd-4dd7-81d2-3445ae2babc8",
+        "684bcec6-3c0b-4b7b-85be-f26b51768392",
+        "be2b22d2-c012-4a78-bfd5-14289f13407a"
+      ],
+      "strict_positive_chunk_ids": [
+        "5da6cdc8-0605-4dc7-9d6f-a602b13c659e",
+        "a3ea0060-2409-43f0-852c-75b486a2faf6",
+        "b2b086aa-f7a8-4069-8dab-45f8a1be3282",
+        "f2a3c595-e4cd-4dd7-81d2-3445ae2babc8"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "5da6cdc8-0605-4dc7-9d6f-a602b13c659e",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "a3ea0060-2409-43f0-852c-75b486a2faf6",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "b2b086aa-f7a8-4069-8dab-45f8a1be3282",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "f2a3c595-e4cd-4dd7-81d2-3445ae2babc8",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "684bcec6-3c0b-4b7b-85be-f26b51768392",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "be2b22d2-c012-4a78-bfd5-14289f13407a",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "97342fb1-c9eb-4f22-8919-6e517a2a7a2d",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "a43bdf5a-2714-456d-8563-17a4a92382cb",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "cc12369e-b665-4ba8-aafa-95a01e99fa26",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "a2b290c8-d193-404c-abfb-74368239a99f",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q12_raft_leader_election",
+      "question": "How does Raft elect a leader, and why are randomized timeouts and periodic heartbeats important for preventing split votes and detecting failed leaders?",
+      "soft_positive_chunk_ids": [
+        "95347e8c-6a1a-4928-977f-413500a29a36",
+        "f69c3fb9-6977-4e17-8b1b-d1fab055d4f9",
+        "11fcd935-8a78-493c-a6ac-acae832449aa",
+        "88962ec5-4705-443e-a79a-9f5ab040c4ec",
+        "885b51d0-8712-46c8-ac3f-d6d4f06cfdae",
+        "1c5f7d5f-d196-4c20-990f-a916095707c1",
+        "684bcec6-3c0b-4b7b-85be-f26b51768392",
+        "f61c2eb6-56fc-493a-bb29-8f40df909105",
+        "d47a233c-c7d8-49ee-a86c-9f7927b31459"
+      ],
+      "strict_positive_chunk_ids": [
+        "95347e8c-6a1a-4928-977f-413500a29a36",
+        "f69c3fb9-6977-4e17-8b1b-d1fab055d4f9",
+        "11fcd935-8a78-493c-a6ac-acae832449aa"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "95347e8c-6a1a-4928-977f-413500a29a36",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "11fcd935-8a78-493c-a6ac-acae832449aa",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "f69c3fb9-6977-4e17-8b1b-d1fab055d4f9",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "d47a233c-c7d8-49ee-a86c-9f7927b31459",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "f61c2eb6-56fc-493a-bb29-8f40df909105",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "88962ec5-4705-443e-a79a-9f5ab040c4ec",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "885b51d0-8712-46c8-ac3f-d6d4f06cfdae",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1c5f7d5f-d196-4c20-990f-a916095707c1",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "684bcec6-3c0b-4b7b-85be-f26b51768392",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1bb756c6-581c-4468-8894-7176ae5ad41a",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q13_consistency_tradeoffs_and_cap",
+      "question": "Why does allowing clients to read from any follower improve availability but weaken consistency, and how does the CAP theorem frame the choice during a network partition?",
+      "soft_positive_chunk_ids": [
+        "d2fec4af-f567-4b57-8492-e21d66a15f70",
+        "3f79314c-0f90-4628-a9c5-b943904b4d7b",
+        "189a03d0-4457-4829-8ae2-cdd4ec1e5f1c",
+        "0b32e6bc-9410-41e7-b3df-df6293c4aa7a",
+        "fef4cfdf-060e-485c-9c8c-fa30f388487e",
+        "c13e2b8c-27f9-4e82-a9e4-5fe8b9208cff",
+        "bd0353e7-551e-46e0-8d98-ff15bb564590",
+        "d00e12a2-2906-43d2-b7af-d1e411862dde"
+      ],
+      "strict_positive_chunk_ids": [
+        "d2fec4af-f567-4b57-8492-e21d66a15f70",
+        "3f79314c-0f90-4628-a9c5-b943904b4d7b",
+        "189a03d0-4457-4829-8ae2-cdd4ec1e5f1c",
+        "0b32e6bc-9410-41e7-b3df-df6293c4aa7a"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "d2fec4af-f567-4b57-8492-e21d66a15f70",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "0b32e6bc-9410-41e7-b3df-df6293c4aa7a",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "189a03d0-4457-4829-8ae2-cdd4ec1e5f1c",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "3f79314c-0f90-4628-a9c5-b943904b4d7b",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "d00e12a2-2906-43d2-b7af-d1e411862dde",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "bd0353e7-551e-46e0-8d98-ff15bb564590",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "fef4cfdf-060e-485c-9c8c-fa30f388487e",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "c13e2b8c-27f9-4e82-a9e4-5fe8b9208cff",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d4b8314c-64b1-4733-838c-d8b02cacb457",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "a2b290c8-d193-404c-abfb-74368239a99f",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q14_causal_vs_eventual_consistency",
+      "question": "Why is eventual consistency not always enough for applications with causally related operations, and how does causal consistency strengthen the guarantees without requiring full strong consistency?",
+      "soft_positive_chunk_ids": [
+        "a2b290c8-d193-404c-abfb-74368239a99f",
+        "3af03098-a4f6-40de-a24f-ba9d50bfa9b9",
+        "3bdc8b12-4cb8-4057-b711-73c841245914",
+        "5a4f15d1-2309-4f4b-991f-ce69dc6db06c",
+        "3f79314c-0f90-4628-a9c5-b943904b4d7b"
+      ],
+      "strict_positive_chunk_ids": [
+        "a2b290c8-d193-404c-abfb-74368239a99f",
+        "3af03098-a4f6-40de-a24f-ba9d50bfa9b9",
+        "3bdc8b12-4cb8-4057-b711-73c841245914"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "a2b290c8-d193-404c-abfb-74368239a99f",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "3af03098-a4f6-40de-a24f-ba9d50bfa9b9",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "3bdc8b12-4cb8-4057-b711-73c841245914",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "5a4f15d1-2309-4f4b-991f-ce69dc6db06c",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "3f79314c-0f90-4628-a9c5-b943904b4d7b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d2fec4af-f567-4b57-8492-e21d66a15f70",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "0b32e6bc-9410-41e7-b3df-df6293c4aa7a",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "29421fca-e997-4bf8-bf19-0196776353fd",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "f1c74e69-6a81-4b7f-9631-c7abf2537178",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "189a03d0-4457-4829-8ae2-cdd4ec1e5f1c",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q15_isolation_atomicity_and_2pc",
+      "question": "What is the difference between isolation and atomicity in transactions, and why is two-phase commit needed when atomicity must be coordinated across multiple processes?",
+      "soft_positive_chunk_ids": [
+        "ad56cb84-cb9f-4143-babd-9d913357a32b",
+        "53ed6dc8-dc04-434b-ae78-de2f8eaebe19",
+        "bca71f54-66b5-4ce6-8256-b85b04434c66",
+        "ec5ffca6-39be-4fec-8de9-106fc517fb49",
+        "1cb13961-a6c2-49de-92f7-2e7207a911bc",
+        "b0a31694-15c6-4f2d-ae76-30ee9746f5de",
+        "c560c60a-7afb-4a2b-9191-54bea4a31a4e",
+        "66498746-7f34-4bdd-a2c2-ec0166ada39b",
+        "ea3a3a61-e8f1-476f-9de9-c316d26d8504"
+      ],
+      "strict_positive_chunk_ids": [
+        "ad56cb84-cb9f-4143-babd-9d913357a32b",
+        "53ed6dc8-dc04-434b-ae78-de2f8eaebe19",
+        "bca71f54-66b5-4ce6-8256-b85b04434c66"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "53ed6dc8-dc04-434b-ae78-de2f8eaebe19",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "bca71f54-66b5-4ce6-8256-b85b04434c66",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "ad56cb84-cb9f-4143-babd-9d913357a32b",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "ea3a3a61-e8f1-476f-9de9-c316d26d8504",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "c560c60a-7afb-4a2b-9191-54bea4a31a4e",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "b0a31694-15c6-4f2d-ae76-30ee9746f5de",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ec5ffca6-39be-4fec-8de9-106fc517fb49",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "66498746-7f34-4bdd-a2c2-ec0166ada39b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1cb13961-a6c2-49de-92f7-2e7207a911bc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "7e914ce8-4310-4e79-a4dd-40b3fe779c08",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q16_outbox_pattern_dual_writes",
+      "question": "Why can dual writes to a primary database and a secondary system such as a search index leave the system in an inconsistent state, and how does the outbox pattern address this problem?",
+      "soft_positive_chunk_ids": [
+        "5d10c3e2-baf2-4030-a011-9e7ae9d2a00b",
+        "c0cff99a-7877-4876-897a-cb537ecf6dc9",
+        "48b8c228-c99d-4a8c-88c0-200a76258fb7",
+        "ad56cb84-cb9f-4143-babd-9d913357a32b",
+        "1f1a2e07-2e26-428d-92ab-a91b92099f4a",
+        "175c1c58-51c1-4119-a74c-948fcfa493dc"
+      ],
+      "strict_positive_chunk_ids": [
+        "5d10c3e2-baf2-4030-a011-9e7ae9d2a00b",
+        "c0cff99a-7877-4876-897a-cb537ecf6dc9"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "5d10c3e2-baf2-4030-a011-9e7ae9d2a00b",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "c0cff99a-7877-4876-897a-cb537ecf6dc9",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "48b8c228-c99d-4a8c-88c0-200a76258fb7",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ad56cb84-cb9f-4143-babd-9d913357a32b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1f1a2e07-2e26-428d-92ab-a91b92099f4a",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "175c1c58-51c1-4119-a74c-948fcfa493dc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ec5ffca6-39be-4fec-8de9-106fc517fb49",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "1cb13961-a6c2-49de-92f7-2e7207a911bc",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "29421fca-e997-4bf8-bf19-0196776353fd",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "2f9f0327-60ac-434e-9937-44e9753988e7",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q17_sagas_and_lack_of_isolation",
+      "question": "How do sagas use compensating transactions to preserve atomicity across services, and why do they still sacrifice the isolation guarantees of traditional ACID transactions?",
+      "soft_positive_chunk_ids": [
+        "2f9f0327-60ac-434e-9937-44e9753988e7",
+        "b6ff997c-dbde-4558-ade4-2e7977c53a20",
+        "204da6ec-f370-436a-b866-e26b5916ca1e",
+        "221b1bf9-026a-4e5d-b1a6-c8b089f253f7",
+        "48b8c228-c99d-4a8c-88c0-200a76258fb7",
+        "66498746-7f34-4bdd-a2c2-ec0166ada39b",
+        "c560c60a-7afb-4a2b-9191-54bea4a31a4e",
+        "ad56cb84-cb9f-4143-babd-9d913357a32b"
+      ],
+      "strict_positive_chunk_ids": [
+        "2f9f0327-60ac-434e-9937-44e9753988e7",
+        "b6ff997c-dbde-4558-ade4-2e7977c53a20",
+        "204da6ec-f370-436a-b866-e26b5916ca1e",
+        "221b1bf9-026a-4e5d-b1a6-c8b089f253f7"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "2f9f0327-60ac-434e-9937-44e9753988e7",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "b6ff997c-dbde-4558-ade4-2e7977c53a20",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "204da6ec-f370-436a-b866-e26b5916ca1e",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "221b1bf9-026a-4e5d-b1a6-c8b089f253f7",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "c560c60a-7afb-4a2b-9191-54bea4a31a4e",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ad56cb84-cb9f-4143-babd-9d913357a32b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "48b8c228-c99d-4a8c-88c0-200a76258fb7",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "66498746-7f34-4bdd-a2c2-ec0166ada39b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "53ed6dc8-dc04-434b-ae78-de2f8eaebe19",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "5d10c3e2-baf2-4030-a011-9e7ae9d2a00b",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q18_range_vs_hash_partitioning",
+      "question": "What trade-offs separate range partitioning from hash partitioning, and why can each approach still suffer from hotspots under certain access patterns?",
+      "soft_positive_chunk_ids": [
+        "35500b7e-e302-48a5-bc0e-8dc842ac8d47",
+        "f674f242-9294-48fd-b8b0-e6b99f2ccdf1",
+        "9703bd2b-b4dd-4158-95e8-0b03a850504d",
+        "a78e8e37-17b3-4c6c-8845-e14bc2786055",
+        "c282e3c2-caa5-40fe-ae17-9040dbf1ae97",
+        "2d41c96a-3a11-4aa4-99e6-bacb8313ed13",
+        "8a96f05e-2653-40de-a04c-2ef3be04c4af"
+      ],
+      "strict_positive_chunk_ids": [
+        "35500b7e-e302-48a5-bc0e-8dc842ac8d47",
+        "f674f242-9294-48fd-b8b0-e6b99f2ccdf1",
+        "9703bd2b-b4dd-4158-95e8-0b03a850504d",
+        "a78e8e37-17b3-4c6c-8845-e14bc2786055"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "f674f242-9294-48fd-b8b0-e6b99f2ccdf1",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "9703bd2b-b4dd-4158-95e8-0b03a850504d",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "35500b7e-e302-48a5-bc0e-8dc842ac8d47",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "a78e8e37-17b3-4c6c-8845-e14bc2786055",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "8a96f05e-2653-40de-a04c-2ef3be04c4af",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "c282e3c2-caa5-40fe-ae17-9040dbf1ae97",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "2d41c96a-3a11-4aa4-99e6-bacb8313ed13",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d4b8314c-64b1-4733-838c-d8b02cacb457",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "36ff4090-8627-44cd-989c-747db9af0546",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "035d6150-9cfe-4b57-8020-1ddcce486601",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q19_l4_vs_l7_load_balancing",
+      "question": "What is the difference between transport-layer and application-layer load balancing, and what extra capabilities does an L7 load balancer gain by understanding HTTP traffic?",
+      "soft_positive_chunk_ids": [
+        "51922e3f-c8c1-42b2-820d-15bdbd03cd35",
+        "df5539f2-e7ce-4f21-b7ca-214f3d541b39",
+        "51a078cc-c301-473b-b53d-f914e87da789",
+        "8e274ca8-e207-44f7-a288-15e283219120",
+        "36ff4090-8627-44cd-989c-747db9af0546",
+        "9783a0e6-e69d-45e9-8c76-57e58ab02574",
+        "3f763322-f05d-4d56-88ee-eb6181a1bed8",
+        "1cf79e53-d4fe-45c8-bbab-d11031b6b3d7"
+      ],
+      "strict_positive_chunk_ids": [
+        "51922e3f-c8c1-42b2-820d-15bdbd03cd35",
+        "df5539f2-e7ce-4f21-b7ca-214f3d541b39",
+        "51a078cc-c301-473b-b53d-f914e87da789",
+        "8e274ca8-e207-44f7-a288-15e283219120"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "df5539f2-e7ce-4f21-b7ca-214f3d541b39",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "51922e3f-c8c1-42b2-820d-15bdbd03cd35",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "51a078cc-c301-473b-b53d-f914e87da789",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "8e274ca8-e207-44f7-a288-15e283219120",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "36ff4090-8627-44cd-989c-747db9af0546",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1cf79e53-d4fe-45c8-bbab-d11031b6b3d7",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "9783a0e6-e69d-45e9-8c76-57e58ab02574",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "3f763322-f05d-4d56-88ee-eb6181a1bed8",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "a97b1ea8-f8b9-40f2-ad6d-b41ed6e69ed2",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "2139ef4d-112a-42ae-9eb2-725467799407",
+          "score": 0.0
+        }
+      ]
+    },
+    {
+      "question_id": "q20_exactly_once_processing_is_an_illusion",
+      "question": "Why is exactly-once message delivery impossible in practice, and how can a consumer approximate exactly-once processing with idempotent handling and careful delete timing?",
+      "soft_positive_chunk_ids": [
+        "af1eee0e-ace5-401a-9ba9-030a84ab5c00",
+        "75eb1fe7-94cf-4b17-9a01-d369d3f68540",
+        "7c8b27da-5099-49a9-8ea0-b9f98c70101b",
+        "1f1a2e07-2e26-428d-92ab-a91b92099f4a",
+        "175c1c58-51c1-4119-a74c-948fcfa493dc",
+        "eaea710c-c5d2-4943-bc1c-f13af6bd55db",
+        "f925ce3b-1d06-41e2-8502-31d964d352b2",
+        "ee3e1d85-84c7-4849-8342-53047c551111"
+      ],
+      "strict_positive_chunk_ids": [
+        "af1eee0e-ace5-401a-9ba9-030a84ab5c00",
+        "75eb1fe7-94cf-4b17-9a01-d369d3f68540"
+      ],
+      "graded_relevance": [
+        {
+          "chunk_id": "75eb1fe7-94cf-4b17-9a01-d369d3f68540",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "af1eee0e-ace5-401a-9ba9-030a84ab5c00",
+          "score": 1.0
+        },
+        {
+          "chunk_id": "7c8b27da-5099-49a9-8ea0-b9f98c70101b",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "f925ce3b-1d06-41e2-8502-31d964d352b2",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "eaea710c-c5d2-4943-bc1c-f13af6bd55db",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "1f1a2e07-2e26-428d-92ab-a91b92099f4a",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "175c1c58-51c1-4119-a74c-948fcfa493dc",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "ee3e1d85-84c7-4849-8342-53047c551111",
+          "score": 0.5
+        },
+        {
+          "chunk_id": "d1527000-9a3c-44f0-b7e6-db53905c56b5",
+          "score": 0.0
+        },
+        {
+          "chunk_id": "d14b1080-fc8d-4268-83b0-4486b20ffa15",
+          "score": 0.0
+        }
+      ]
+    }
+  ]
+}
