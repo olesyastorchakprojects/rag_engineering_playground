@@ -8,6 +8,8 @@ This folder is split by chunker test type:
   - tests specific to the metadata-driven structural chunker
 - `fixed/`
   - tests specific to the fixed sentence-based chunker
+- `fixed_in_structural/`
+  - tests specific to the fixed-size chunker over structural chunk input
 
 Current layout:
 
@@ -21,3 +23,5 @@ Current layout:
 - `fixed/page_mapping.md`
 - `fixed/overlap.md`
 - `fixed/synthetic_regression.md`
+- `fixed_in_structural/synthetic_regression.md`
+- `fixed_in_structural/inheritance.md`
